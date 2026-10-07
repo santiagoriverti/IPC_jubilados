@@ -110,12 +110,21 @@ entra en la canasta).
 ```
 src/            fuentes.py (descargas) · ponderaciones.py (ENGHo) · indices.py · haberes.py · fiscal.py
                 pipeline.py (corre todo) · graficos.py · exportar.py (Excel, PNG, CSV, ZIP)
-scripts/        construir.py · control_calidad.py · gen_notebooks.py (genera notebooks/)
+scripts/        construir.py · control_calidad.py · comparar_zip.py (ZIP de Colab vs local)
+                gen_notebooks.py (genera notebooks/)
+notebooks/      01 canasta · 02 IIJP vs IPC · 03 haberes y fiscal (Colab)
 data/reference  ponderaciones del IPC, bono previsional, series del TP original
 data/processed  resultados en CSV (versionados)
 output/         IIJP_resultados.xlsx y graficos/
-docs/           revision_TP.md
+docs/           revision_TP.md (revisión del TP original)
+                informe_indicadores/seccion_iijp.tex (sección del informe INECO "Propuesta de
+                Indicadores Económicos")
+tests/          tests rápidos con datos sintéticos
 ```
+
+**Para continuar el proyecto** (otra sesión u otra PC): [`ESTADO.md`](ESTADO.md) tiene el estado, las
+cifras vigentes, la rutina mensual y los pasos para una PC nueva; [`CONTEXTO.md`](CONTEXTO.md) las
+definiciones, decisiones y trampas; [`CLAUDE.md`](CLAUDE.md) las reglas de trabajo.
 
 ## Fuentes
 

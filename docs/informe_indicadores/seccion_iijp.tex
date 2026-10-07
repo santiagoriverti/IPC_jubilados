@@ -1,0 +1,72 @@
+% =============================================================================================
+% Seccion "Indice de Precios de Jubilados Argentinos" del documento de INECO-UADE
+% "Propuesta de Indicadores Economicos" (octubre 2026, en Overleaf; el documento completo NO esta
+% en este repo). Se copia y pega dentro del documento, en lugar de "% Escribir aqui".
+%
+% - Figura que usa: figuras/g01_ponderaciones.png  (= output/graficos/g01_ponderaciones.png)
+% - Citas: indec_ipc (ya esta en el documento) y tres nuevas: indec_engho, haber_minimo, mecon_imig
+%   -> los \bibitem estan al final de este archivo (pegarlos dentro de thebibliography).
+% - Cifras: datos hasta ago-2026 (IPC, IMIG) y sep-2026 (haber minimo), commit ea4ffc3.
+%   Si se actualizan los datos, revisar las cifras marcadas en ESTADO.md (seccion "Donde se citan
+%   las cifras") y regenerar la figura con python scripts/construir.py.
+% =============================================================================================
+
+\section{Índice de Precios de Jubilados Argentinos}
+
+El Índice de Inflación de Jubilados y Pensionados (IIJP) mide la variación mensual del costo de vida de los hogares que viven de una jubilación o pensión. El IPC del INDEC \cite{indec_ipc} refleja la canasta de consumo promedio de todos los hogares, pero los jubilados gastan distinto: más en alimentos y salud, y menos en educación, transporte o restaurantes. Como los haberes se actualizan con el IPC (DNU 274/2024), medir la inflación que efectivamente enfrenta este grupo aporta al debate sobre la movilidad jubilatoria y el sistema previsional. La serie es mensual desde diciembre de 2016 (base 100) y se actualiza con cada publicación del IPC.
+
+\subsection{Metodología}
+
+La canasta surge de los microdatos de la Encuesta Nacional de Gastos de los Hogares (ENGHo) 2017/18 \cite{indec_engho}. Se consideran hogares jubilados aquellos en los que las jubilaciones y pensiones aportan al menos la mitad del ingreso total: 5.350 hogares en la muestra, que representan 2,96 millones de hogares. Su estructura de gasto difiere tanto de la del conjunto de los hogares en la misma encuesta como de la que usa el IPC oficial, que sigue basado en la ENGHo 2004/05 (Figura~\ref{fig:iijp_pond}): los hogares jubilados destinan el 26,4\% de su gasto a alimentos (22,7\% el total de hogares), el 11,4\% a salud (6,4\%) y apenas el 0,8\% a educación (3,1\%).
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=0.75\textwidth]{figuras/g01_ponderaciones.png}
+\caption{Estructura del gasto de consumo por división: IPC oficial (ENGHo 2004/05), todos los hogares y hogares jubilados (ENGHo 2017/18).}
+\label{fig:iijp_pond}
+\end{figure}
+
+El índice es de canasta fija, el mismo concepto que el IPC: las cantidades consumidas en 2017/18 se valorizan cada mes con los índices de precios por división del IPC nacional,
+\begin{equation*}
+\text{IIJP}_t = \sum_{i=1}^{12} q_i\, I_{i,t}, \qquad q_i = \frac{w_i}{\bar{I}_{i}},
+\end{equation*}
+donde $w_i$ es la participación de la división $i$ en el gasto de los hogares jubilados, $I_{i,t}$ su índice de precios en el mes $t$ e $\bar{I}_{i}$ su nivel promedio durante el relevamiento de la encuesta (noviembre de 2017 a noviembre de 2018). Así, el peso efectivo de cada rubro se mueve con sus precios relativos: tras los años de tarifas congeladas, vivienda y servicios representaba en noviembre de 2023 el 8,1\% del valor de la canasta, frente al 14,5\% de 2017/18. Con las ponderaciones oficiales, el mismo cálculo reproduce el IPC nacional con un error máximo de 0,16\% en casi diez años.
+
+Para aislar el efecto de la edad, el índice se compara además con un IPC recalculado con la canasta de todos los hogares de la ENGHo 2017/18: la diferencia entre ambos es el \emph{efecto edad}, y la diferencia entre ese IPC y el oficial, el \emph{efecto de la canasta desactualizada}. La incertidumbre muestral se estima con 500 réplicas \emph{bootstrap} de hogares estratificadas por región.
+
+\subsection{Resultados}
+
+En agosto de 2026 el IIJP aumentó 1,74\% mensual y 34,5\% interanual, frente al 1,66\% y 33,5\% del IPC oficial. Entre diciembre de 2016 y agosto de 2026 acumuló un 1,3\% más que el IPC (Cuadro~\ref{tab:iijp_periodos}), pero la diferencia no es sistemática: cambia de signo según el período y la diferencia media mensual no es estadísticamente distinta de cero. Con A.~Fernández el IIJP subió un 4,0\% menos que el IPC, por el congelamiento de tarifas, y desde noviembre de 2023 subió un 2,7\% más (intervalo de confianza del 95\%: 2,4 a 3,1), por su recomposición. Sin embargo, en este último período el efecto edad es negativo ($-0{,}7\%$): la canasta de los jubilados subió algo menos que la de todos los hogares. La brecha con el IPC oficial se explica por una canasta oficial de 2004/05 que sobrepondera prendas de vestir (9,9\%) y subpondera vivienda y servicios (9,4\%), lo que afecta a todos los hogares y no solo a los jubilados.
+
+\begin{table}[!htb]
+\centering
+\small
+\caption{Inflación acumulada del IPC oficial y del IIJP por período (\%)}
+\vspace{.25 cm}
+\label{tab:iijp_periodos}
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+Período & IPC oficial & IIJP & Brecha & Efecto edad \\
+\midrule
+Completo (dic.\ 2016--ago.\ 2026)    & 12.177 & 12.339 & $+1{,}3$ & $+0{,}8$ \\
+Macri (dic.\ 2016--dic.\ 2019)        & 183,4  & 191,3  & $+2{,}8$ & $+1{,}5$ \\
+A.~Fernández (dic.\ 2019--nov.\ 2023) & 893,5  & 853,7  & $-4{,}0$ & $0{,}0$ \\
+Milei (nov.\ 2023--ago.\ 2026)        & 336,0  & 347,8  & $+2{,}7$ & $-0{,}7$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\parbox{12.5cm}{\footnotesize Brecha: $(1+\text{IIJP})/(1+\text{IPC})-1$. Efecto edad: IIJP frente a un IPC con la canasta de todos los hogares de la ENGHo 2017/18. Fuente: INECO--UADE en base a IPC y ENGHo 2017/18 (INDEC).}
+\end{table}
+
+Aplicado a los haberes \cite{haber_minimo}, el indicador muestra que en agosto de 2026 la jubilación mínima sin bono está un 10,1\% por encima de noviembre de 2023 en términos reales, pero con el bono ---congelado en \$70.000 desde marzo de 2024--- está un 9,7\% por debajo (12,1\% si se mide con el IIJP). Actualizar los haberes con el IIJP en lugar del IPC desde abril de 2024 habría elevado la mínima un 0,8\% a septiembre de 2026 (\$3.285 por mes), con un costo fiscal de alrededor del 0,01\% del PIB por año sobre el gasto en jubilaciones y pensiones \cite{mecon_imig}. La pérdida de poder adquisitivo responde así más al bono congelado que al índice de actualización, y la principal implicancia de política es actualizar la canasta del IPC, con el IIJP como indicador complementario de seguimiento.
+
+% =============================================================================================
+% \bibitem nuevos (pegar dentro de \begin{thebibliography} ... \end{thebibliography}):
+%
+% \bibitem{indec_engho} INDEC (2020). \textit{Encuesta Nacional de Gastos de los Hogares 2017-2018: bases de microdatos}. Buenos Aires: Instituto Nacional de Estadística y Censos.
+%
+% \bibitem{haber_minimo} Ministerio de Economía (2026). \textit{Haber mínimo jubilatorio, serie mensual}. Portal de datos abiertos datos.gob.ar.
+%
+% \bibitem{mecon_imig} Ministerio de Economía (2026). \textit{Información Mensual de Ingresos y Gastos del Sector Público Nacional (base caja)}. Buenos Aires: Secretaría de Hacienda.
+% =============================================================================================
