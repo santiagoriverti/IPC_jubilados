@@ -1,0 +1,8 @@
+poblacion,descripcion,hogares_muestra,hogares_expandidos,gasto_medio_hogar
+total,Todos los hogares (ENGHo 2017/18),21547,12642525.000000,24622.218894
+tp,"Canasta del TP (0,69 x 1 mayor + 0,31 x 2+ mayores)",5811,3480075.000000,20450.080247
+con_65,Hogares con al menos una persona de 65+,5811,3480075.000000,20450.080247
+solo_65,Hogares solo de personas de 65+,2646,1631247.000000,17890.880481
+jubilados,Hogares jubilados (jubilación/pensión >= 50% del ingreso),5350,2958653.000000,17164.654100
+jub_bajos,"Hogares jubilados, mitad de menor ingreso per cápita",2768,1479490.000000,11963.263153
+jub_altos,"Hogares jubilados, mitad de mayor ingreso per cápita",2582,1479163.000000,22367.194923

@@ -1,0 +1,7 @@
+data/cache/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+_local_run/
+docs/tp_original/
+IIJP_resultados.zip

@@ -1,0 +1,17 @@
+# Ponderaciones del IPC nacional del INDEC por division COICOP (en %), base dic-2016=100.
+# Estructura de gasto de la ENGHo 2004/05. Fuente: INDEC, Indice de precios al consumidor. Metodologia (2019).
+# Verificacion: con estas ponderaciones, un Laspeyres sobre los indices por division replica el nivel
+# general nacional con error maximo de 0,16% (2016-2026); ver scripts/control_calidad.py.
+codigo,division,ponderacion
+01,Alimentos y bebidas no alcohólicas,26.9
+02,Bebidas alcohólicas y tabaco,3.5
+03,Prendas de vestir y calzado,9.9
+04,"Vivienda, agua, electricidad, gas y otros combustibles",9.4
+05,Equipamiento y mantenimiento del hogar,6.4
+06,Salud,8.0
+07,Transporte,11.0
+08,Comunicación,2.8
+09,Recreación y cultura,7.3
+10,Educación,2.3
+11,Restaurantes y hoteles,9.0
+12,Bienes y servicios varios,3.5
