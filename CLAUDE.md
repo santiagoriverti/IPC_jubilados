@@ -28,6 +28,11 @@
   herramientas de archivos o un `.py` aparte.
 - Para probar notebooks sin ensuciar los del repo: copiarlos a `_local_run/` (ignorado) y ejecutar con
   `python -m jupyter nbconvert --to notebook --execute --inplace`.
+- **Colab reutiliza sesiones**: el usuario suele volver a correr un notebook en una sesión vieja. La
+  celda de configuración hace `git fetch --depth 1` + `git reset --hard FETCH_HEAD` (un `git pull`
+  falla si la copia tiene cambios) y borra `src.*` de `sys.modules` (si no, Python usa el código viejo
+  ya importado: pasó el 2026-10-06, ZIPs con haberes viejos). Imprime "Version del repo"; el ZIP la
+  trae en `LEEME.txt` y en la hoja Notas: chequearla al comparar un ZIP de Colab.
 - Pedido del usuario: **cada notebook termina descargando un ZIP con todo** (Excel, graficos PNG y CSV),
   vía `src.exportar.zip_resultados` (celdas de `descarga()` en gen_notebooks.py). Escribe en
   `_descargas/` (ignorado), no toca `data/processed` ni `output/`, que solo actualiza `construir.py`.

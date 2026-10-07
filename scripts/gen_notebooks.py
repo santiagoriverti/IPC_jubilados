@@ -10,19 +10,29 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 
 SETUP = r'''# Configuracion: en Colab clona (o actualiza) el repo; en local usa la carpeta del repo
-import os, sys, subprocess
+import os, sys, subprocess, importlib
 REPO = 'https://github.com/santiagoriverti/IPC_jubilados.git'
 if 'google.colab' in sys.modules:
     RAIZ = '/content/IPC_jubilados'
     if os.path.exists(RAIZ):
-        subprocess.run(['git', '-C', RAIZ, 'pull', '-q'], check=True)
+        # Trae la ultima version de GitHub y descarta cambios locales (la copia de Colab es descartable)
+        subprocess.run(['git', '-C', RAIZ, 'fetch', '-q', '--depth', '1', 'origin', 'main'], check=True)
+        subprocess.run(['git', '-C', RAIZ, 'reset', '-q', '--hard', 'FETCH_HEAD'], check=True)
     else:
         subprocess.run(['git', 'clone', '-q', '--depth', '1', REPO, RAIZ], check=True)
 else:  # subir desde la carpeta actual hasta encontrar el repo
     RAIZ = os.getcwd()
     while not os.path.exists(os.path.join(RAIZ, 'src', 'pipeline.py')) and os.path.dirname(RAIZ) != RAIZ:
         RAIZ = os.path.dirname(RAIZ)
-sys.path.insert(0, RAIZ)
+if RAIZ not in sys.path:
+    sys.path.insert(0, RAIZ)
+# Si el notebook ya se corrio en esta sesion, olvidar los modulos de src cargados (pueden ser viejos)
+for m in [m for m in sys.modules if m == 'src' or m.startswith('src.')]:
+    del sys.modules[m]
+importlib.invalidate_caches()
+v = subprocess.run(['git', '-C', RAIZ, 'log', '-1', '--format=%h (%ad) %s', '--date=short'],
+                   capture_output=True, text=True).stdout.strip()
+print('Version del repo:', v or 'sin git')
 
 import pandas as pd
 import matplotlib.pyplot as plt

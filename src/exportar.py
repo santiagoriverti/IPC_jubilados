@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import shutil
+import subprocess
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -74,10 +75,21 @@ def hojas_excel(R: dict) -> dict[str, pd.DataFrame]:
     return h
 
 
+def version_repo() -> str:
+    """Commit del repo con que se genero la salida (para saber si un ZIP es de una version vieja)."""
+    try:
+        r = subprocess.run(['git', '-C', str(fuentes.RAIZ), 'log', '-1', '--format=%h (%ad)', '--date=short'],
+                           capture_output=True, text=True, timeout=10)
+        return r.stdout.strip() or 'desconocida'
+    except (OSError, subprocess.SubprocessError):
+        return 'desconocida'
+
+
 def notas(R: dict) -> list[str]:
     m = R['meta']
     return [
         'IIJP: Indice de Inflacion de Jubilados y Pensionados (canasta fija ENGHo 2017/18, hogares jubilados).',
+        f'Version del codigo (commit): {version_repo()}',
         f'Ultimo IPC: {m["ultimo_ipc"]} | ultimo haber: {m["ultimo_haber"]} | ultima IMIG: {m["ultimo_imig"]}'
         f' | replicas bootstrap: {m["n_bootstrap"]}',
         'Niveles base dic-2016 = 100. Variaciones en %. Brechas: (1 + infl. A) / (1 + infl. B) - 1, en %.',
