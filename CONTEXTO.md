@@ -35,8 +35,10 @@
 - La suma `gc_01..gc_12` = `gastot` (no `gascomp`).
 - Las ponderaciones del TP se reproducen con la mezcla 0,69/0,31 (columna D de la planilla); el
   texto del TP dice 0,691/0,309.
-- **Movilidad**: el haber de t sube la variación del IPC de t−2 **publicada a 1 decimal**. Abril 2024
-  fue de transición (+27,4%). El contrafactual por IIJP también redondea a 1 decimal.
+- **Movilidad**: el haber de t sube la variación del IPC de t−2 **calculada desde los niveles y
+  redondeada a 2 decimales** (no la publicada a 1 decimal: con esa el error llega a 0,05 p.p.; con 2
+  decimales es 0 en todos los meses desde mayo 2024). Abril 2024 fue de transición (+27,4%). El
+  contrafactual por IIJP usa el mismo redondeo (`pipeline.var_movilidad`).
 - El haber se conoce hasta 2 meses después del último IPC; la IMIG suele llegar 1 mes después del haber.
 - La IMIG de junio y diciembre incluye aguinaldo (el factor relativo aplica igual).
 - En la IMIG algunos conceptos aparecen con dos descripciones (p. ej. RESULTADO_FINANCIERO): se

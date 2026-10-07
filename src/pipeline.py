@@ -22,9 +22,11 @@ NOMBRES = {
 }
 
 
-def redondear_pct(v: pd.Series) -> pd.Series:
-    """Variacion mensual redondeada a 1 decimal en % (como la publica el INDEC y la usa ANSES)."""
-    return (v * 100).round(1) / 100
+def var_movilidad(nivel: pd.Series) -> pd.Series:
+    """Variacion mensual calculada desde los niveles y redondeada a 2 decimales en %: es la que usa
+    ANSES para la movilidad (verificado: error 0 en todos los meses desde mayo 2024; con la variacion
+    publicada a 1 decimal el error llega a 0,05 p.p.)."""
+    return (nivel.pct_change() * 100).round(2) / 100
 
 
 def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = True) -> dict:
@@ -147,8 +149,8 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
 
     # ---------------------------------------------------------------- haberes
     hab = haberes.tabla_haberes(fuentes.leer_haber_minimo(refrescar), fuentes.leer_bono())
-    v_ipc_pub = V['0']
-    v_iijp = redondear_pct(niv['IIJP'].pct_change())
+    v_ipc_pub = var_movilidad(I['0'])
+    v_iijp = var_movilidad(niv['IIJP'])
     R['regla_movilidad'] = haberes.verificar_regla(hab['haber_minimo'], v_ipc_pub)
     fin = min(hab.index.max(), ultimo + 2)  # el haber se conoce hasta 2 meses despues del IPC
     hab = hab.loc[:fin]

@@ -40,7 +40,7 @@ def main() -> int:
     chequear(bool(regla['ok'].all()), f'El haber minimo sigue la regla IPC(t-2) en {regla["ok"].sum()}/{len(regla)} meses')
     h = R['haberes'].dropna(subset=['haber_cf_ipc'])
     d = ((h['haber_cf_ipc'] / h['haber_minimo'] - 1).abs().max()) * 100
-    chequear(d < 0.1, f'El contrafactual por IPC reproduce el haber efectivo: desvio maximo {d:.3f}% (< 0,1%)')
+    chequear(d < 0.01, f'El contrafactual por IPC reproduce el haber efectivo: desvio maximo {d:.4f}% (< 0,01%)')
 
     bono = h['bono']
     chequear(bool(bono.notna().all()), f'Bono cargado para todos los meses del haber (ultimo {h.index.max()})')

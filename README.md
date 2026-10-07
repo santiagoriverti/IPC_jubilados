@@ -30,9 +30,9 @@ detallada del TP original está en [`docs/revision_TP.md`](docs/revision_TP.md).
    El IPC oficial sobrepondera ropa y subpondera vivienda y servicios, y eso afecta a todos los hogares.
 4. **Haberes**: el haber mínimo *sin bono* está ~10% por encima de noviembre 2023 en términos reales;
    *con el bono* (congelado en $70.000 desde marzo 2024) está ~10% por debajo. Indexar por IIJP desde
-   abril 2024 (misma regla del DNU 274/2024) daría un haber 0,9% mayor en septiembre 2026.
+   abril 2024 (misma regla del DNU 274/2024) daría un haber 0,8% mayor en septiembre 2026.
 5. **Costo fiscal** de indexar por IIJP desde abril 2024: ~0,01% del PIB por año en 2024-2025
-   (0,1%-0,5% del gasto en jubilaciones y pensiones).
+   (0,2%-0,4% del gasto en jubilaciones y pensiones).
 
 ![Brecha acumulada desde dic-2016](output/graficos/g03_brecha_historica.png)
 
@@ -44,13 +44,14 @@ detallada del TP original está en [`docs/revision_TP.md`](docs/revision_TP.md).
 
 ## Cómo usarlo
 
-**En Colab** (no hace falta instalar nada; cada notebook clona el repo y descarga los datos):
+**En Colab** (no hace falta instalar nada; cada notebook clona el repo, descarga los datos y al
+terminar baja a tu computadora un ZIP con el Excel, los gráficos y las tablas en CSV):
 
 | Notebook | Contenido |
 |---|---|
 | [01 · Canasta de los jubilados](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/01_canasta_jubilados.ipynb) | ENGHo 2017/18 → ponderaciones por población, comparación con el IPC y con el TP, bootstrap |
 | [02 · IIJP vs IPC](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/02_iijp_vs_ipc.ipynb) | Índice, validación, brecha por período, efecto edad vs canasta vieja, descomposición por división |
-| [03 · Haberes y costo fiscal](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/03_haberes_y_fiscal.ipynb) | Haber mínimo y bono, contrafactual IIJP, costo fiscal; descarga un ZIP con Excel y gráficos |
+| [03 · Haberes y costo fiscal](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/03_haberes_y_fiscal.ipynb) | Haber mínimo y bono, contrafactual IIJP, costo fiscal |
 
 **En la PC**:
 
@@ -91,7 +92,8 @@ logaritmos con error estándar de Newey-West.
 **Haberes.** Haber mínimo de datos.gob.ar (serie `58.1_MP_0_M_24`); bono cargado a mano desde los
 decretos ([`data/reference/bono_previsional.csv`](data/reference/bono_previsional.csv)). Regla vigente
 verificada en los datos: desde mayo 2024 el haber sube la variación del IPC de dos meses antes
-(publicada a 1 decimal). Contrafactual: la misma regla con el IIJP desde abril 2024.
+(calculada desde los niveles del índice, con 2 decimales). Contrafactual: la misma regla con el IIJP
+desde abril 2024.
 
 **Costo fiscal.** Gasto en jubilaciones y pensiones contributivas + pensiones no contributivas del
 Sector Público Nacional (IMIG de Hacienda, consolidada en el repo
@@ -107,7 +109,7 @@ entra en la canasta).
 
 ```
 src/            fuentes.py (descargas) · ponderaciones.py (ENGHo) · indices.py · haberes.py · fiscal.py
-                pipeline.py (corre todo) · graficos.py
+                pipeline.py (corre todo) · graficos.py · exportar.py (Excel, PNG, CSV, ZIP)
 scripts/        construir.py · control_calidad.py · gen_notebooks.py (genera notebooks/)
 data/reference  ponderaciones del IPC, bono previsional, series del TP original
 data/processed  resultados en CSV (versionados)

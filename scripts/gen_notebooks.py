@@ -41,6 +41,24 @@ def code(texto: str) -> dict:
             'source': texto.strip('\n').splitlines(keepends=True)}
 
 
+def descarga(nombre: str) -> list[dict]:
+    """Celdas finales comunes: exportan todo y, en Colab, descargan el ZIP."""
+    return [
+        md(r'''
+## Descargar todos los resultados
+
+ZIP con el Excel (una hoja por tabla), los gráficos en PNG (`graficos/`) y las tablas en CSV
+(`datos/`). En Colab se descarga solo; en la PC queda en la carpeta `_descargas/` del repo.
+'''),
+        code(f'''from src.exportar import zip_resultados
+zip_path = zip_resultados(R, '{nombre}')
+print('ZIP:', zip_path)
+if 'google.colab' in sys.modules:
+    from google.colab import files
+    files.download(zip_path)'''),
+    ]
+
+
 def guardar(nombre: str, celdas: list[dict]) -> None:
     nb = {'cells': celdas, 'metadata': {
         'kernelspec': {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'},
@@ -112,6 +130,7 @@ de cada hogar (democráticas) da más peso a los hogares de menores ingresos.
 '''),
     code(r'''D = R['ponderaciones_democraticas'].set_index('division')
 display((D[['total', 'jubilados', 'jub_bajos']] * 100).round(1))'''),
+    *descarga('IIJP_01_canasta_jubilados'),
 ]
 
 # ------------------------------------------------------------------------------------------------
@@ -184,18 +203,32 @@ tiene sustento en los datos.
 Diferencia mensual en logaritmos entre los índices, con intervalo de 95% robusto a autocorrelación
 (Newey-West). Si el intervalo incluye el 0, no hay evidencia de una brecha sistemática en ese período.
 '''),
-    code(r'''display(R['brecha_estadistica'])'''),
+    code(r'''with pd.option_context('display.float_format', '{:,.3f}'.format):
+    display(R['brecha_estadistica'])'''),
     md(r'''
 ## Qué divisiones explican la brecha
 
 Aporte de cada división: (ponderación efectiva IIJP − ponderación efectiva de la otra canasta) ×
 (variación de la división − variación promedio). Los aportes suman la brecha.
 '''),
-    code(r'''fig = graficos.g04_descomposicion(R, 'nov23_ultimo'); plt.show()
-display(R['descomposicion']['nov23_ultimo'])'''),
-    code(r'''d = R['descomposicion']['dic16_ultimo']
-print({k: round(v, 2) if isinstance(v, float) else v for k, v in d.attrs.items()})
-display(d)'''),
+    md(r'''
+Ponderaciones efectivas en % (peso de cada división en el valor de la canasta al inicio del período).
+La brecha "vs IPC oficial" de la descomposición usa el IPC replicado con sus ponderaciones (difiere del
+oficial en ≤ 0,16%), por eso no coincide exactamente con la tabla de períodos.
+'''),
+    code(r'''def ver_descomposicion(clave):
+    d = R['descomposicion'][clave].copy()
+    cols = ['pond_ef_iijp', 'pond_ef_ipc_oficial', 'pond_ef_ipc_1718']
+    d[cols] = d[cols] * 100
+    a = d.attrs
+    print(f"{a['desde']} a {a['hasta']}: brecha vs IPC oficial {a['brecha_vs_oficial']:+.2f}% = "
+          f"efecto edad {a['brecha_edad']:+.2f}% y canasta vieja {a['brecha_canasta']:+.2f}% (aprox.)")
+    display(d)
+
+fig = graficos.g04_descomposicion(R, 'nov23_ultimo'); plt.show()
+ver_descomposicion('nov23_ultimo')'''),
+    code(r'''ver_descomposicion('dic16_ultimo')'''),
+    *descarga('IIJP_02_iijp_vs_ipc'),
 ]
 
 # ------------------------------------------------------------------------------------------------
@@ -209,16 +242,16 @@ NB03 = [
 - Movilidad vigente (DNU 274/2024): el haber de cada mes sube lo que subió el IPC dos meses antes.
 - Contrafactual: la misma regla con el IIJP. Costo fiscal con el gasto real en jubilaciones y pensiones
   (IMIG, repo `cuentas_publicas`).
-- Al final se descarga un ZIP con el Excel de resultados y los gráficos.
 '''),
     code(SETUP),
-    code(r'''N_BOOTSTRAP = 0   # este notebook no usa los intervalos; poner 500 si se quiere el Excel completo
+    code(r'''N_BOOTSTRAP = 300   # este notebook no usa los intervalos, pero van al Excel y a los graficos del ZIP (0 = mas rapido)
 R = pipeline.calcular(n_bootstrap=N_BOOTSTRAP)
 hab = R['haberes']'''),
     md(r'''
 ## La regla de movilidad se cumple
 
-Desde mayo 2024 el aumento del haber mínimo coincide con el IPC de dos meses antes (1 decimal).
+Desde mayo 2024 el aumento del haber mínimo coincide exactamente con la variación del IPC de dos meses
+antes, calculada desde los niveles del índice con 2 decimales (no la publicada a 1 decimal).
 '''),
     code(r'''r = R['regla_movilidad'].copy()
 r[['aumento_observado', 'ipc_t_menos_2']] *= 100   # en %
@@ -272,18 +305,7 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
 '''),
     code(r'''print(f"Gasto previsional / PIB {R['meta']['anio_pib_ref']}: {R['meta']['gasto_prev_pct_pib']:.2f}%")
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
-    md(r'''
-## Descargar resultados (Excel + gráficos)
-'''),
-    code(r'''import shutil
-sys.path.insert(0, os.path.join(RAIZ, 'scripts'))
-from construir import exportar
-exportar(R)
-zip_path = shutil.make_archive(os.path.join(RAIZ, 'IIJP_resultados'), 'zip', os.path.join(RAIZ, 'output'))
-print('ZIP:', zip_path)
-if 'google.colab' in sys.modules:
-    from google.colab import files
-    files.download(zip_path)'''),
+    *descarga('IIJP_03_haberes_y_fiscal'),
 ]
 
 

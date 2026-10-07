@@ -27,9 +27,10 @@
 - **No escribir scripts ni ediciones con heredocs de bash** (rompen `\\` y `\n`). Usar las
   herramientas de archivos o un `.py` aparte.
 - Para probar notebooks sin ensuciar los del repo: copiarlos a `_local_run/` (ignorado) y ejecutar con
-  `python -m jupyter nbconvert --to notebook --execute --inplace`. El NB03 llama a `exportar()` y
-  reescribe `data/processed` y `output/` (sin bootstrap si N_BOOTSTRAP = 0): después correr
-  `python scripts/construir.py` para restaurar las salidas completas.
+  `python -m jupyter nbconvert --to notebook --execute --inplace`.
+- Pedido del usuario: **cada notebook termina descargando un ZIP con todo** (Excel, graficos PNG y CSV),
+  vía `src.exportar.zip_resultados` (celdas de `descarga()` en gen_notebooks.py). Escribe en
+  `_descargas/` (ignorado), no toca `data/processed` ni `output/`, que solo actualiza `construir.py`.
 - Cifras citadas (README, revision_TP, ESTADO) = las que imprimen `construir.py` / `control_calidad.py`.
 - Antes de commitear resultados nuevos: `python scripts/control_calidad.py` (0 ALERTAS) y
   `python -m pytest tests -q`.

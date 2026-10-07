@@ -20,8 +20,10 @@
 - Efecto edad nov-23 → ago-26: **−0,69%** (IC −1,01 a −0,37); efecto canasta vieja +3,43%.
 - Ago-2026: IPC 1,66% · IIJP 1,74% · IPC ENGHo 17/18 1,69%.
 - Haber mínimo real (base nov-23): sin bono +10,1%, con bono −9,7% (IPC) en ago-26.
-- Contrafactual IIJP desde abr-24: haber +0,87% en sep-26. Costo fiscal: 2024 (abr-dic) 0,23% del
-  gasto previsional; 2025 0,13% (0,009% PIB); 2026 ene-ago 0,55%.
+- Contrafactual IIJP desde abr-24: haber +0,77% en sep-26. Costo fiscal: 2024 (abr-dic) 0,28% del
+  gasto previsional (0,014% PIB); 2025 0,17% (0,012% PIB); 2026 ene-ago 0,43%.
+- Movilidad: ANSES usa el IPC(t−2) con 2 decimales desde los niveles (error 0 en 29/29 meses).
+- Colab verificado 2026-10-06: el ZIP del NB03 coincide hoja por hoja con la corrida local.
 
 ## 3. Próximos pasos posibles (a decidir con el usuario)
 

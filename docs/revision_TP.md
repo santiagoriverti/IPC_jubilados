@@ -18,9 +18,9 @@ noviembre 2023 al de mayo 2026; las cifras corregidas usan esa misma ventana.
 | La brecha se debe al patrón de consumo de los jubilados | Desde nov-23 el **efecto edad es −0,7%**; la brecha viene de que el IPC oficial usa la canasta de 2004/05 (+3,4%) | No separa edad de canasta vieja (M2) |
 | Corregir permanentemente un 3,8% | La brecha cambia de signo por período (Macri +2,8%, Fernández −4,0%, Milei +2,7%) y en 2016-2026 la media mensual no es distinta de 0 | Generaliza un episodio (M4) |
 | Pérdida de poder adquisitivo de la mínima dic-23 → may-26: **−9,77%** | Haber **sin bono: +13,2%** (vs dic-23) / +9,1% (vs nov-23). **Con bono: −9,7%** (vs nov-23) | Fechas mezcladas (B6); el bono congelado es lo que explica la pérdida |
-| Indexando por IIJP desde dic-23 la mínima sería $484.827 en may-26 (pérdida ~19%, $1,8 M acumulados) | De esa diferencia, **19,3 de 22,4 puntos son la transición de fórmula** (ene-feb 2024 sin aumento); el efecto del índice es **2,6%** | Atribuye al índice un efecto de la fórmula (M5) |
-| Desde jun-24, mínima por IIJP $15.276 (3,9%) mayor en may-26 | Con la regla vigente desde abr-24: **+0,5%** en may-26 y +0,9% en sep-26 | Método (M1) y la "corrección" duplicada (B3) |
-| Costo fiscal may-26: $186.167 M, 38,9% del resultado financiero | **$26.892 M**, 0,47% del gasto previsional, 5,6% del resultado financiero del mes | Brecha sobreestimada y supuestos de beneficiarios (M7) |
+| Indexando por IIJP desde dic-23 la mínima sería $484.827 en may-26 (pérdida ~19%, $1,8 M acumulados) | De esa diferencia, **19,3 de 22,3 puntos son la transición de fórmula** (ene-feb 2024 sin aumento); el efecto del índice es **2,5%** | Atribuye al índice un efecto de la fórmula (M5) |
+| Desde jun-24, mínima por IIJP $15.276 (3,9%) mayor en may-26 | Con la regla vigente desde abr-24: **+0,4%** en may-26 y +0,8% en sep-26 | Método (M1) y la "corrección" duplicada (B3) |
+| Costo fiscal may-26: $186.167 M, 38,9% del resultado financiero | **$22.815 M**, 0,40% del gasto previsional, 4,8% del resultado financiero del mes | Brecha sobreestimada y supuestos de beneficiarios (M7) |
 | Brecha de sostenibilidad 2050: $54,6 billones (148 vs 94) | Ese resultado exige que el IIJP supere al IPC en **1,9 p.p. por año durante 24 años**: 14 veces el promedio histórico (0,14 p.p./año, no significativo) | Supuesto no respaldado por los datos (M6) |
 
 ## A. Lo que está bien y se conserva
@@ -66,7 +66,7 @@ compara ambos como si fueran lo mismo ("casi el doble", "diferencia de $202.790 
 inflación desde noviembre (incluye el 25,5% de diciembre). Comparado de forma consistente, el haber
 sin bono de mayo 2026 está **13,2% por encima** del de diciembre 2023 (9,1% sobre noviembre). La
 pérdida real aparece al sumar el bono: haber + bono cae 9,7% entre nov-23 y may-26, porque el bono
-quedó fijo en $70.000 (actualizado por IPC desde marzo 2024 sería $194.145 en ago-26). D2 divide el
+quedó fijo en $70.000 (actualizado por IPC desde marzo 2024 sería $194.268 en ago-26). D2 divide el
 haber con la corrección duplicada (B3) por la inflación del IIJP.
 
 **B7. Cobertura de la CBT** (`Indicadores sociales!C9`). Divide el haber por la CBT de un adulto
@@ -122,8 +122,8 @@ brecha sistemática.
 **M5. La pérdida del haber se atribuye al índice.** El ejercicio "IIJP desde diciembre 2023" compara
 una indexación mensual hipotética con el haber efectivo, que en enero y febrero de 2024 no aumentó
 (regía la fórmula trimestral de la Ley 27.609). Con el mismo ejercicio por IPC, el haber de mayo
-2026 sería 19,3% mayor; por IIJP, 22,4%. La transición de fórmula explica casi toda la diferencia;
-el índice, 2,6%. De los $1,77 M acumulados, $0,22 M corresponden al índice.
+2026 sería 19,3% mayor; por IIJP, 22,3%. La transición de fórmula explica casi toda la diferencia;
+el índice, 2,5%. De los $1,77 M acumulados, $0,22 M corresponden al índice.
 
 **M6. Proyección 2050.** El escenario "IIJP" (148 billones) contra "IPC" (94 billones) implica que el
 gasto con IIJP es 58% mayor: el IIJP tendría que superar al IPC en 1,9 p.p. **todos los años**
