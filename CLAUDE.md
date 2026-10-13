@@ -9,6 +9,10 @@
 
 ## Reglas del usuario
 
+- **Objetivo**: un índice de precios de jubilados (IPC jubilados) profesional y coherente que muestre la
+  evolución de la canasta de consumo de los jubilados en Argentina. El TP de los alumnos es solo el
+  origen de la idea: si una metodología mejor es posible, se cambia (sesión 2: aperturas regionales).
+  Primero el procesamiento y la metodología; la redacción del informe (sección LaTeX) va después.
 - **Commits solo con el usuario (Santiago Riverti). NUNCA agregar `Co-Authored-By: Claude`** ni
   ninguna atribución a Claude en commits o PRs. Commit/push solo cuando el usuario lo pide.
 - Idioma: español (rioplatense) en respuestas, commits y documentación.
@@ -48,8 +52,16 @@
 - `data/cache/` guarda las descargas (ignorado). `--refrescar` en construir.py baja todo de nuevo.
 - El costo fiscal lee la IMIG de `cuentas_publicas` (repo hermano en disco o GitHub raw): actualizar
   ese repo primero.
-- La regla de movilidad usa el IPC(t−2) **desde niveles con 2 decimales** (`pipeline.var_movilidad`),
+- La regla de movilidad usa el IPC(t−2) **desde niveles con 2 decimales** (`haberes.var_movilidad`),
   no el publicado a 1 decimal. Tolerancia del control: 0,005 p.p.
+- **Estructura de precios** (`src/estructura.py`): el IIJP se valoriza con las aperturas regionales del
+  IPC (`serie_ipc_aperturas.csv`, no hay aperturas nacionales) y restos deducidos de las ponderaciones
+  oficiales (`data/reference/ponderadores_ipc_regiones.csv`, copia del `ponderadores_ipc.xls` del INDEC:
+  no editar a mano). Si el INDEC agrega o quita aperturas, la estructura se rearma sola; revisar el
+  control de calidad (réplica del IPC < 0,2%, restos estables, 100% del gasto asignado) y la hoja
+  Imputaciones (huecos completados con la variación del agregado).
+- Toda decisión metodológica nueva entra como variante en `src/variantes.py` (cambia una sola cosa
+  respecto de la principal); una conclusión es firme si mantiene el signo en todas.
 
 ## Cierre de sesión
 

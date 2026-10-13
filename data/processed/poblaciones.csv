@@ -1,8 +1,15 @@
-poblacion,descripcion,hogares_muestra,hogares_expandidos,gasto_medio_hogar
-total,Todos los hogares (ENGHo 2017/18),21547,12642525.000000,24622.218894
-tp,"Canasta del TP (0,69 x 1 mayor + 0,31 x 2+ mayores)",5811,3480075.000000,20450.080247
-con_65,Hogares con al menos una persona de 65+,5811,3480075.000000,20450.080247
-solo_65,Hogares solo de personas de 65+,2646,1631247.000000,17890.880481
-jubilados,Hogares jubilados (jubilación/pensión >= 50% del ingreso),5350,2958653.000000,17164.654100
-jub_bajos,"Hogares jubilados, mitad de menor ingreso per cápita",2768,1479490.000000,11963.263153
-jub_altos,"Hogares jubilados, mitad de mayor ingreso per cápita",2582,1479163.000000,22367.194923
+poblacion,rol,descripcion,hogares_muestra,hogares_expandidos,gasto_medio_hogar
+jubilados,principal,Hogares jubilados: jubilaciones y pensiones (contributivas y no contributivas) >= 50% del ingreso,5350,2958653.000000,17164.654100
+total,comparador,Todos los hogares (IPC con la canasta de la ENGHo 2017/18),21547,12642525.000000,24622.218894
+jub_minimo,subindice,"Hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos",2081,1171173.000000,10963.423305
+jub_sin_pnc,variante,Jubilaciones y pensiones contributivas >= 50% del ingreso (sin pensiones no contributivas),4759,2699258.000000,17619.061395
+jub_umbral_75,variante,Jubilaciones y pensiones >= 75% del ingreso,3879,2118751.000000,16331.747148
+jub_umbral_25,variante,Jubilaciones y pensiones >= 25% del ingreso,7479,4103001.000000,18668.145065
+jefe_conyuge_jub,variante,Jefe/a o cónyuge cobra jubilación o pensión contributiva,6833,3849893.000000,20088.139216
+jefe_65,variante,Jefe/a de 65 años o más,4955,2903779.000000,19204.990211
+adultos_jub,variante,Todos los adultos (18+) cobran jubilación o pensión,3613,2100735.000000,17668.987718
+con_65,variante,Hogares con al menos una persona de 65+,5811,3480075.000000,20450.080247
+solo_65,variante,Hogares solo de personas de 65+,2646,1631247.000000,17890.880481
+jub_bajos,variante,"Hogares jubilados, mitad de menor ingreso per cápita",2768,1479490.000000,11963.263153
+jub_altos,variante,"Hogares jubilados, mitad de mayor ingreso per cápita",2582,1479163.000000,22367.194923
+tp,tp,"Canasta del TP original (0,69 x 1 mayor + 0,31 x 2+ mayores)",5811,3480075.000000,20450.080247

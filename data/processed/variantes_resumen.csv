@@ -1,0 +1,12 @@
+,principal,minimo,variante_minimo,maximo,variante_maximo,mismo_signo_en_todas
+brecha_completo,2.289214,1.292693,jub_altos,4.529024,young,True
+brecha_macri,3.158453,2.598668,jub_altos,5.717643,young,True
+brecha_fernandez,-4.451732,-9.687357,geometrica,-4.007836,div_nacional,True
+brecha_milei,3.777260,2.710543,div_nacional,8.643238,geometrica,True
+brecha_desde_2025,0.431100,-0.122057,jub_altos,1.853507,resto_agregado,False
+edad_completo,2.007626,0.790769,div_nacional,4.138080,jub_minimo,True
+edad_macri,2.857160,1.482986,div_nacional,4.128984,jub_minimo,True
+edad_fernandez,-0.425955,-1.708431,solo_65,0.009155,div_nacional,False
+edad_milei,-0.401691,-0.749337,jub_altos,0.781960,solo_65,False
+edad_desde_2025,-0.867421,-1.413427,jub_altos,0.262774,jub_minimo,False
+haber_vs_ipc,1.948142,0.766355,div_nacional,7.348303,geometrica,True

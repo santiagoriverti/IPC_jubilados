@@ -1,22 +1,29 @@
 periodo,comparacion,meses,media_pp_mes,ic95_inf,ic95_sup,anualizada_pp,meses_a_mayor,acumulada_pct
-Completo,IIJP vs IPC oficial,116,0.011323,-0.035453,0.058100,0.135973,63,1.322177
-Completo,IIJP vs IPC 17/18 (efecto edad),116,0.006790,-0.025643,0.039223,0.081515,64,0.790769
-Completo,IPC 17/18 vs oficial (efecto canasta nueva),116,0.004533,-0.037833,0.046899,0.054414,58,0.527239
-Macri (dic-16 a dic-19),IIJP vs IPC oficial,36,0.075817,0.036228,0.115406,0.913957,27,2.767006
-Macri (dic-16 a dic-19),IIJP vs IPC 17/18 (efecto edad),36,0.040892,-0.005030,0.086814,0.491905,26,1.482986
-Macri (dic-16 a dic-19),IPC 17/18 vs oficial (efecto canasta nueva),36,0.034926,-0.014510,0.084361,0.419986,22,1.265256
-Fernández (dic-19 a nov-23),IIJP vs IPC oficial,47,-0.087029,-0.134162,-0.039896,-1.038913,14,-4.007836
-Fernández (dic-19 a nov-23),IIJP vs IPC 17/18 (efecto edad),47,0.000195,-0.041690,0.042080,0.002337,25,0.009155
-Fernández (dic-19 a nov-23),IPC 17/18 vs oficial (efecto canasta nueva),47,-0.087224,-0.114357,-0.060090,-1.041226,9,-4.016623
-Milei (nov-23 al último dato),IIJP vs IPC oficial,33,0.081044,-0.015334,0.177423,0.977275,22,2.710543
-Milei (nov-23 al último dato),IIJP vs IPC 17/18 (efecto edad),33,-0.021018,-0.087622,0.045586,-0.251898,13,-0.691194
-Milei (nov-23 al último dato),IPC 17/18 vs oficial (efecto canasta nueva),33,0.102062,0.026201,0.177924,1.232277,27,3.425414
-Shock tarifario (nov-23 a dic-24),IIJP vs IPC oficial,13,0.165140,-0.033676,0.363956,2.001445,8,2.170030
-Shock tarifario (nov-23 a dic-24),IIJP vs IPC 17/18 (efecto edad),13,-0.018134,-0.188104,0.151836,-0.217373,3,-0.235466
-Shock tarifario (nov-23 a dic-24),IPC 17/18 vs oficial (efecto canasta nueva),13,0.183274,0.040819,0.325729,2.223652,10,2.411174
-Desde 2025 (dic-24 al último dato),IIJP vs IPC oficial,20,0.026382,-0.023191,0.075955,0.317085,14,0.529033
-Desde 2025 (dic-24 al último dato),IIJP vs IPC 17/18 (efecto edad),20,-0.022892,-0.062989,0.017204,-0.274333,10,-0.456803
-Desde 2025 (dic-24 al último dato),IPC 17/18 vs oficial (efecto canasta nueva),20,0.049274,0.016992,0.081557,0.593045,17,0.990360
-Ventana del TP (nov-23 a may-26),IIJP vs IPC oficial,30,0.078595,-0.027298,0.184488,0.947604,19,2.385873
-Ventana del TP (nov-23 a may-26),IIJP vs IPC 17/18 (efecto edad),30,-0.027901,-0.099582,0.043780,-0.334252,10,-0.833536
-Ventana del TP (nov-23 a may-26),IPC 17/18 vs oficial (efecto canasta nueva),30,0.106496,0.023535,0.189458,1.286155,24,3.246469
+Completo,IIJP vs IPC oficial,116,0.019512,-0.043703,0.082727,0.234420,55,2.289214
+Completo,IIJP vs IPC 17/18 (efecto edad),116,0.017136,-0.025092,0.059364,0.205840,64,2.007626
+Completo,IPC 17/18 vs oficial (efecto canasta nueva),116,0.002376,-0.044294,0.049047,0.028521,56,0.276045
+Completo,IIJP haber mínimo vs IIJP,116,0.017819,-0.023462,0.059101,0.214058,59,2.088524
+Macri (dic-16 a dic-19),IIJP vs IPC oficial,36,0.086378,0.027506,0.145249,1.041924,23,3.158453
+Macri (dic-16 a dic-19),IIJP vs IPC 17/18 (efecto edad),36,0.078253,0.035201,0.121305,0.943457,28,2.857160
+Macri (dic-16 a dic-19),IPC 17/18 vs oficial (efecto canasta nueva),36,0.008125,-0.051107,0.067357,0.097546,19,0.292924
+Macri (dic-16 a dic-19),IIJP haber mínimo vs IIJP,36,0.034136,-0.043356,0.111629,0.410478,17,1.236496
+Fernández (dic-19 a nov-23),IIJP vs IPC oficial,47,-0.096891,-0.168741,-0.025041,-1.155956,14,-4.451732
+Fernández (dic-19 a nov-23),IIJP vs IPC 17/18 (efecto edad),47,-0.009082,-0.061353,0.043188,-0.108927,24,-0.425955
+Fernández (dic-19 a nov-23),IPC 17/18 vs oficial (efecto canasta nueva),47,-0.087808,-0.127722,-0.047895,-1.048170,12,-4.042998
+Fernández (dic-19 a nov-23),IIJP haber mínimo vs IIJP,47,-0.006558,-0.066571,0.053455,-0.078663,22,-0.307742
+Milei (nov-23 al último dato),IIJP vs IPC oficial,33,0.112354,-0.028978,0.253685,1.357373,18,3.777260
+Milei (nov-23 al último dato),IIJP vs IPC 17/18 (efecto edad),33,-0.012197,-0.102447,0.078053,-0.146257,12,-0.401691
+Milei (nov-23 al último dato),IPC 17/18 vs oficial (efecto canasta nueva),33,0.124551,0.043866,0.205235,1.505832,25,4.195805
+Milei (nov-23 al último dato),IIJP haber mínimo vs IIJP,33,0.034737,-0.051062,0.120536,0.417712,20,1.152912
+Shock tarifario (nov-23 a dic-24),IIJP vs IPC oficial,13,0.252115,-0.007081,0.511311,3.071610,8,3.331796
+Shock tarifario (nov-23 a dic-24),IIJP vs IPC 17/18 (efecto edad),13,0.036054,-0.159650,0.231758,0.433589,5,0.469806
+Shock tarifario (nov-23 a dic-24),IPC 17/18 vs oficial (efecto canasta nueva),13,0.216061,0.090235,0.341887,2.626632,11,2.848608
+Shock tarifario (nov-23 a dic-24),IIJP haber mínimo vs IIJP,13,0.000976,-0.128629,0.130581,0.011707,7,0.012683
+Desde 2025 (dic-24 al último dato),IIJP vs IPC oficial,20,0.021509,-0.069502,0.112519,0.258438,10,0.431100
+Desde 2025 (dic-24 al último dato),IIJP vs IPC 17/18 (efecto edad),20,-0.043560,-0.110597,0.023476,-0.521359,7,-0.867421
+Desde 2025 (dic-24 al último dato),IPC 17/18 vs oficial (efecto canasta nueva),20,0.065069,0.011646,0.118492,0.783884,14,1.309884
+Desde 2025 (dic-24 al último dato),IIJP haber mínimo vs IIJP,20,0.056682,-0.047136,0.160499,0.682499,13,1.140084
+Ventana del TP (nov-23 a may-26),IIJP vs IPC oficial,30,0.112359,-0.043181,0.267900,1.357443,16,3.428236
+Ventana del TP (nov-23 a may-26),IIJP vs IPC 17/18 (efecto edad),30,-0.020112,-0.118254,0.078030,-0.241054,9,-0.601545
+Ventana del TP (nov-23 a may-26),IPC 17/18 vs oficial (efecto canasta nueva),30,0.132471,0.045302,0.219641,1.602360,23,4.054169
+Ventana del TP (nov-23 a may-26),IIJP haber mínimo vs IIJP,30,0.036848,-0.057533,0.131230,0.443160,19,1.111584

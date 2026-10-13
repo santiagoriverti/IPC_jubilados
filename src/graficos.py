@@ -11,7 +11,7 @@ from . import ponderaciones as pond
 AZUL, NARANJA, AQUA = '#2a78d6', '#eb6834', '#1baf7a'
 ROJO, GRIS = '#e34948', '#8a8984'
 TINTA, TINTA2 = '#0b0b0b', '#52514e'
-FUENTE = 'Fuente: elaboración propia con datos de INDEC (IPC, ENGHo 2017/18)'
+FUENTE = 'Fuente: elaboración propia con datos de INDEC (IPC por aperturas regionales, ENGHo 2017/18)'
 
 plt.rcParams.update({
     'font.size': 10, 'axes.titlesize': 12, 'axes.titleweight': 'bold', 'axes.titlelocation': 'left',
@@ -62,17 +62,20 @@ def g02_brecha_nov23(R):
         band = R['banda_brecha_nov23']
         ax.fill_between(_fecha(band.index), band['p2.5'], band['p97.5'], color=AZUL, alpha=0.15, lw=0,
                         label='IIJP: intervalo 95% (muestra ENGHo)')
-    ax.plot(x, b(niv['IIJP']), color=AZUL, label='IIJP corregido (canasta fija, hogares jubilados)')
-    ax.plot(x, b(niv['IIJP método TP']), color=NARANJA, label='Método del TP (ponderaciones fijas sobre variaciones)')
-    tp = R['tp_original']
-    tpv = tp.loc['2023-12':, ['ipc_tp', 'iijp_tp']]
-    rel = ((1 + tpv['iijp_tp']).cumprod() / (1 + tpv['ipc_tp']).cumprod() - 1) * 100
-    rel = pd.concat([pd.Series([0.0], index=pd.PeriodIndex([base])), rel])
-    ax.plot(_fecha(rel.index), rel.values, color=AQUA, ls='none', marker='o', ms=4, label='Planilla del TP')
+    series = [(niv['IIJP'], 'IIJP (hogares jubilados)', AZUL, '-'),
+              (niv['IIJP haber mínimo'], 'IIJP haber mínimo', NARANJA, '-'),
+              (niv['IPC ENGHo 17/18'], 'Todos los hogares, canasta 2017/18', AQUA, '-')]
+    if 'variantes_niveles' in R:
+        series.append((R['variantes_niveles']['div_nacional'], 'IIJP por 12 divisiones (método anterior)', GRIS, '--'))
+    for s, lab, c, ls in series:
+        y = b(s)
+        ax.plot(x, y, color=c, ls=ls, lw=2 if ls == '-' else 1.5, label=lab)
+        ax.annotate(f'{y.iloc[-1]:+.1f}%', (x[-1], y.iloc[-1]), xytext=(4, 0), textcoords='offset points',
+                    va='center', fontsize=8.5, color=TINTA2)
     ax.axhline(0, color=GRIS, lw=1)
     ax.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=1))
-    ax.set_title('Brecha acumulada IIJP vs IPC oficial desde noviembre 2023')
-    ax.set_ylabel('IIJP / IPC − 1')
+    ax.set_title('Brecha acumulada contra el IPC oficial desde noviembre 2023')
+    ax.set_ylabel('índice / IPC oficial − 1')
     ax.legend(loc='upper left', fontsize=9)
     _pie(fig)
     return fig
@@ -128,9 +131,11 @@ def g05_haber_real(R):
     fig, ax = plt.subplots(figsize=(9.5, 5.2))
     x = _fecha(h.index)
     ax.plot(x, h['real_con_bono_ipc'] / base * 100, color=NARANJA, label='Haber mínimo + bono, deflactado por IPC')
-    ax.plot(x, h['real_con_bono_iijp'] / base * 100, color=NARANJA, ls='--', label='Haber mínimo + bono, deflactado por IIJP')
+    ax.plot(x, h['real_con_bono_iijp_minimo'] / base * 100, color=NARANJA, ls='--',
+            label='Haber mínimo + bono, deflactado por IIJP haber mínimo')
     ax.plot(x, h['real_haber_ipc'] / base_s * 100, color=AZUL, label='Haber mínimo sin bono, deflactado por IPC')
-    ax.plot(x, h['real_haber_iijp'] / base_s * 100, color=AZUL, ls='--', label='Haber mínimo sin bono, deflactado por IIJP')
+    ax.plot(x, h['real_haber_iijp_minimo'] / base_s * 100, color=AZUL, ls='--',
+            label='Haber mínimo sin bono, deflactado por IIJP haber mínimo')
     ax.axhline(100, color=GRIS, lw=1)
     ax.set_title('Poder adquisitivo de la jubilación mínima (noviembre 2023 = 100)')
     ax.legend(loc='upper right', fontsize=9)
@@ -149,6 +154,55 @@ def g06_costo_fiscal(R):
     return fig
 
 
+def g07_regiones(R):
+    t = R['periodos_regionales']
+    per = [('Milei (nov-23 al último dato)', 'nov-23 al último dato', AZUL), ('Completo', 'dic-16 al último dato', AQUA)]
+    regiones = list(dict.fromkeys(t['region']))
+    fig, ax = plt.subplots(figsize=(9, 4.8))
+    alto = 0.38
+    for k, (p, lab, c) in enumerate(per):
+        v = t[t['periodo'] == p].set_index('region').loc[regiones, 'brecha (%)']
+        y = [i + (k - 0.5) * alto for i in range(len(regiones))]
+        ax.barh(y, v, height=alto - 0.04, color=c, label=lab)
+        for yi, vi in zip(y, v):
+            ax.annotate(f'{vi:+.1f}', (vi, yi), xytext=(3 if vi >= 0 else -3, 0), textcoords='offset points',
+                        ha='left' if vi >= 0 else 'right', va='center', fontsize=8, color=TINTA2)
+    ax.set_yticks(range(len(regiones)))
+    ax.set_yticklabels(regiones)
+    ax.invert_yaxis()
+    ax.axvline(0, color=GRIS, lw=1)
+    ax.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    ax.grid(axis='y', visible=False)
+    ax.set_title('Brecha del IIJP contra el IPC de cada región')
+    ax.legend(loc='lower right', fontsize=9)
+    _pie(fig)
+    return fig
+
+
+def g08_variantes(R):
+    t = R['variantes'].iloc[::-1]
+    fig, axes = plt.subplots(1, 2, figsize=(11, 7), sharey=True)
+    for ax, col, tit in [(axes[0], 'brecha_milei', 'Brecha vs IPC oficial, nov-23 al último dato'),
+                         (axes[1], 'edad_completo', 'Efecto edad, dic-16 al último dato')]:
+        y = range(len(t))
+        es_p = (t['variante'] == 'principal').values
+        ax.scatter(t[col][~es_p], [i for i, e in zip(y, es_p) if not e], s=40, color=AZUL, zorder=3)
+        ax.scatter(t[col][es_p], [i for i, e in zip(y, es_p) if e], s=90, color=NARANJA, zorder=4,
+                   edgecolor='white', linewidth=1.5)
+        ax.axvline(float(t.loc[es_p, col].iloc[0]), color=NARANJA, lw=1, ls=':')
+        ax.axvline(0, color=GRIS, lw=1)
+        ax.set_title(tit, fontsize=11)
+        ax.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+        ax.grid(axis='y', visible=False)
+    axes[0].set_yticks(range(len(t)))
+    axes[0].set_yticklabels(t['etiqueta'])
+    fig.suptitle('Sensibilidad del IIJP a cada decisión metodológica (naranja: especificación principal)',
+                 x=0.01, ha='left', fontweight='bold', fontsize=12)
+    _pie(fig, FUENTE + '. Cada fila cambia una sola decisión respecto de la principal.')
+    fig.tight_layout()
+    return fig
+
+
 GRAFICOS = {
     'g01_ponderaciones': g01_ponderaciones,
     'g02_brecha_nov23': g02_brecha_nov23,
@@ -156,4 +210,6 @@ GRAFICOS = {
     'g04_descomposicion': g04_descomposicion,
     'g05_haber_real': g05_haber_real,
     'g06_costo_fiscal': g06_costo_fiscal,
+    'g07_regiones': g07_regiones,
+    'g08_variantes': g08_variantes,
 }

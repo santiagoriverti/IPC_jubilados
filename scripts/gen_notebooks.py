@@ -86,47 +86,69 @@ NB01 = [
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/01_canasta_jubilados.ipynb)
 
-Arma las ponderaciones del IIJP a partir de los **microdatos** de la Encuesta Nacional de Gastos de los
-Hogares 2017/18 (INDEC): gasto de consumo de cada hogar por división COICOP (`gc_01`…`gc_12`).
+Ponderaciones del IIJP a partir de los **microdatos** de la Encuesta Nacional de Gastos de los Hogares
+2017/18 (INDEC): el gasto de cada hogar en cada artículo (archivo de gastos) se asigna al índice de
+precios del INDEC con que se valoriza (ver notebook 02).
 
-- Reproduce la canasta del TP original (hogares con al menos un mayor de 65, mezcla 0,69 / 0,31).
-- Define la población de referencia del IIJP: **hogares jubilados** (jubilaciones y pensiones ≥ 50% del ingreso).
-- Compara con el IPC oficial, que todavía usa la estructura de gasto de la **ENGHo 2004/05**.
-- Mide la incertidumbre muestral de las ponderaciones (bootstrap de hogares).
+- **Población de referencia**: hogares jubilados (jubilaciones y pensiones, contributivas y no
+  contributivas, ≥ 50% del ingreso del hogar).
+- **Subíndice haber mínimo**: hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes
+  mínimos (el vigente en el trimestre de la entrevista).
+- **Comparador**: todos los hogares de la misma encuesta, y el IPC oficial (ENGHo 2004/05).
+- Incertidumbre muestral de las ponderaciones (bootstrap de hogares).
 '''),
     code(SETUP),
     code(r'''N_BOOTSTRAP = 300   # replicas para los intervalos de confianza (0 = no calcular)
-R = pipeline.calcular(n_bootstrap=N_BOOTSTRAP)'''),
+R = pipeline.calcular(n_bootstrap=N_BOOTSTRAP)
+PRINC = ['ipc_oficial', 'total', 'jubilados', 'jub_minimo']'''),
     md(r'''
 ## Poblaciones
 
-Cantidad de hogares en la muestra y expandidos (con el factor `pondera`) de cada definición.
+Hogares en la muestra y expandidos (factor `pondera`). Rol: `principal` (IIJP), `subindice`,
+`comparador`, `variante` (definiciones alternativas para la tabla de sensibilidad del notebook 02) y
+`tp` (solo para la revisión del TP original).
 '''),
-    code(r'''display(R['poblaciones'])
-print(f"Proporcion ponderada de hogares con un solo mayor de 65: {R['peso_tp_1_mayor']:.4f} (el TP usa 0,69)")'''),
+    code(r'''display(R['poblaciones'])'''),
     md(r'''
 ## Ponderaciones por división (en %)
 
-- `ipc_oficial`: IPC nacional del INDEC (ENGHo 2004/05).
-- `tp_original`: lo que cargó el TP. `tp`: la misma canasta recalculada desde los microdatos (coincide).
-- `total`: todos los hogares con la ENGHo 2017/18 → lo que sería un IPC con canasta actualizada.
-- `jubilados`: **canasta del IIJP**. `jub_bajos` / `jub_altos`: mitades por ingreso per cápita.
+`ipc_oficial`: IPC nacional del INDEC (ENGHo 2004/05). `total`: todos los hogares con la ENGHo 2017/18
+(lo que sería un IPC con canasta actualizada). `jubilados`: canasta del IIJP. `jub_minimo`: subíndice
+haber mínimo. Las demás columnas son las definiciones alternativas de la población.
 '''),
     code(r'''W = R['ponderaciones'].set_index('division')
-display((W * 100).round(1))'''),
-    code(r'''fig = graficos.g01_ponderaciones(R); plt.show()'''),
+display((W[PRINC] * 100).round(1))
+fig = graficos.g01_ponderaciones(R); plt.show()'''),
+    code(r'''display((W.drop(columns=PRINC) * 100).round(1))'''),
     md(r'''
-**Lectura.** Frente a todos los hogares de la misma encuesta, los hogares jubilados gastan más en
-alimentos (+3,7 p.p.), salud (+5 p.p.) y equipamiento, y menos en educación, transporte, restaurantes y
-ropa. Vivienda y servicios pesa **lo mismo** (14,5%) en ambos: la mayor ponderación de vivienda que el TP
-atribuía a los jubilados (13,7% vs 9,4% del IPC) es en realidad un efecto de la **canasta nueva**
-(2017/18 vs 2004/05), no de la edad.
+## Composición dentro de las divisiones
+
+El IPC no solo pondera distinto las divisiones: dentro de cada una, los jubilados compran cosas
+distintas (medicamentos vs prepagas, alquiler vs servicios, transporte público vs vehículo propio), y
+esos rubros tuvieron variaciones de precios muy distintas. Por eso el IIJP se valoriza al nivel más
+desagregado que publica el INDEC. Participación de cada apertura en el gasto de su división (%),
+nacional (suma de las 6 regiones). Los nodos `.r` son la parte de la división sin índice propio publicado.
 '''),
+    code(r'''A = R['ponderaciones_aperturas']
+cols = [f'{c}_en_division' for c in PRINC]
+for d in ['04', '06', '07', '05', '09']:
+    t = A[A['division'] == d][['descripcion'] + cols].copy()
+    t[cols] = t[cols] * 100
+    display(Markdown(f'**{pond.DIVISIONES[d]}**'))
+    display(t.round(1))'''),
+    md(r'''
+## Peso de cada región
+
+El IIJP nacional suma las canastas de las 6 regiones: cada región pesa según el gasto de sus hogares
+jubilados (en el IPC oficial, según el gasto de todos sus hogares en 2004/05).
+'''),
+    code(r'''display(R['peso_regiones'].style.format({'ipc_oficial': '{:.1%}', 'jubilados': '{:.1%}', 'total': '{:.1%}'}))'''),
     md(r'''
 ## Incertidumbre muestral
 
-Intervalos de 95% por bootstrap (remuestreo de hogares estratificado por región). Son angostos: la
-diferencia entre jubilados y el total de hogares en salud, educación o transporte no es ruido muestral.
+Intervalos de 95% por bootstrap: remuestreo de hogares estratificado por región. La ENGHo pública no
+trae las unidades primarias de muestreo, así que no se pueden remuestrear conglomerados: los intervalos
+son una cota inferior del error muestral.
 '''),
     code(r'''if 'bootstrap_ponderaciones' in R:
     b = R['bootstrap_ponderaciones'] * 100
@@ -139,48 +161,65 @@ El IPC usa ponderaciones plutocráticas (cada hogar pesa según cuánto gasta). 
 de cada hogar (democráticas) da más peso a los hogares de menores ingresos.
 '''),
     code(r'''D = R['ponderaciones_democraticas'].set_index('division')
-display((D[['total', 'jubilados', 'jub_bajos']] * 100).round(1))'''),
+display((D * 100).round(1))'''),
     *descarga('IIJP_01_canasta_jubilados'),
 ]
 
 # ------------------------------------------------------------------------------------------------
 NB02 = [
     md(r'''
-# 02 · IIJP vs IPC: cuánto difieren y por qué
+# 02 · IIJP vs IPC: método, validación y resultados
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/02_iijp_vs_ipc.ipynb)
 
-**Método.** Índice de canasta fija (Lowe), el mismo concepto que el IPC: las cantidades de la canasta
-de 2017/18 se valorizan cada mes con los índices de precios por división del INDEC. La ponderación
-efectiva de cada rubro se mueve con sus precios relativos.
+**Método.** Índice de canasta fija (Lowe), el mismo concepto que el IPC: las cantidades que compraban
+los hogares jubilados en 2017/18 se valorizan cada mes con los precios del INDEC.
 
-El TP original aplicaba siempre las mismas ponderaciones a las variaciones mensuales. Eso no es una
-canasta fija: sobrepondera los rubros que venían atrasados y exagera la brecha cuando hay ajustes de
-precios relativos grandes (2024).
+- **Precios por región y por apertura**: el IPC se calcula en 6 regiones y se publica, en cada una, por
+  división, grupo y algunas clases. El IIJP valoriza cada gasto con el índice más específico publicado.
+- **Restos**: la parte de cada agregado sin índice propio publicado (p. ej. agua dentro de Vivienda) se
+  valoriza con un índice deducido de la estructura oficial de ponderaciones del INDEC (agregación de
+  Laspeyres). Si esa parte pesa menos de 0,2% de la región, usa el índice del agregado.
+- **Precios de referencia**: promedio del relevamiento (nov-2017 a nov-2018). Es decir, las ponderaciones
+  se actualizan por precios relativos, como recomienda el Manual del IPC (OIT/FMI) y hace el INDEC.
+- **Nacional**: suma de las 6 canastas regionales (cada región pesa según el gasto de sus jubilados).
 '''),
     code(SETUP),
     code(r'''N_BOOTSTRAP = 300
 R = pipeline.calcular(n_bootstrap=N_BOOTSTRAP)
 niv, vm = R['niveles'], R['var_mensual']'''),
     md(r'''
+## Estructura de precios
+
+Nodos de cada región: aperturas publicadas, restos derivados de las ponderaciones oficiales y restos
+valorizados con el índice del agregado. Debajo: los meses en que el INDEC no publicó alguna apertura
+(aislamiento de 2020), completados con la variación de su agregado, y la estabilidad de los restos
+derivados ante el redondeo de las ponderaciones oficiales (4 decimales).
+'''),
+    code(r'''e = R['estructura']
+display(pd.crosstab(e['region'], e['tipo']))
+display(R['imputaciones'])
+display(R['sensibilidad_restos'].sort_values('dispersion_p5_p95_%', ascending=False).head(8))'''),
+    md(r'''
 ## Validación: replicar el IPC oficial
 
-Con las ponderaciones del INDEC y el mismo cálculo se reproduce el nivel general nacional con un error
-máximo de ~0,16% en casi 10 años. Si el método no replicara el IPC, no serviría para compararlo.
+Con las ponderaciones oficiales, la misma estructura de nodos reproduce el IPC nacional y el nivel
+general de cada región. Si no lo hiciera, no serviría para compararlos.
 '''),
     code(r'''v = R['validacion']
-print(f"Error maximo: {v['error_pct'].abs().max():.3f}% | ultimo mes: {v['error_pct'].iloc[-1]:.3f}%")
-display(v.tail(6))'''),
+print(f"Error maximo nacional: {v['error_pct'].abs().max():.3f}% | ultimo mes: {v['error_pct'].iloc[-1]:.3f}%")
+display(v.filter(like='error_pct').abs().max().to_frame('error maximo (%)').round(3))'''),
     md(r'''
-## Variación mensual (%)
+## Variación mensual e interanual (%)
 '''),
-    code(r'''display(vm[['IPC oficial', 'IPC ENGHo 17/18', 'IIJP', 'IIJP jub. bajos', 'IIJP método TP']].tail(13))'''),
+    code(r'''display(vm.tail(13))
+display(R['var_interanual'].tail(6))'''),
     md(r'''
-## La brecha del TP era en buena parte un artefacto del método
+## Brecha con el IPC oficial desde noviembre de 2023
 
-Desde noviembre de 2023 la planilla del TP acumula una brecha de 3,8% (con un error: en febrero 2024
-falta la división Vivienda). El mismo método sin ese error da 6,3%; con canasta fija, la brecha es
-**2,4%** a mayo 2026, y la banda de incertidumbre muestral no incluye el valor del TP.
+La banda es el intervalo de 95% por bootstrap del IIJP. La línea punteada es el método anterior del
+IIJP (12 divisiones nacionales), que subestima la brecha porque ignora la composición dentro de cada
+división.
 '''),
     code(r'''fig = graficos.g02_brecha_nov23(R); plt.show()'''),
     md(r'''
@@ -188,43 +227,39 @@ falta la división Vivienda). El mismo método sin ese error da 6,3%; con canast
 
 La brecha IIJP vs IPC oficial combina dos cosas distintas:
 
-1. **Efecto edad**: IIJP vs un IPC recalculado con la canasta de *todos* los hogares de la ENGHo 2017/18.
+1. **Efecto edad**: IIJP vs el mismo cálculo con la canasta de *todos* los hogares de la ENGHo 2017/18.
 2. **Efecto canasta vieja**: ese IPC 2017/18 vs el IPC oficial (ENGHo 2004/05).
 '''),
-    code(r'''fig = graficos.g03_brecha_historica(R); plt.show()'''),
-    code(r'''p = R['periodos']
-cols = ['periodo', 'desde', 'hasta', 'IPC oficial (%)', 'IIJP (%)', 'brecha IIJP vs IPC oficial (%)',
-        'brecha IPC ENGHo 17/18 vs IPC oficial (%)', 'brecha IIJP método TP vs IPC oficial (%)']
-display(p[cols])'''),
+    code(r'''fig = graficos.g03_brecha_historica(R); plt.show()
+display(R['periodos'])'''),
     code(r'''if 'bootstrap_brechas' in R:
     display(Markdown('**Intervalos de 95% por bootstrap (incertidumbre muestral de la ENGHo):**'))
     display(R['bootstrap_brechas'])'''),
     md(r'''
-**Lectura.** La brecha cambia de signo según el período: positiva con Macri (+2,8%), negativa con
-Fernández (−4,0%, tarifas congeladas) y positiva desde fines de 2023 (+2,7%). Desde noviembre de 2023
-**el efecto edad es negativo** (la canasta de los jubilados subió algo *menos* que la de todos los
-hogares): lo que empuja la brecha es que el IPC oficial usa una canasta de 2004/05 que subpondera
-vivienda y servicios y sobrepondera ropa. Una corrección permanente del 3,8% (propuesta del TP) no
-tiene sustento en los datos.
-'''),
-    md(r'''
-## ¿La diferencia es sistemática? (test de la media mensual)
+## ¿La diferencia es persistente? (test de la media mensual)
 
 Diferencia mensual en logaritmos entre los índices, con intervalo de 95% robusto a autocorrelación
-(Newey-West). Si el intervalo incluye el 0, no hay evidencia de una brecha sistemática en ese período.
+(Newey-West). Responde si la brecha se acumula mes a mes o se concentra en pocos meses; con períodos
+cortos tiene poca potencia. La precisión de la canasta la mide el bootstrap.
 '''),
     code(r'''with pd.option_context('display.float_format', '{:,.3f}'.format):
     display(R['brecha_estadistica'])'''),
     md(r'''
-## Qué divisiones explican la brecha
+## Regiones
 
-Aporte de cada división: (ponderación efectiva IIJP − ponderación efectiva de la otra canasta) ×
-(variación de la división − variación promedio). Los aportes suman la brecha.
+IIJP de cada región contra el IPC oficial de la misma región. Las muestras regionales de hogares
+jubilados son chicas fuera de GBA y Pampeana (ver `hogares_jubilados_muestra`).
 '''),
+    code(r'''fig = graficos.g07_regiones(R); plt.show()
+display(R['peso_regiones'])
+display(R['periodos_regionales'].pivot(index='region', columns='periodo', values='brecha (%)'))'''),
     md(r'''
-Ponderaciones efectivas en % (peso de cada división en el valor de la canasta al inicio del período).
-La brecha "vs IPC oficial" de la descomposición usa el IPC replicado con sus ponderaciones (difiere del
-oficial en ≤ 0,16%), por eso no coincide exactamente con la tabla de períodos.
+## Qué explica la brecha
+
+Aporte de cada componente: (ponderación efectiva de la canasta A − la de la canasta B) × (variación del
+componente − variación promedio de B). Se calcula por nodo y se suma por división; los aportes suman la
+brecha. La brecha "vs IPC oficial" usa el IPC replicado con sus ponderaciones (difiere levemente del
+publicado). Ponderaciones efectivas en % del valor de la canasta al inicio del período.
 '''),
     code(r'''def ver_descomposicion(clave):
     d = R['descomposicion'][clave].copy()
@@ -234,10 +269,26 @@ oficial en ≤ 0,16%), por eso no coincide exactamente con la tabla de períodos
     print(f"{a['desde']} a {a['hasta']}: brecha vs IPC oficial {a['brecha_vs_oficial']:+.2f}% = "
           f"efecto edad {a['brecha_edad']:+.2f}% y canasta vieja {a['brecha_canasta']:+.2f}% (aprox.)")
     display(d)
+    n = R['descomposicion_aperturas'][clave]
+    display(Markdown('Aperturas con mayor aporte (en puntos de %):'))
+    display(pd.concat([n.head(6), n.tail(4)])[['descripcion', 'aporte_vs_ipc_oficial', 'aporte_efecto_edad',
+                                               'aporte_efecto_canasta_nueva']].round(2))
 
 fig = graficos.g04_descomposicion(R, 'nov23_ultimo'); plt.show()
 ver_descomposicion('nov23_ultimo')'''),
     code(r'''ver_descomposicion('dic16_ultimo')'''),
+    md(r'''
+## Sensibilidad: ¿qué conclusiones son firmes?
+
+Cada variante cambia **una** decisión metodológica respecto de la especificación principal (nivel de
+detalle, definición de la población, ponderación, fórmula, precios de referencia) y recalcula la brecha
+con el IPC oficial, el efecto edad (contra todos los hogares con la misma especificación) y cuánto más
+alto sería hoy el haber si se hubiera indexado por esa variante desde abril de 2024. Una conclusión es
+firme si mantiene el signo en todas las variantes (`mismo_signo_en_todas`).
+'''),
+    code(r'''fig = graficos.g08_variantes(R); plt.show()
+display(R['variantes_resumen'])'''),
+    code(r'''display(R['variantes'].drop(columns=['descripcion']))'''),
     *descarga('IIJP_02_iijp_vs_ipc'),
 ]
 
@@ -250,6 +301,8 @@ NB03 = [
 
 - Haber mínimo (datos.gob.ar) y bono (decretos; congelado en $70.000 desde marzo 2024).
 - Movilidad vigente (DNU 274/2024): el haber de cada mes sube lo que subió el IPC dos meses antes.
+- Poder adquisitivo de la mínima medido con el IPC y con el **IIJP haber mínimo** (la canasta de los
+  hogares jubilados que cobran alrededor de la mínima).
 - Contrafactual: la misma regla con el IIJP. Costo fiscal con el gasto real en jubilaciones y pensiones
   (IMIG, repo `cuentas_publicas`).
 '''),
@@ -270,31 +323,31 @@ print('Meses que cumplen la regla:', r['ok'].sum(), 'de', len(r))'''),
     md(r'''
 ## Poder adquisitivo (noviembre 2023 = 100)
 
-El haber mínimo **sin bono** está ~10% por encima de noviembre 2023 en términos reales; **con el bono**
-está ~10% por debajo. La pérdida del jubilado de la mínima viene sobre todo del bono congelado, no del
-índice con que se actualiza el haber. (El TP calculaba −9,8% dividiendo el haber de diciembre por la
-inflación que incluía diciembre: mezclaba meses.)
+Haber mínimo con y sin bono, deflactado por el IPC oficial, por el IIJP y por el IIJP haber mínimo.
 '''),
     code(r'''fig = graficos.g05_haber_real(R); plt.show()'''),
     code(r'''b = pd.Period('2023-11', 'M')
 u = hab.dropna(subset=['real_haber_ipc']).index.max()
-t = pd.DataFrame({
-    'sin bono, IPC': hab['real_haber_ipc'] / hab.loc[b, 'real_haber_ipc'] - 1,
-    'sin bono, IIJP': hab['real_haber_iijp'] / hab.loc[b, 'real_haber_iijp'] - 1,
-    'con bono, IPC': hab['real_con_bono_ipc'] / hab.loc[b, 'real_con_bono_ipc'] - 1,
-    'con bono, IIJP': hab['real_con_bono_iijp'] / hab.loc[b, 'real_con_bono_iijp'] - 1,
-}).loc[['2023-12', '2024-02', '2024-12', '2025-12', str(u)]] * 100
-display(t.round(1))
+t = pd.DataFrame({f'{bono}, {nom}': hab[f'{col}_{k}'] / hab.loc[b, f'{col}_{k}'] - 1
+                  for bono, col in [('sin bono', 'real_haber'), ('con bono', 'real_con_bono')]
+                  for nom, k in [('IPC', 'ipc'), ('IIJP', 'iijp'), ('IIJP haber mínimo', 'iijp_minimo')]})
+display((t.loc[['2023-12', '2024-02', '2024-12', '2025-12', str(u)]] * 100).round(1))
 print(f"Bono de $70.000 actualizado por IPC desde marzo 2024 en {u}: ${hab.loc[u, 'bono_indexado_ipc']:,.0f}")'''),
     md(r'''
 ## Contrafactual: haber indexado por IIJP desde abril 2024
+
+Misma regla de movilidad (variación de dos meses antes, con 2 decimales) usando el IIJP o el IIJP haber
+mínimo en lugar del IPC.
 '''),
-    code(r'''c = hab.loc['2024-04':, ['haber_minimo', 'haber_cf_ipc', 'haber_cf_iijp']].copy()
-c['diferencia_%'] = (hab['factor_iijp'] - 1) * 100
+    code(r'''c = hab.loc['2024-04':, ['haber_minimo', 'haber_cf_ipc', 'haber_cf_iijp', 'haber_cf_iijp_minimo']].copy()
+c['diferencia_iijp_%'] = (hab['factor_iijp'] - 1) * 100
+c['diferencia_iijp_minimo_%'] = (hab['factor_iijp_minimo'] - 1) * 100
 display(c.iloc[::3])
 u2 = hab['factor_iijp'].dropna().index.max()
-print(f"En {u2} el haber indexado por IIJP seria {100 * (hab.loc[u2, 'factor_iijp'] - 1):.2f}% mayor: "
-      f"${hab.loc[u2, 'haber_cf_iijp'] - hab.loc[u2, 'haber_cf_ipc']:,.0f} por mes en la minima.")'''),
+for k, nom in [('iijp', 'IIJP'), ('iijp_minimo', 'IIJP haber minimo')]:
+    f = hab.loc[u2, f'factor_{k}']
+    print(f"En {u2} el haber indexado por {nom} seria {100 * (f - 1):.2f}% mayor: "
+          f"${hab.loc[u2, f'haber_cf_{k}'] - hab.loc[u2, 'haber_cf_ipc']:,.0f} por mes en la minima.")'''),
     md(r'''
 ## Costo fiscal
 

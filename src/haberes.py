@@ -16,6 +16,13 @@ import pandas as pd
 INICIO_DNU = pd.Period('2024-04', 'M')  # ultimo mes previo a la indexacion mensual por IPC(t-2)
 
 
+def var_movilidad(nivel: pd.Series) -> pd.Series:
+    """Variacion mensual calculada desde los niveles y redondeada a 2 decimales en %: es la que usa
+    ANSES para la movilidad (verificado: error 0 en todos los meses desde mayo 2024; con la variacion
+    publicada a 1 decimal el error llega a 0,05 p.p.)."""
+    return (nivel.pct_change() * 100).round(2) / 100
+
+
 def tabla_haberes(haber: pd.Series, bono: pd.Series) -> pd.DataFrame:
     t = pd.DataFrame({'haber_minimo': haber})
     t['bono'] = bono.reindex(t.index)

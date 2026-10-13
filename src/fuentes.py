@@ -1,8 +1,10 @@
 """Descarga y lectura de fuentes.
 
-- INDEC: IPC por division COICOP (nacional y 6 regiones, dic-2016=100) y microdatos ENGHo 2017/18.
+- INDEC: IPC por division COICOP (nacional y 6 regiones, dic-2016=100), IPC por aperturas (grupos y
+  clases, solo regional) y microdatos ENGHo 2017/18.
 - datos.gob.ar: haber minimo jubilatorio (serie 58.1_MP_0_M_24).
-- data/reference: bono previsional (no hay serie publica) y ponderaciones oficiales del IPC.
+- data/reference: bono previsional (no hay serie publica), ponderaciones oficiales del IPC (nacionales
+  por division y regionales por division, grupo y clase).
 - Repo cuentas_publicas: IMIG (gasto en jubilaciones y pensiones) y AIF (resultados fiscales).
 
 Todo lo descargado se guarda en data/cache/ (ignorado por git) para no repetir descargas.
@@ -24,6 +26,7 @@ PROCESADOS = RAIZ / 'data' / 'processed'
 UA = {'User-Agent': 'Mozilla/5.0'}
 
 URL_IPC_DIVISIONES = 'https://www.indec.gob.ar/ftp/cuadros/economia/serie_ipc_divisiones.csv'
+URL_IPC_APERTURAS = 'https://www.indec.gob.ar/ftp/cuadros/economia/serie_ipc_aperturas.csv'
 URL_ENGHO = 'https://www.indec.gob.ar/ftp/cuadros/menusuperior/engho/engho2018_{tabla}.zip'
 URL_SERIES = 'https://apis.datos.gob.ar/series/api/series/'
 ID_HABER_MINIMO = '58.1_MP_0_M_24'
@@ -32,6 +35,15 @@ URL_CUENTAS = 'https://raw.githubusercontent.com/santiagoriverti/cuentas_publica
 
 # Regiones: codigo ENGHo -> nombre en el IPC del INDEC
 REGIONES_ENGHO = {1: 'GBA', 2: 'Pampeana', 3: 'Noroeste', 4: 'Noreste', 5: 'Cuyo', 6: 'Patagonia'}
+REGIONES = list(REGIONES_ENGHO.values())
+# Participacion de cada region en el gasto de consumo nacional: ponderacion de las regiones en el IPC
+# nacional (INDEC, Metodologia del IPC 2019, cuadro 6)
+POND_REGIONES = {'GBA': 0.447, 'Pampeana': 0.342, 'Noroeste': 0.069, 'Noreste': 0.045, 'Cuyo': 0.052,
+                 'Patagonia': 0.046}
+# Trimestres operativos de la ENGHo 2017/18 (relevamiento nov-2017 a nov-2018; el manual de uso no da
+# los meses exactos: anio = 2017 solo aparece en el primero)
+TRIMESTRES_ENGHO = {1: ('2017-11', '2018-01'), 2: ('2018-02', '2018-04'), 3: ('2018-05', '2018-07'),
+                    4: ('2018-08', '2018-11')}
 
 
 def _bajar(url: str, destino: Path, refrescar: bool = False) -> Path:
@@ -84,6 +96,32 @@ def matriz_var_publicada(ipc: pd.DataFrame, region: str = 'Nacional') -> pd.Data
     Solo se usan para replicar el calculo del TP original."""
     m = ipc[ipc['region'] == region].pivot(index='periodo', columns='codigo', values='var_mensual') / 100
     return m.sort_index()[['0'] + [f'{i:02d}' for i in range(1, 13)]]
+
+
+def leer_ipc_aperturas(refrescar: bool = False) -> pd.DataFrame:
+    """IPC por aperturas (nivel general, divisiones, grupos y algunas clases) de las 6 regiones; no hay
+    aperturas nacionales. Formato largo: periodo, region, codigo ('0', '01', '04.1', '04.1.1'...),
+    descripcion, indice (dic-2016=100)."""
+    ruta = _bajar(URL_IPC_APERTURAS, CACHE / 'serie_ipc_aperturas.csv', refrescar)
+    d = pd.read_csv(ruta, sep=';', encoding='latin-1', dtype={'Codigo': str})
+    cod = d['Codigo'].str.strip()
+    cod = cod.where(cod.str.contains('.', regex=False), cod.str.zfill(2)).replace({'00': '0'})
+    out = pd.DataFrame({
+        'periodo': pd.PeriodIndex(d['Periodo'].astype(str).str[:4] + '-' + d['Periodo'].astype(str).str[4:], freq='M'),
+        'region': d['Region'].str.strip(),
+        'codigo': cod,
+        'descripcion': d['Descripcion_aperturas'].str.strip(),
+        'indice': _a_numero(d['Indice_IPC']),
+    })
+    return out.reset_index(drop=True)
+
+
+def leer_ponderadores_ipc() -> pd.DataFrame:
+    """Ponderaciones oficiales del IPC por region (fraccion del gasto de la region) para el nivel general,
+    divisiones, grupos y clases (data/reference/ponderadores_ipc_regiones.csv, INDEC dic-2016).
+    Indice: codigo; columnas: descripcion y una por region."""
+    d = pd.read_csv(REFERENCIA / 'ponderadores_ipc_regiones.csv', comment='#', dtype={'codigo': str})
+    return d.set_index('codigo')
 
 
 # --------------------------------------------------------------------------------------------

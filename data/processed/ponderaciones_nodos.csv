@@ -1,0 +1,255 @@
+,region,nodo,descripcion,division,tipo,ipc_oficial,jubilados,total,jub_minimo
+0,GBA,01.1.1,Pan y cereales,01,publicado,0.018085,0.015081,0.015918,0.017763
+1,GBA,01.1.2,Carnes y derivados,01,publicado,0.031169,0.029123,0.027301,0.036134
+2,GBA,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.015406,0.014033,0.013275,0.013398
+3,GBA,01.1.5,"Aceites, grasas y manteca",01,publicado,0.002456,0.002505,0.002129,0.002819
+4,GBA,01.1.6,Frutas,01,publicado,0.005671,0.006153,0.004003,0.006086
+5,GBA,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.009958,0.009978,0.008373,0.013619
+6,GBA,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.004510,0.005284,0.004764,0.003746
+7,GBA,01.2.1,"Café, té, yerba y cacao",01,publicado,0.003037,0.003304,0.002712,0.003882
+8,GBA,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.010851,0.007665,0.008264,0.006842
+9,GBA,02.1,Bebidas alcohólicas,02,publicado,0.006341,0.004307,0.004221,0.002506
+10,GBA,02.2,Tabaco,02,publicado,0.008261,0.002213,0.003730,0.003191
+11,GBA,03.1,Prendas de vestir y materiales,03,publicado,0.028267,0.010956,0.017770,0.008985
+12,GBA,03.2,Calzado,03,publicado,0.009601,0.005274,0.008026,0.006134
+13,GBA,04.1.1,Alquiler de la vivienda,04,publicado,0.015540,0.007333,0.020955,0.005984
+14,GBA,04.3,Mantenimiento y reparación de la vivienda,04,publicado,0.005493,0.004403,0.004680,0.003026
+15,GBA,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.011342,0.025947,0.023447,0.038618
+16,GBA,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.016344,0.018382,0.014619,0.008673
+17,GBA,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.017639,0.024849,0.011313,0.027543
+18,GBA,06.4.1,Gastos de prepagas,06,publicado,0.014200,0.023715,0.014549,0.007311
+19,GBA,07.1,Adquisición de vehículos,07,publicado,0.011074,0.008595,0.013116,0.001184
+20,GBA,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.016880,0.013948,0.022843,0.013323
+21,GBA,07.3,Transporte público,07,publicado,0.017951,0.015103,0.016916,0.021232
+22,GBA,08.3,Servicios de telefonía e internet,08,publicado,0.012146,0.019046,0.019748,0.019053
+23,GBA,09.1,"Equipos audiovisuales, fotográficos y de procesamiento de la información",09,publicado,0.005984,0.001819,0.003384,0.001031
+24,GBA,09.4,Servicios recreativos y culturales,09,publicado,0.013620,0.011758,0.013852,0.010616
+25,GBA,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.006654,0.002655,0.004095,0.001462
+26,GBA,10,Educación,10,publicado,0.013486,0.003958,0.018908,0.002436
+27,GBA,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.046039,0.018050,0.029654,0.010325
+28,GBA,12.1,Cuidado personal,12,publicado,0.012593,0.010187,0.011830,0.008681
+29,GBA,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+30,GBA,01.1.r,Resto de Alimentos,01,resto derivado,0.003528,0.005920,0.005137,0.006600
+31,GBA,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+32,GBA,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+33,GBA,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000045,0.000000,0.000000,0.000000
+34,GBA,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.003974,0.019848,0.014595,0.014976
+35,GBA,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.010360,0.001253,0.002170,0.000527
+36,GBA,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.011655,0.007133,0.009550,0.006019
+37,GBA,06.r,Resto de Salud,06,resto derivado,0.007457,0.006599,0.005217,0.004101
+38,GBA,07.r,Resto de Transporte,07,resto = indice del agregado,0.000045,0.000000,0.000000,0.000000
+39,GBA,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.005805,0.004855,0.007644,0.003262
+40,GBA,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000402,0.001467,0.002464,0.001581
+41,GBA,09.r,Resto de Recreación y cultura,09,resto derivado,0.007055,0.013667,0.014886,0.006641
+42,GBA,11.r,Resto de Restaurantes y hoteles,11,resto derivado,0.002367,0.002096,0.002676,0.000071
+43,GBA,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.003260,0.007136,0.009354,0.003397
+44,Pampeana,01.1.1,Pan y cereales,01,publicado,0.017151,0.014567,0.012664,0.019359
+45,Pampeana,01.1.2,Carnes y derivados,01,publicado,0.033516,0.031103,0.024876,0.038869
+46,Pampeana,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.012744,0.010889,0.008870,0.011344
+47,Pampeana,01.1.5,"Aceites, grasas y manteca",01,publicado,0.002597,0.002491,0.001760,0.003479
+48,Pampeana,01.1.6,Frutas,01,publicado,0.004988,0.005606,0.003468,0.006410
+49,Pampeana,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.009908,0.009641,0.007249,0.012447
+50,Pampeana,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.004134,0.004301,0.003959,0.004888
+51,Pampeana,01.2.1,"Café, té, yerba y cacao",01,publicado,0.002802,0.003051,0.002178,0.003958
+52,Pampeana,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.007175,0.005536,0.005273,0.005961
+53,Pampeana,02.1,Bebidas alcohólicas,02,publicado,0.006116,0.004558,0.003840,0.002856
+54,Pampeana,02.2,Tabaco,02,publicado,0.006867,0.003378,0.003423,0.004736
+55,Pampeana,03.1,Prendas de vestir y materiales,03,publicado,0.026239,0.016025,0.016900,0.013574
+56,Pampeana,03.2,Calzado,03,publicado,0.009396,0.006718,0.007908,0.007769
+57,Pampeana,04.1.1,Alquiler de la vivienda,04,publicado,0.012265,0.008430,0.014548,0.008372
+58,Pampeana,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.010181,0.026705,0.020318,0.033498
+59,Pampeana,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.013017,0.014875,0.009624,0.011914
+60,Pampeana,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.016263,0.024021,0.009598,0.026989
+61,Pampeana,06.4.1,Gastos de prepagas,06,publicado,0.006116,0.006023,0.006098,0.002663
+62,Pampeana,07.1,Adquisición de vehículos,07,publicado,0.009874,0.005425,0.007734,0.002072
+63,Pampeana,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.015682,0.019234,0.024498,0.015228
+64,Pampeana,07.3,Transporte público,07,publicado,0.006765,0.007876,0.007523,0.010930
+65,Pampeana,08.3,Servicios de telefonía e internet,08,publicado,0.009532,0.016880,0.014590,0.017376
+66,Pampeana,09.4,Servicios recreativos y culturales,09,publicado,0.009840,0.012932,0.012008,0.014479
+67,Pampeana,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.005535,0.001657,0.003058,0.001474
+68,Pampeana,10,Educación,10,publicado,0.005501,0.001418,0.006392,0.001437
+69,Pampeana,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.026786,0.014195,0.019871,0.012152
+70,Pampeana,12.1,Cuidado personal,12,publicado,0.010489,0.008988,0.008385,0.010309
+71,Pampeana,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+72,Pampeana,01.1.r,Resto de Alimentos,01,resto derivado,0.002870,0.003457,0.003301,0.003487
+73,Pampeana,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+74,Pampeana,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+75,Pampeana,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+76,Pampeana,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.006081,0.014500,0.009789,0.016695
+77,Pampeana,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.001093,0.000551,0.001165,0.000120
+78,Pampeana,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.008644,0.008604,0.008104,0.008994
+79,Pampeana,06.r,Resto de Salud,06,resto derivado,0.005501,0.008092,0.005805,0.006440
+80,Pampeana,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+81,Pampeana,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.003246,0.004544,0.005175,0.002676
+82,Pampeana,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000239,0.001438,0.001797,0.001544
+83,Pampeana,09.r,Resto de Recreación y cultura,09,resto derivado,0.009874,0.016504,0.015071,0.010695
+84,Pampeana,11.r,Resto de Restaurantes y hoteles,11,resto derivado,0.000888,0.000483,0.000611,0.000005
+85,Pampeana,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.001742,0.005271,0.005189,0.005746
+86,Noroeste,01.1.1,Pan y cereales,01,publicado,0.004474,0.004090,0.003742,0.007115
+87,Noroeste,01.1.2,Carnes y derivados,01,publicado,0.008616,0.009608,0.008637,0.015491
+88,Noroeste,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.002544,0.002375,0.002170,0.004047
+89,Noroeste,01.1.5,"Aceites, grasas y manteca",01,publicado,0.000441,0.000448,0.000372,0.000772
+90,Noroeste,01.1.6,Frutas,01,publicado,0.000999,0.000976,0.000714,0.001558
+91,Noroeste,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.002468,0.002668,0.002175,0.004806
+92,Noroeste,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.000855,0.000702,0.000727,0.001073
+93,Noroeste,01.2.1,"Café, té, yerba y cacao",01,publicado,0.000441,0.000358,0.000281,0.000630
+94,Noroeste,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.002564,0.002098,0.002252,0.003070
+95,Noroeste,02.1,Bebidas alcohólicas,02,publicado,0.000944,0.000436,0.000421,0.000298
+96,Noroeste,02.2,Tabaco,02,publicado,0.001213,0.000529,0.000544,0.000939
+97,Noroeste,03.1,Prendas de vestir y materiales,03,publicado,0.005776,0.002622,0.003608,0.003459
+98,Noroeste,03.2,Calzado,03,publicado,0.002757,0.001623,0.002175,0.001910
+99,Noroeste,04.1.1,Alquiler de la vivienda,04,publicado,0.001289,0.001069,0.001815,0.001016
+100,Noroeste,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.002509,0.006091,0.005011,0.009207
+101,Noroeste,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.002544,0.002816,0.002052,0.002268
+102,Noroeste,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.002764,0.003809,0.002029,0.004645
+103,Noroeste,06.4.1,Gastos de prepagas,06,publicado,0.000517,0.001184,0.000667,0.001235
+104,Noroeste,07.1,Adquisición de vehículos,07,publicado,0.001089,0.001746,0.002919,0.001072
+105,Noroeste,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.002619,0.003970,0.004916,0.004803
+106,Noroeste,07.3,Transporte público,07,publicado,0.001620,0.003024,0.002742,0.004656
+107,Noroeste,08.3,Servicios de telefonía e internet,08,publicado,0.001709,0.003359,0.003252,0.003926
+108,Noroeste,09.4,Servicios recreativos y culturales,09,publicado,0.001565,0.002541,0.002245,0.003672
+109,Noroeste,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.001089,0.000656,0.000792,0.001156
+110,Noroeste,10,Educación,10,publicado,0.001406,0.000831,0.001795,0.000500
+111,Noroeste,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.005390,0.003947,0.004812,0.004705
+112,Noroeste,12.1,Cuidado personal,12,publicado,0.002192,0.001698,0.001761,0.002167
+113,Noroeste,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+114,Noroeste,01.1.r,Resto de Alimentos,01,resto derivado,0.000496,0.000674,0.000605,0.001143
+115,Noroeste,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+116,Noroeste,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+117,Noroeste,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+118,Noroeste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000951,0.002644,0.001970,0.003367
+119,Noroeste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000076,0.000204,0.000263,0.000131
+120,Noroeste,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001675,0.001948,0.001830,0.002680
+121,Noroeste,06.r,Resto de Salud,06,resto derivado,0.001082,0.001439,0.001072,0.001161
+122,Noroeste,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+123,Noroeste,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.000469,0.000649,0.000842,0.000351
+124,Noroeste,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000076,0.000222,0.000487,0.000166
+125,Noroeste,09.r,Resto de Recreación y cultura,09,resto derivado,0.001448,0.002111,0.002274,0.001966
+126,Noroeste,11.r,Resto de Restaurantes y hoteles,11,resto = indice del agregado,0.000117,0.000164,0.000128,0.000073
+127,Noroeste,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.000152,0.000612,0.000634,0.000608
+128,Noreste,01.1.1,Pan y cereales,01,publicado,0.002963,0.003032,0.002389,0.007655
+129,Noreste,01.1.2,Carnes y derivados,01,publicado,0.005965,0.007172,0.005204,0.015561
+130,Noreste,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.001843,0.001902,0.001476,0.004032
+131,Noreste,01.1.5,"Aceites, grasas y manteca",01,publicado,0.000405,0.000443,0.000349,0.001081
+132,Noreste,01.1.6,Frutas,01,publicado,0.000656,0.000687,0.000419,0.001396
+133,Noreste,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.001614,0.001943,0.001314,0.004492
+134,Noreste,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.000503,0.000526,0.000453,0.001154
+135,Noreste,01.2.1,"Café, té, yerba y cacao",01,publicado,0.000418,0.000581,0.000381,0.001395
+136,Noreste,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.001218,0.001007,0.000905,0.001925
+137,Noreste,02.1,Bebidas alcohólicas,02,publicado,0.000917,0.000533,0.000505,0.000976
+138,Noreste,02.2,Tabaco,02,publicado,0.000719,0.000336,0.000345,0.000907
+139,Noreste,03.1,Prendas de vestir y materiales,03,publicado,0.003583,0.001775,0.002147,0.003190
+140,Noreste,03.2,Calzado,03,publicado,0.001632,0.000673,0.000966,0.001266
+141,Noreste,04.1.1,Alquiler de la vivienda,04,publicado,0.000998,0.000852,0.001193,0.001672
+142,Noreste,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001681,0.004924,0.003122,0.010002
+143,Noreste,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001596,0.001989,0.001303,0.003623
+144,Noreste,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.001519,0.001952,0.000988,0.004035
+145,Noreste,06.4.1,Gastos de prepagas,06,publicado,0.000315,0.000152,0.000175,0.000028
+146,Noreste,07.1,Adquisición de vehículos,07,publicado,0.001241,0.001931,0.001293,0.000661
+147,Noreste,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.001915,0.003775,0.003572,0.004918
+148,Noreste,07.3,Transporte público,07,publicado,0.000881,0.001347,0.001055,0.002603
+149,Noreste,08.3,Servicios de telefonía e internet,08,publicado,0.001232,0.002964,0.002329,0.005012
+150,Noreste,09.4,Servicios recreativos y culturales,09,publicado,0.001025,0.002385,0.001664,0.004815
+151,Noreste,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.000827,0.000265,0.000373,0.000263
+152,Noreste,10,Educación,10,publicado,0.000611,0.000331,0.000659,0.000350
+153,Noreste,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.002176,0.001465,0.001944,0.002126
+154,Noreste,12.1,Cuidado personal,12,publicado,0.001380,0.001224,0.001204,0.002249
+155,Noreste,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+156,Noreste,01.1.r,Resto de Alimentos,01,resto derivado,0.000283,0.000430,0.000365,0.000945
+157,Noreste,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+158,Noreste,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+159,Noreste,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+160,Noreste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000904,0.002425,0.001553,0.004481
+161,Noreste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000063,0.000371,0.000148,0.000000
+162,Noreste,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001902,0.001705,0.001238,0.002968
+163,Noreste,06.r,Resto de Salud,06,resto derivado,0.000530,0.000899,0.000514,0.001645
+164,Noreste,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+165,Noreste,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.000292,0.000402,0.000431,0.000361
+166,Noreste,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000036,0.000152,0.000238,0.000197
+167,Noreste,09.r,Resto de Recreación y cultura,09,resto derivado,0.000949,0.001305,0.001154,0.001532
+168,Noreste,11.r,Resto de Restaurantes y hoteles,11,resto = indice del agregado,0.000054,0.000006,0.000011,0.000005
+169,Noreste,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.000103,0.000488,0.000357,0.000702
+170,Cuyo,01.1.1,Pan y cereales,01,publicado,0.002706,0.003041,0.002430,0.004217
+171,Cuyo,01.1.2,Carnes y derivados,01,publicado,0.005361,0.006608,0.005164,0.008782
+172,Cuyo,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.001844,0.002152,0.001731,0.002505
+173,Cuyo,01.1.5,"Aceites, grasas y manteca",01,publicado,0.000343,0.000365,0.000275,0.000376
+174,Cuyo,01.1.6,Frutas,01,publicado,0.000571,0.000921,0.000572,0.001164
+175,Cuyo,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.001449,0.001964,0.001409,0.002831
+176,Cuyo,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.000535,0.000736,0.000607,0.000956
+177,Cuyo,01.2.1,"Café, té, yerba y cacao",01,publicado,0.000343,0.000485,0.000318,0.000511
+178,Cuyo,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.001190,0.001197,0.001005,0.001402
+179,Cuyo,02.1,Bebidas alcohólicas,02,publicado,0.000738,0.000860,0.000615,0.001147
+180,Cuyo,02.2,Tabaco,02,publicado,0.001117,0.000476,0.000653,0.000695
+181,Cuyo,03.1,Prendas de vestir y materiales,03,publicado,0.004291,0.002440,0.002651,0.002379
+182,Cuyo,03.2,Calzado,03,publicado,0.001621,0.001095,0.001500,0.001267
+183,Cuyo,04.1.1,Alquiler de la vivienda,04,publicado,0.001906,0.001734,0.002615,0.001873
+184,Cuyo,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001725,0.004749,0.003469,0.006880
+185,Cuyo,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001912,0.003253,0.001807,0.002382
+186,Cuyo,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.002587,0.003972,0.002061,0.004642
+187,Cuyo,06.4.1,Gastos de prepagas,06,publicado,0.000519,0.000974,0.000714,0.000483
+188,Cuyo,07.1,Adquisición de vehículos,07,publicado,0.001532,0.001584,0.002689,0.001462
+189,Cuyo,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.002925,0.003908,0.004540,0.003294
+190,Cuyo,07.3,Transporte público,07,publicado,0.001169,0.002061,0.001973,0.002569
+191,Cuyo,08.3,Servicios de telefonía e internet,08,publicado,0.001273,0.003090,0.002572,0.003375
+192,Cuyo,09.4,Servicios recreativos y culturales,09,publicado,0.001392,0.002326,0.002058,0.002642
+193,Cuyo,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.000790,0.000539,0.000545,0.000277
+194,Cuyo,10,Educación,10,publicado,0.001164,0.000508,0.001766,0.000369
+195,Cuyo,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.003387,0.002173,0.003014,0.001919
+196,Cuyo,12.1,Cuidado personal,12,publicado,0.001616,0.001754,0.001598,0.001664
+197,Cuyo,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+198,Cuyo,01.1.r,Resto de Alimentos,01,resto derivado,0.000421,0.000705,0.000481,0.000721
+199,Cuyo,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+200,Cuyo,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+201,Cuyo,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+202,Cuyo,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000914,0.002048,0.001557,0.002235
+203,Cuyo,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000068,0.000087,0.000357,0.000127
+204,Cuyo,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001351,0.001439,0.001508,0.001722
+205,Cuyo,06.r,Resto de Salud,06,resto derivado,0.000738,0.001700,0.001003,0.000797
+206,Cuyo,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+207,Cuyo,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.000660,0.000907,0.000986,0.000579
+208,Cuyo,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000042,0.000227,0.000370,0.000190
+209,Cuyo,09.r,Resto de Recreación y cultura,09,resto derivado,0.001309,0.001704,0.002613,0.001991
+210,Cuyo,11.r,Resto de Restaurantes y hoteles,11,resto derivado,0.000171,0.000036,0.000132,0.000000
+211,Cuyo,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.000270,0.001007,0.001130,0.000726
+212,Patagonia,01.1.1,Pan y cereales,01,publicado,0.002118,0.002095,0.001956,0.000752
+213,Patagonia,01.1.2,Carnes y derivados,01,publicado,0.004559,0.005299,0.004456,0.001832
+214,Patagonia,01.1.4,"Leche, productos lácteos y huevos",01,publicado,0.001691,0.001571,0.001482,0.000495
+215,Patagonia,01.1.5,"Aceites, grasas y manteca",01,publicado,0.000290,0.000362,0.000250,0.000164
+216,Patagonia,01.1.6,Frutas,01,publicado,0.000588,0.000766,0.000557,0.000210
+217,Patagonia,01.1.7,"Verduras, tubérculos y legumbres",01,publicado,0.001232,0.001479,0.001169,0.000483
+218,Patagonia,01.1.8,"Azúcar, dulces, chocolate, golosinas, etc.",01,publicado,0.000469,0.000689,0.000658,0.000186
+219,Patagonia,01.2.1,"Café, té, yerba y cacao",01,publicado,0.000317,0.000454,0.000320,0.000160
+220,Patagonia,01.2.2,"Aguas minerales, bebidas gaseosas y jugos",01,publicado,0.000905,0.000712,0.000756,0.000158
+221,Patagonia,02.1,Bebidas alcohólicas,02,publicado,0.000643,0.000703,0.000753,0.000118
+222,Patagonia,02.2,Tabaco,02,publicado,0.000965,0.000639,0.000576,0.000213
+223,Patagonia,03.1,Prendas de vestir y materiales,03,publicado,0.004117,0.002041,0.003032,0.000323
+224,Patagonia,03.2,Calzado,03,publicado,0.001774,0.001154,0.001504,0.000236
+225,Patagonia,04.1.1,Alquiler de la vivienda,04,publicado,0.002293,0.000937,0.004318,0.000108
+226,Patagonia,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001351,0.004542,0.003418,0.001444
+227,Patagonia,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001392,0.003024,0.001957,0.000315
+228,Patagonia,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.001209,0.002541,0.001155,0.001046
+229,Patagonia,06.4.1,Gastos de prepagas,06,publicado,0.000377,0.000996,0.000700,0.000023
+230,Patagonia,07.1,Adquisición de vehículos,07,publicado,0.002261,0.001528,0.002467,0.000102
+231,Patagonia,07.2.2,Combustibles y lubricantes para vehículos de uso del hogar,07,publicado,0.002353,0.004092,0.004443,0.000354
+232,Patagonia,07.3,Transporte público,07,publicado,0.001121,0.001534,0.001639,0.000418
+233,Patagonia,08.3,Servicios de telefonía e internet,08,publicado,0.001438,0.003260,0.003158,0.000608
+234,Patagonia,09.4,Servicios recreativos y culturales,09,publicado,0.001388,0.002915,0.002569,0.000721
+235,Patagonia,09.5,"Periódicos, diarios, revistas, libros y artículos de papelería",09,publicado,0.000841,0.000359,0.000697,0.000121
+236,Patagonia,10,Educación,10,publicado,0.000960,0.000516,0.001371,0.000100
+237,Patagonia,11.1,Restaurantes y comidas fuera del hogar,11,publicado,0.002256,0.002106,0.002540,0.000312
+238,Patagonia,12.1,Cuidado personal,12,publicado,0.001222,0.001851,0.001719,0.000313
+239,Patagonia,01.r,Resto de Alimentos y bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+240,Patagonia,01.1.r,Resto de Alimentos,01,resto derivado,0.000437,0.001158,0.000814,0.000171
+241,Patagonia,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000001,0.000000
+242,Patagonia,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+243,Patagonia,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+244,Patagonia,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000924,0.002483,0.001626,0.000447
+245,Patagonia,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000055,0.000432,0.000530,0.000000
+246,Patagonia,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001618,0.001334,0.001495,0.000067
+247,Patagonia,06.r,Resto de Salud,06,resto derivado,0.000689,0.001248,0.000798,0.000371
+248,Patagonia,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
+249,Patagonia,07.2.r,Resto de Funcionamiento de equipos de transporte personal,07,resto derivado,0.000437,0.000929,0.001035,0.000028
+250,Patagonia,08.r,Resto de Comunicación,08,resto = indice del agregado,0.000028,0.000339,0.000370,0.000000
+251,Patagonia,09.r,Resto de Recreación y cultura,09,resto derivado,0.001342,0.002204,0.002815,0.000196
+252,Patagonia,11.r,Resto de Restaurantes y hoteles,11,resto = indice del agregado,0.000078,0.000143,0.000219,0.000000
+253,Patagonia,12.r,Resto de Bienes y servicios varios,12,resto derivado,0.000221,0.000883,0.001018,0.000467

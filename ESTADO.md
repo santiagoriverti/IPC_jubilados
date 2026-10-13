@@ -1,19 +1,23 @@
 # ESTADO — IPC_jubilados (IIJP)
 
-**Última actualización:** 2026-10-06 (cierre de la sesión 1). Punto de entrada para retomar: este
-archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md` (historial).
+**Última actualización:** 2026-10-13 (sesión 2: rediseño metodológico). Punto de entrada para retomar:
+este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md`
+(historial).
 
 ## 0. Estado en una línea
 
-Proyecto funcionando y verificado (local + Colab). Datos a ago-2026. Sin trabajo a medias: lo único
-pendiente es que el usuario vuelva a correr en Colab los notebooks 01 y 02 (sus ZIP anteriores son de
-una versión vieja) y decidir los próximos pasos (§5).
+Metodología nueva implementada, verificada en local y pusheada: el IIJP se valoriza **por región y al
+nivel de aperturas del IPC**, con los restos no publicados deducidos de las ponderaciones oficiales del
+INDEC. Incluye un subíndice **haber mínimo** y una **tabla de 19 variantes** de sensibilidad. Datos a
+ago-2026. README y revision_TP al día. **Pendiente**: que el usuario corra los 3 notebooks en Colab y pase
+los ZIP; reescribir la sección LaTeX del informe INECO con la metodología nueva.
 
 ## 1. Cobertura de datos
 
 | Fuente | Último dato | Cómo se actualiza |
 |---|---|---|
-| IPC por división (INDEC) | ago-2026 | automático (`--refrescar`) |
+| IPC por división y por aperturas regionales (INDEC) | ago-2026 | automático (`--refrescar`) |
+| Ponderaciones oficiales por región (`data/reference/ponderadores_ipc_regiones.csv`) | dic-2016 | fijas (cambian solo con un IPC nuevo) |
 | Haber mínimo (datos.gob.ar `58.1_MP_0_M_24`) | sep-2026 | automático |
 | Bono previsional (`data/reference/bono_previsional.csv`) | sep-2026 ($70.000) | **manual**, una fila por mes |
 | IMIG (vía repo `cuentas_publicas`) | ago-2026 | actualizar ese repo primero |
@@ -22,63 +26,75 @@ una versión vieja) y decidir los próximos pasos (§5).
 
 ## 2. Cifras vigentes (`python scripts/construir.py`, bootstrap 500)
 
-- **Ago-2026**: IPC 1,66% m/m y 33,5% i.a. · IIJP 1,74% y 34,5% · IPC ENGHo 17/18 1,69% y 34,5%.
-- **Brecha IIJP vs IPC oficial**: dic-16 → ago-26 +1,32% (IC 1,07-1,57); Macri +2,77%;
-  Fernández −4,01%; Milei (nov-23 → ago-26) +2,71% (IC 2,37-3,09); desde dic-24 +0,53%;
-  ventana del TP (nov-23 → may-26) +2,39% (IC 2,06-2,75; el TP decía 3,84%).
-- **Efecto edad** (IIJP vs IPC 17/18): completo +0,79%; Milei −0,69% (IC −1,01 a −0,37).
-  **Efecto canasta vieja** (IPC 17/18 vs oficial): Milei +3,43%.
-- Diferencia media mensual 2016-2026: 0,011 p.p. (IC Newey-West −0,035 a 0,058): no sistemática.
+- **Ago-2026**: IPC 1,66% m/m y 33,5% i.a. · IIJP 1,61% y 34,7% · IIJP haber mínimo 1,81% y 36,5% ·
+  IPC ENGHo 17/18 1,52% y 34,6%.
+- **Brecha IIJP vs IPC oficial**: dic-16 → ago-26 **+2,29%** (IC 1,88-2,70); Macri +3,16%; Fernández
+  −4,45%; Milei (nov-23 → ago-26) **+3,78%** (IC 3,19-4,28); shock tarifario +3,33%; desde dic-24 +0,43%;
+  ventana del TP +3,43%.
+- **IIJP haber mínimo vs IPC oficial**: completo +4,43%; Milei +4,97% (IC 4,14-5,85).
+- **Efecto edad** (IIJP vs IPC 17/18): completo **+2,01%** (IC 1,64-2,37); Macri +2,86%; Fernández −0,43%;
+  Milei −0,40% (IC −0,89 a +0,10); desde dic-24 −0,87%. **Efecto canasta vieja** (IPC 17/18 vs oficial):
+  completo +0,28%; Milei +4,20%.
+- **Firmeza (19 variantes)**: mantienen el signo en todas la brecha vs IPC oficial en el período completo
+  (1,3 a 4,5%), Macri, Fernández y Milei (2,7 a 8,6%), el efecto edad del período completo (0,8 a 4,1%) y
+  de Macri, y el aumento del haber si se indexara por IIJP (0,8 a 7,4%). **No es firme** el signo del
+  efecto edad en Milei (−0,75 a +0,78) ni desde 2025.
+- Lo que explica la brecha en Milei (por apertura): prendas (los jubilados compran menos ropa, que subió
+  menos), electricidad y gas y el resto de vivienda (agua), a favor; alquiler, restaurantes y recreación,
+  en contra. Medicamentos resta en el efecto edad (subieron menos que prepagas).
+- **Regiones** (IIJP vs IPC de la región, Milei): GBA +4,7%, Pampeana +1,9%, NOA +5,6%, NEA +8,9%,
+  Cuyo +3,1%, Patagonia +5,1% (muestras chicas fuera de GBA y Pampeana).
 - **Canasta** (hogares jubilados, 5.350 en la muestra, 2,96 M expandidos): alimentos 26,4%, vivienda
-  14,5%, salud 11,4%, transporte 11,3%, educación 0,8% (todos los hogares: 22,7 / 14,5 / 6,4 / 14,3 / 3,1).
-- **Haber mínimo real** (base nov-23, ago-26): sin bono +10,1% (IPC) / +7,2% (IIJP); con bono −9,7%
-  (IPC) / −12,1% (IIJP). Bono actualizado por IPC desde mar-24 sería $194.268.
-- **Contrafactual IIJP desde abr-24**: haber +0,77% en sep-26 ($3.285/mes en la mínima).
-- **Costo fiscal**: 2024 (abr-dic) $84.393 M = 0,28% del gasto previsional (0,014% PIB); 2025
-  $98.318 M = 0,17% (0,012% PIB); 2026 ene-ago $205.402 M = 0,43%. Mayo 2026: $22.815 M.
+  14,5% (dentro de vivienda: alquiler 14%, electricidad y gas 51%), salud 11,4% (medicamentos 54%,
+  prepagas 29%), transporte 11,3% (transporte público 27%). Haber mínimo (2.081 hogares, 40% de los
+  jubilados): alimentos 32,9%, vivienda 16,5%, medicamentos 72% de salud, transporte público 43%.
+- **Haber mínimo real** (base nov-23, ago-26): sin bono +10,1% (IPC) / +6,1% (IIJP) / +4,9% (IIJP haber
+  mínimo); con bono −9,7% / −13,0% / −14,0%. Bono actualizado por IPC desde mar-24: $194.268.
+- **Contrafactual desde abr-24** (sep-26): con IIJP el haber sería +1,95% ($8.350/mes en la mínima); con
+  IIJP haber mínimo, +3,11% ($13.321).
+- **Costo fiscal** (indexar por IIJP): 2024 (abr-dic) $391.577 M = 1,28% del gasto previsional (0,067% PIB);
+  2025 $659.222 M = 1,16% (0,078% PIB); 2026 ene-ago $674.355 M = 1,42%. Mayo 2026: $88.533 M.
 - Movilidad: ANSES usa el IPC(t−2) desde niveles con 2 decimales (error 0 en 29/29 meses).
 
 ## 3. Dónde se citan las cifras (actualizar todo junto si cambian)
 
-| Documento | Qué cifras |
+| Documento | Estado |
 |---|---|
-| `README.md` | tabla de períodos, puntos 1-5 de Resultados, nota metodológica (5.350 hogares, 0,16%) |
-| `docs/revision_TP.md` | tabla resumen (ventana del TP, haberes may-26/sep-26, costo may-26), M2 (tabla edad/canasta), B6 (bono) |
-| `docs/informe_indicadores/seccion_iijp.tex` | sección LaTeX del informe INECO: ago-26 m/m e i.a., cuadro de períodos, canasta, haberes, costo |
-| `ESTADO.md` §2 | todas |
-| Markdown de `scripts/gen_notebooks.py` | lecturas cualitativas (+3,7 p.p. alimentos, 2,4% ventana TP, ±10% haber) |
+| `ESTADO.md` §2 | al día: todas |
+| `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-6, nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%) |
+| `docs/revision_TP.md` | al día: tabla resumen (ventana del TP, haberes may-26/sep-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
+| `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
+| Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
-## 4. Verificación
+## 4. Verificación (2026-10-13)
 
-- `python -m pytest tests -q` → 7 passed.
-- `python scripts/control_calidad.py` → 0 ALERTAS (réplica IPC 0,158%; canasta del TP 0,0006; regla de
-  movilidad 29/29; contrafactual IPC = haber efectivo; bono cargado; IMIG sin huecos).
-- Colab (2026-10-06): NB03 con commit `ea4ffc3` → `python scripts/comparar_zip.py <zip>` da 0
-  diferencias no esperadas. **Pendiente**: el usuario vuelve a correr NB01 y NB02 (sus ZIP previos se
-  generaron con módulos viejos en memoria: hojas Haberes/Fiscal con la regla de 1 decimal).
+- `python -m pytest tests -q` → 13 passed (6 nuevos de `tests/test_estructura.py`).
+- `python scripts/control_calidad.py` → 0 ALERTAS: réplica del IPC nacional con la estructura de
+  aperturas 0,081% (regiones ≤ 0,257%); agregados completos ≤ 0,056%; restos estables ante el redondeo
+  (≤ 4,1%); 100% del gasto asignado; canastas suman 1; haber mínimo 39,6% de los jubilados; canasta del TP
+  0,0006; regla de movilidad 29/29; contrafactual = haber efectivo; bono cargado; IMIG sin huecos.
+- Notebooks ejecutados en local (`_local_run/`, bootstrap 30) y sus ZIP comparados con `construir.py`:
+  0 diferencias no esperadas. **Falta**: correrlos en Colab después del push.
 
 ## 5. Próximos pasos posibles (a decidir con el usuario)
 
-1. Devolución a los alumnos: `docs/revision_TP.md` está escrita como devolución (¿así o resumida?).
-2. Informe INECO: la sección del IIJP está en `docs/informe_indicadores/seccion_iijp.tex`. Opcionales:
-   sumar el gráfico `g03_brecha_historica.png`, una línea de crédito al TP del Grupo 2, o cambiar la
-   sigla (IIJP vs una que siga el título "Índice de Precios de Jubilados Argentinos").
-3. Subíndices de Salud (medicamentos vs prepagas) con `serie_ipc_aperturas.csv` del INDEC + archivo de
-   gastos por artículo de la ENGHo (`engho2018_gastos.zip`, ya se descarga a cache): el archivo de
-   hogares solo abre la división 09 (`gc09_*`).
-4. Canasta por nivel de haber con el archivo de gastos por artículo.
-5. Proyección 2050 (si se quiere rehacer la del TP): población 65+ del Banco Mundial (HNP) + tabla de
-   desvío permanente; el costo relativo no depende de la demografía.
-6. Página interactiva / dashboard: no por ahora.
+1. Corrida en Colab de los 3 notebooks (comparar los ZIP con `scripts/comparar_zip.py`).
+2. Sección LaTeX del informe INECO (metodología por aperturas, tabla de firmeza, subíndice haber mínimo)
+   y, si se quiere, una versión resumida de la devolución a los alumnos.
+3. Precios propios de los jubilados (limitación conceptual): cobertura de PAMI en medicamentos, tarifa
+   social de transporte, segmentación de subsidios energéticos. Requiere datos fuera del IPC.
+4. Decidir si el umbral del haber mínimo (1,1 mínimos) y la inclusión de PNC quedan como están.
+5. Si el INDEC publica el IPC con canasta ENGHo 2017/18 (postergado sin fecha en feb-2026) o una ENGHo
+   nueva: cambiar la referencia de ponderaciones.
 
 ## 6. Rutina mensual (cuando el INDEC publica el IPC)
 
 1. `git pull`. Actualizar `cuentas_publicas` (IMIG) si Hacienda publicó el mes.
 2. Si hubo decreto de bono: agregar la fila en `data/reference/bono_previsional.csv` (aunque siga en
    $70.000; el control de calidad avisa si falta un mes).
-3. `python scripts/construir.py --refrescar`
+3. `python scripts/construir.py --refrescar` (baja divisiones y aperturas).
 4. `python scripts/control_calidad.py` → 0 ALERTAS; `python -m pytest tests -q`.
-5. Actualizar §1-§2 y los documentos de §3 si cambian las cifras. Commit + push.
+5. Actualizar §1-§2 (y los documentos de §3 cuando estén redactados). Commit + push.
 6. Si el usuario corre los notebooks en Colab y pasa los ZIP: `python scripts/comparar_zip.py <zips>`.
 
 ## 7. PC nueva
@@ -87,7 +103,7 @@ una versión vieja) y decidir los próximos pasos (§5).
 git clone https://github.com/santiagoriverti/IPC_jubilados.git
 cd IPC_jubilados
 pip install -r requirements.txt
-python scripts/construir.py          # baja IPC, ENGHo (~13 MB), haber y PIB a data/cache/ (~1 min)
+python scripts/construir.py          # baja IPC (divisiones y aperturas), ENGHo (~14 MB), haber y PIB (~1-2 min)
 python scripts/control_calidad.py    # 0 ALERTAS
 ```
 

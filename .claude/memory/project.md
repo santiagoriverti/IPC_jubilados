@@ -35,3 +35,32 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   del ingreso; ponderaciones plutocráticas; precio de referencia de la canasta = promedio nov-17/nov-18;
   sigla IIJP (el informe titula "Índice de Precios de Jubilados Argentinos").
 - Pendientes / ideas: ver ESTADO.md §5.
+
+## Sesión 2 — 2026-10-13 (rediseño metodológico)
+- ZIPs de Colab de NB01/02/03 con 55e87c2 = local (0 diferencias no esperadas): verificación de la
+  versión anterior cerrada.
+- Revisión "de expertos" pedida por el usuario. Hallazgo principal: las 12 divisiones heredan la
+  composición interna de 2004/05 (medicamentos vs prepagas, alquiler vs servicios, transporte público vs
+  vehículo) y subestiman la brecha. El efecto edad de Milei (−0,7%) no era robusto. Las estimaciones
+  públicas del "IPC con canasta 2017/18" usan ponderaciones fijas sobre variaciones (González-Rozada
+  2024 +7,4% se replica exacto): el Lowe del repo es el método correcto.
+- El usuario aclaró el objetivo: un IPC de jubilados profesional; el TP es solo la idea. Pidió
+  implementar: (1) índice por aperturas regionales, (2) tabla de variantes, (3) subíndice haber mínimo.
+- Implementado:
+  - `src/estructura.py`: nodos por región (aperturas publicadas + restos `.r` deducidos de las
+    ponderaciones oficiales `ponderadores_ipc.xls` del INDEC, encontrado en la página del IPC; umbral
+    0,002; huecos de 2020 completados con el agregado). Réplica del IPC nacional 0,081%.
+  - `src/ponderaciones.py`: gasto por hogar y nodo desde el archivo de gastos (100% asignado),
+    poblaciones nuevas (haber mínimo ≤ 1,1 mínimos del trimestre; 10 variantes de definición).
+  - `src/variantes.py`: 19 variantes (detalle, población, ponderación, fórmula, precios de referencia),
+    resumen de firmeza. `src/indices.py` genérico (Lowe, Young, geométrico, descomposición por nodo).
+  - Pipeline: niveles nacionales y regionales, bootstrap sobre la matriz de gasto, descomposición por
+    división y por apertura, haber real y contrafactual con IIJP haber mínimo, bloque `revision_tp`.
+  - Gráficos g07 (regiones) y g08 (variantes); notebooks regenerados sin cifras fijas en el markdown.
+- Resultado: Milei IIJP vs IPC +3,78% (antes 2,71%); completo +2,29% (antes 1,32%); efecto edad
+  completo +2,01% (firme), Milei −0,40% (no firme); haber mínimo Milei +4,97%; haber por IIJP +1,95% en
+  sep-26; costo ~0,07-0,08% PIB/año.
+- Verificado local: 13 tests, control 0 ALERTAS, notebooks en `_local_run` = construir.py.
+- A pedido del usuario se actualizaron todos los .md (README reescrito con la metodología y cifras
+  nuevas; revision_TP con las cifras del IIJP vigente, M1b nuevo sobre las 12 divisiones) y se hizo
+  commit + push. Solo `seccion_iijp.tex` queda desactualizada (aviso en la cabecera). Falta: Colab.

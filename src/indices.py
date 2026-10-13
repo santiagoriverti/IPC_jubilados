@@ -1,20 +1,27 @@
 """Calculo de indices de precios por canasta y comparacion con el IPC.
 
-Metodo (el mismo concepto que usa el INDEC): indice de canasta fija (Lowe/Laspeyres).
-Las cantidades de la canasta quedan fijas en el periodo de la encuesta y se valorizan con los
-indices de precios por division de cada mes:
+Las funciones reciben una matriz de precios P (periodo x componentes; los componentes pueden ser las 12
+divisiones o los nodos (region, apertura) de estructura.Estructura) y una canasta w indexada por esos
+mismos componentes.
+
+Metodo principal (el mismo concepto que el IPC): indice de canasta fija (Lowe). Las cantidades de la
+canasta quedan fijas en el periodo de la encuesta y se valorizan con los indices de precios de cada mes:
 
     IIJP_t = sum_i q_i * I_i,t ,   q_i = w_i / Ibar_i,ref
 
-donde w_i es la participacion del gasto en la division i medida por la ENGHo 2017/18 e Ibar_i,ref
-el nivel promedio del indice de esa division durante el relevamiento (nov-2017 a nov-2018).
-Equivale a decir que la ponderacion efectiva de cada division se actualiza con sus precios relativos:
-si un rubro se abarata en terminos relativos (p. ej. tarifas congeladas 2019-2023), pesa menos.
+donde w_i es la participacion del gasto en el componente i medida por la ENGHo 2017/18 e Ibar_i,ref el
+nivel promedio de su indice durante el relevamiento (nov-2017 a nov-2018). Equivale a actualizar por
+precios las ponderaciones desde el periodo de la encuesta (lo que recomienda el Manual del IPC de
+OIT/FMI y hace el INDEC): si un rubro se abarata en terminos relativos (tarifas congeladas 2019-2023),
+pesa menos.
 
-El TP original, en cambio, aplicaba siempre las mismas ponderaciones a las variaciones mensuales
+Alternativas para la tabla de sensibilidad: Young (participaciones de la encuesta fijas sobre los
+relativos de precios desde la base, sin actualizar por precios) y geometrica (Cobb-Douglas).
+
+El TP original aplicaba siempre las mismas ponderaciones a las variaciones mensuales
 (sum_i w_i * pi_i,t). Eso no es un indice de canasta fija: cuando hay grandes cambios de precios
-relativos sobrepondera los rubros atrasados y genera una brecha artificial con el IPC
-(se incluye `metodo_tp` solo para cuantificar ese sesgo).
+relativos sobrepondera los rubros atrasados y genera una brecha artificial con el IPC (`metodo_tp`
+queda solo para la revision del TP).
 """
 from __future__ import annotations
 
@@ -27,39 +34,47 @@ BASE = pd.Period('2016-12', 'M')
 
 
 def _w(w) -> pd.Series:
-    w = pd.Series(w, index=DIVS) if not isinstance(w, pd.Series) else w.reindex(DIVS)
+    """Canasta normalizada (suma 1). Un vector sin indice se interpreta como las 12 divisiones."""
+    w = w if isinstance(w, pd.Series) else pd.Series(np.asarray(w, dtype=float), index=DIVS)
     return w / w.sum()
 
 
-def lowe(I: pd.DataFrame, w, ref=REF_ENGHO, base=BASE) -> pd.Series:
+def lowe(P: pd.DataFrame, w, ref=REF_ENGHO, base=BASE) -> pd.Series:
     """Indice de canasta fija con cantidades del periodo ref (base=100)."""
-    pref = I.loc[ref[0]:ref[1], DIVS].mean()
-    nivel = (I[DIVS] * (_w(w) / pref)).sum(axis=1)
+    w = _w(w)
+    pref = P.loc[ref[0]:ref[1], w.index].mean()
+    nivel = P[w.index] @ (w / pref)
     return nivel / nivel.loc[base] * 100
 
 
-def laspeyres(I: pd.DataFrame, w, base=BASE) -> pd.Series:
-    """Laspeyres con ponderaciones del periodo base (asi esta construido el IPC oficial)."""
-    nivel = (I[DIVS] / I.loc[base, DIVS] * _w(w)).sum(axis=1)
+def lowe_cantidades(P: pd.DataFrame, q: pd.Series, base=BASE) -> pd.Series:
+    """Indice de canasta fija con cantidades q dadas (en unidades de indice)."""
+    nivel = P[q.index] @ q
     return nivel / nivel.loc[base] * 100
 
 
-def lowe_regional(indices_region: dict[str, pd.DataFrame], gasto_region: pd.DataFrame,
-                  ref=REF_ENGHO, base=BASE) -> pd.Series:
-    """Indice de canasta fija con canastas e indices de precios regionales (6 regiones del IPC)."""
-    tot = gasto_region.values.sum()
-    nivel = 0
-    for r, I in indices_region.items():
-        w = gasto_region.loc[r, DIVS] / tot
-        pref = I.loc[ref[0]:ref[1], DIVS].mean()
-        nivel = nivel + (I[DIVS] * (w / pref)).sum(axis=1)
+def laspeyres(P: pd.DataFrame, w, base=BASE) -> pd.Series:
+    """Ponderaciones fijas sobre los relativos de precios desde la base. Con ponderaciones del periodo
+    base es el Laspeyres con que se calcula el IPC oficial; con las de otro periodo, el indice de Young."""
+    w = _w(w)
+    nivel = (P[w.index] / P.loc[base, w.index]) @ w
     return nivel / nivel.loc[base] * 100
+
+
+young = laspeyres
+
+
+def geometrica(P: pd.DataFrame, w, base=BASE) -> pd.Series:
+    """Media geometrica ponderada de los relativos de precios (Cobb-Douglas)."""
+    w = _w(w)
+    return np.exp(np.log(P[w.index] / P.loc[base, w.index]) @ w) * 100
 
 
 def metodo_tp(V: pd.DataFrame, w) -> pd.Series:
     """Variacion mensual como la calculaba el TP: ponderaciones fijas sobre las variaciones
     mensuales publicadas (1 decimal). Devuelve variaciones (fraccion), no niveles."""
-    return (V[DIVS] * _w(w)).sum(axis=1)
+    w = _w(w)
+    return V[w.index] @ w
 
 
 def nivel_desde_variaciones(v: pd.Series, base=BASE) -> pd.Series:
@@ -84,28 +99,36 @@ def acumulada(nivel: pd.Series, desde, hasta) -> float:
     return float(nivel.loc[pd.Period(hasta, 'M')] / nivel.loc[pd.Period(desde, 'M')] - 1)
 
 
-def ponderacion_efectiva(I: pd.DataFrame, w, t, ref=REF_ENGHO) -> pd.Series:
-    """Participacion que tiene cada division en el valor de la canasta fija en el mes t."""
-    pref = I.loc[ref[0]:ref[1], DIVS].mean()
-    v = (_w(w) / pref) * I.loc[pd.Period(t, 'M'), DIVS]
+def brecha(a: pd.Series, b: pd.Series, desde, hasta) -> float:
+    """Brecha acumulada entre dos indices, en %: (1 + infl. A) / (1 + infl. B) - 1."""
+    return ((1 + acumulada(a, desde, hasta)) / (1 + acumulada(b, desde, hasta)) - 1) * 100
+
+
+def ponderacion_efectiva(P: pd.DataFrame, w, t, ref=REF_ENGHO) -> pd.Series:
+    """Participacion que tiene cada componente en el valor de la canasta fija en el mes t."""
+    w = _w(w)
+    pref = P.loc[ref[0]:ref[1], w.index].mean()
+    v = (w / pref) * P.loc[pd.Period(t, 'M'), w.index]
     return v / v.sum()
 
 
-def descomposicion(I: pd.DataFrame, w_a, w_b, desde, hasta, ref_a=REF_ENGHO, ref_b=None) -> pd.DataFrame:
-    """Aporte de cada division a la brecha entre dos canastas fijas, (A_h/A_d) / (B_h/B_d) - 1.
+def descomposicion(P: pd.DataFrame, w_a, w_b, desde, hasta, ref_a=REF_ENGHO, ref_b=None) -> pd.DataFrame:
+    """Aporte de cada componente a la brecha entre dos canastas fijas, (A_h/A_d) / (B_h/B_d) - 1.
 
     (A_h/A_d) / (B_h/B_d) - 1 = sum_i (wa_i - wb_i) * (R_i - R_B) / R_B
     con wa, wb = ponderaciones efectivas en `desde`, R_i = I_i,h / I_i,d y R_B = B_h/B_d.
-    Una division suma brecha si la canasta A la pondera mas que la B y sus precios subieron mas
+    Un componente suma brecha si la canasta A lo pondera mas que la B y sus precios subieron mas
     que el promedio de B (o al reves). Los aportes suman exactamente la brecha (en %)."""
     d, h = pd.Period(desde, 'M'), pd.Period(hasta, 'M')
-    wa = ponderacion_efectiva(I, w_a, d, ref_a)
+    w_a, w_b = _w(w_a), _w(w_b)
+    idx = w_a.index.union(w_b.index, sort=False)
+    wa = ponderacion_efectiva(P, w_a, d, ref_a).reindex(idx, fill_value=0.0)
     if ref_b is None:  # B es un Laspeyres base dic-2016 (IPC oficial): sus cantidades son w/I_base
         ref_b = (str(BASE), str(BASE))
-    wb = ponderacion_efectiva(I, w_b, d, ref_b)
-    R = I.loc[h, DIVS] / I.loc[d, DIVS]
+    wb = ponderacion_efectiva(P, w_b, d, ref_b).reindex(idx, fill_value=0.0)
+    R = P.loc[h, idx] / P.loc[d, idx]
     RB = float((wb * R).sum())
-    out = pd.DataFrame({'pond_efectiva_a': wa, 'pond_efectiva_b': wb, 'var_division': R - 1,
+    out = pd.DataFrame({'pond_efectiva_a': wa, 'pond_efectiva_b': wb, 'var_componente': R - 1,
                         'aporte_pct': (wa - wb) * (R - RB) / RB * 100})
     out.attrs['brecha_pct'] = float(((wa * R).sum() / RB - 1) * 100)
     return out
@@ -127,7 +150,8 @@ def newey_west_se(x: np.ndarray, lags: int | None = None) -> float:
 
 def brecha_mensual(nivel_a: pd.Series, nivel_b: pd.Series, desde=None, hasta=None) -> dict:
     """Diferencia media mensual (en log) entre dos indices, con IC 95% Newey-West.
-    Responde: la diferencia es sistematica o va y viene?"""
+    Responde: la diferencia es persistente mes a mes o se concentra en pocos meses? (Con pocos meses el
+    test tiene poca potencia; la incertidumbre de la canasta se mide con el bootstrap.)"""
     d = np.log(nivel_a / nivel_a.shift(1)) - np.log(nivel_b / nivel_b.shift(1))
     d = d.loc[desde:hasta].dropna()
     m, se = d.mean(), newey_west_se(d.values)
@@ -147,14 +171,22 @@ PERIODOS = [
 ]
 
 
+def periodos_vigentes(ultimo) -> list[tuple[str, str, str]]:
+    """PERIODOS con el ultimo dato resuelto, sin los que terminan despues del ultimo dato."""
+    ultimo = pd.Period(ultimo, 'M')
+    out = []
+    for nombre, d, h in PERIODOS:
+        h = h or str(ultimo)
+        if pd.Period(h, 'M') <= ultimo:
+            out.append((nombre, d, h))
+    return out
+
+
 def tabla_periodos(niveles: dict[str, pd.Series], referencia: str = 'IPC oficial') -> pd.DataFrame:
     """Inflacion acumulada por periodo de cada indice y su brecha (en %) contra la referencia."""
     filas = []
     ultimo = min(s.dropna().index.max() for s in niveles.values())
-    for nombre, d, h in PERIODOS:
-        h = h or str(ultimo)
-        if pd.Period(h, 'M') > ultimo:
-            continue
+    for nombre, d, h in periodos_vigentes(ultimo):
         fila = {'periodo': nombre, 'desde': d, 'hasta': h}
         ref = acumulada(niveles[referencia], d, h)
         for k, s in niveles.items():
