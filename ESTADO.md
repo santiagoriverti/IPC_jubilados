@@ -9,9 +9,8 @@ este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → 
 El IIJP se valoriza **por región y al nivel de aperturas del IPC**, con los restos no publicados
 deducidos de las ponderaciones oficiales del INDEC y una concordancia ENGHo → IPC (expensas). Incluye un
 subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a ago-2026.
-Colab verificado con `6e7aab1`; después se corrigió la concordancia de las expensas (cambian las cifras:
-§2). README y revision_TP al día. **Pendiente**: correr los notebooks en Colab con la versión nueva y
-reescribir la sección LaTeX del informe INECO.
+Colab verificado con `b419fa3` (versión con la concordancia de las expensas): los 3 ZIP = local. README
+y revision_TP al día. **Pendiente**: reescribir la sección LaTeX del informe INECO.
 
 ## 1. Cobertura de datos
 
@@ -81,13 +80,12 @@ reescribir la sección LaTeX del informe INECO.
   contrafactual = haber efectivo; bono cargado; IMIG sin huecos.
 - Notebooks ejecutados en local (`_local_run/`, bootstrap 30) y sus ZIP comparados con `construir.py`:
   0 diferencias no esperadas (`comparar_zip.py` ignora las columnas de intervalos p2.5/p97.5).
-- Colab: con `7c770cf` falló (API de datos.gob.ar vacía; corregido en `6e7aab1`); con `6e7aab1` los 3
-  ZIP = local (0 diferencias no esperadas). La concordancia de las expensas es posterior: **falta**
-  volver a correr en Colab.
+- Colab: con `7c770cf` falló (API de datos.gob.ar vacía; corregido en `6e7aab1`); con `6e7aab1` y con
+  `b419fa3` (concordancia de expensas) los 3 ZIP = local: 0 diferencias no esperadas.
 
 ## 5. Próximos pasos posibles (a decidir con el usuario)
 
-1. Corrida en Colab de los 3 notebooks (comparar los ZIP con `scripts/comparar_zip.py`).
+1. (Hecho) Corrida en Colab de los 3 notebooks con `b419fa3`.
 2. Sección LaTeX del informe INECO (metodología por aperturas, tabla de firmeza, subíndice haber mínimo)
    y, si se quiere, una versión resumida de la devolución a los alumnos.
 3. Precios propios de los jubilados (limitación conceptual): cobertura de PAMI en medicamentos, tarifa

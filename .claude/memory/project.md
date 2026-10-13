@@ -81,3 +81,5 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
     sensibilidad del tope del haber mínimo (1-2 mínimos: resultado estable); cobertura de precios
     (83/16,5/0,5%). Ahora la brecha del período completo NO es firme; el efecto edad completo sí, pero
     viene de 2016-2019.
+- Commit `b419fa3` pusheado; Colab con `b419fa3`: los 3 ZIP = local (0 diferencias no esperadas).
+  Proyecto verificado de punta a punta. Próximo paso: sección LaTeX del informe INECO.
