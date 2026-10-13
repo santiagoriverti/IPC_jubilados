@@ -64,6 +64,9 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
     gas = fuentes.leer_engho('gastos', refrescar, usecols=['id', 'clase', 'grupo', 'division', 'monto'])
     haber_serie = fuentes.leer_haber_minimo(refrescar)
     h = pond.preparar_hogares(hog, per, haber_serie)
+    for p in POBLACIONES_INDICE.values():
+        if not h[p].any():
+            raise ValueError(f'La poblacion {p} quedo sin hogares: revisar los datos de entrada')
     E = pond.gasto_por_nodo(gas, h, est)
     E_dr = pond.gasto_por_nodo(gas, h, est_dr)
     E_dn = pond.gasto_por_nodo(gas, h, est_dn)

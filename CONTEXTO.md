@@ -130,6 +130,12 @@
 - **Movilidad**: el haber de t sube la variación del IPC de t−2 **calculada desde los niveles y
   redondeada a 2 decimales** (no la publicada a 1 decimal). Abril 2024 fue de transición (+27,4%). Los
   contrafactuales usan el mismo redondeo (`haberes.var_movilidad`; alias `pipeline.var_movilidad`).
+- **La API de series de datos.gob.ar falla de forma intermitente** (oct-2026: la misma consulta devuelve
+  la serie completa o una tabla vacía según el momento). `fuentes.serie_datos_gob` reintenta, si sigue
+  vacía baja el CSV estático de la distribución (`fuentes.DISTRIBUCIONES`, haber mínimo y PIB) y si no hay
+  datos lanza un error; nunca guarda una serie vacía en caché. Con una serie vacía del haber, el grupo
+  haber mínimo quedaba en 0 hogares (falló así en Colab el 2026-10-13): `preparar_hogares` y el pipeline
+  ahora cortan con un mensaje claro.
 - El haber se conoce hasta 2 meses después del último IPC; la IMIG suele llegar 1 mes después del haber.
 - La IMIG de junio y diciembre incluye aguinaldo (el factor relativo aplica igual). Algunos conceptos
   aparecen con dos descripciones: se deduplica por (fecha, código).

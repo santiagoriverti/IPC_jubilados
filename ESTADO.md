@@ -74,7 +74,10 @@ los ZIP; reescribir la sección LaTeX del informe INECO con la metodología nuev
   (≤ 4,1%); 100% del gasto asignado; canastas suman 1; haber mínimo 39,6% de los jubilados; canasta del TP
   0,0006; regla de movilidad 29/29; contrafactual = haber efectivo; bono cargado; IMIG sin huecos.
 - Notebooks ejecutados en local (`_local_run/`, bootstrap 30) y sus ZIP comparados con `construir.py`:
-  0 diferencias no esperadas. **Falta**: correrlos en Colab después del push.
+  0 diferencias no esperadas.
+- Colab con `7c770cf` falló: la API de datos.gob.ar devolvió vacía la serie del haber mínimo (grupo
+  haber mínimo = 0 hogares). Corregido (reintentos + CSV de respaldo + validaciones; CONTEXTO §5) y
+  probado con una copia del repo sin caché: mismas cifras. **Falta**: volver a correr en Colab.
 
 ## 5. Próximos pasos posibles (a decidir con el usuario)
 

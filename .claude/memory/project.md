@@ -64,3 +64,8 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
 - A pedido del usuario se actualizaron todos los .md (README reescrito con la metodología y cifras
   nuevas; revision_TP con las cifras del IIJP vigente, M1b nuevo sobre las 12 divisiones) y se hizo
   commit + push. Solo `seccion_iijp.tex` queda desactualizada (aviso en la cabecera). Falta: Colab.
+- Colab con `7c770cf`: los 3 notebooks fallaron (ZeroDivisionError, "haber minimo 0"). Causa: la API de
+  datos.gob.ar devolvía vacía la serie del haber (intermitente; en la PC andaba por la caché del 06-10).
+  Arreglo: `serie_datos_gob` con reintentos y respaldo al CSV de la distribución, caché vacío se vuelve a
+  bajar, validaciones que cortan si el haber no cubre la ENGHo o una población queda vacía. Probado con
+  una copia del repo sin caché (simula Colab): mismas cifras.

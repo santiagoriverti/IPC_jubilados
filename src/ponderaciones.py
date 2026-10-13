@@ -125,6 +125,9 @@ def preparar_hogares(hogares: pd.DataFrame, personas: pd.DataFrame,
         # Haber minimo de referencia: el maximo vigente en el trimestre operativo de la entrevista
         tope = {t: float(haber_minimo.loc[a:b].max()) * TOPE_HABER_MINIMO
                 for t, (a, b) in fuentes.TRIMESTRES_ENGHO.items()}
+        if not all(np.isfinite(list(tope.values()))):
+            raise ValueError('La serie del haber minimo no cubre el relevamiento de la ENGHo (nov-2017 a nov-2018): '
+                             f'{haber_minimo.index.min()} a {haber_minimo.index.max()}')
         pp = per[per['prev'] > 0]
         rel = pp['prev'] / pp['id'].map(h['trimestre']).map(tope)
         max_rel = rel.groupby(pp['id']).max().reindex(h.index)

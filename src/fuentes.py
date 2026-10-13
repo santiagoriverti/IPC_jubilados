@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import io
 import os
+import time
 import zipfile
 from pathlib import Path
 
@@ -31,6 +32,15 @@ URL_ENGHO = 'https://www.indec.gob.ar/ftp/cuadros/menusuperior/engho/engho2018_{
 URL_SERIES = 'https://apis.datos.gob.ar/series/api/series/'
 ID_HABER_MINIMO = '58.1_MP_0_M_24'
 ID_PIB_NOMINAL = '4.4_OGP_2004_T_17'  # trimestral ANUALIZADO: anual = suma / 4
+# Respaldo de la API de series: CSV de la distribucion en el catalogo (archivo estatico) y su columna
+DISTRIBUCIONES = {
+    ID_HABER_MINIMO: ('https://infra.datos.gob.ar/catalog/sspm/dataset/58/distribution/58.1/download/'
+                      'haber-minimo-jubilatorio-pesos-corrientes-valores-mensuales-desde-1971.csv',
+                      'mensual_pesos_corrientes'),
+    ID_PIB_NOMINAL: ('https://infra.datos.gob.ar/catalog/sspm/dataset/4/distribution/4.4/download/'
+                     'oferta-demanda-globales-precios-corrientes-valores-trimestrales-base-2004.csv',
+                     'oferta_global_pib'),
+}
 URL_CUENTAS = 'https://raw.githubusercontent.com/santiagoriverti/cuentas_publicas/main/output/{archivo}'
 
 # Regiones: codigo ENGHo -> nombre en el IPC del INDEC
@@ -139,25 +149,52 @@ def leer_engho(tabla: str, refrescar: bool = False, usecols=None) -> pd.DataFram
 # --------------------------------------------------------------------------------------------
 # Haberes
 # --------------------------------------------------------------------------------------------
-def serie_datos_gob(serie_id: str, desde: str = '2016-12-01') -> pd.Series:
-    r = requests.get(URL_SERIES, params={'ids': serie_id, 'format': 'csv', 'limit': 5000,
-                                         'start_date': desde}, headers=UA, timeout=60)
-    r.raise_for_status()
-    d = pd.read_csv(io.StringIO(r.text))
-    s = pd.Series(d.iloc[:, 1].values, index=pd.PeriodIndex(pd.to_datetime(d.iloc[:, 0]), freq='M'))
-    return s.astype(float)
+def _serie(fechas, valores) -> pd.Series:
+    periodos = pd.PeriodIndex(pd.to_datetime(pd.Series(fechas).values).to_period('M'))
+    return pd.Series(pd.to_numeric(pd.Series(valores), errors='coerce').values, index=periodos).dropna().astype(float)
+
+
+def serie_datos_gob(serie_id: str, desde: str = '2016-12-01', intentos: int = 4) -> pd.Series:
+    """Serie de la API de datos.gob.ar desde `desde`.
+
+    La API a veces responde sin datos (oct-2026: la misma consulta devolvia la serie completa o una tabla
+    vacia segun el momento). Se reintenta y, si sigue vacia, se baja el CSV de la distribucion del
+    catalogo (DISTRIBUCIONES). Si tampoco hay datos, error: nunca devuelve una serie vacia."""
+    for k in range(intentos):
+        try:
+            r = requests.get(URL_SERIES, params={'ids': serie_id, 'format': 'csv', 'limit': 1000,
+                                                 'start_date': desde}, headers=UA, timeout=60)
+            r.raise_for_status()
+            d = pd.read_csv(io.StringIO(r.text))
+            if len(d):
+                return _serie(d.iloc[:, 0], d.iloc[:, 1])
+        except (requests.RequestException, pd.errors.ParserError, pd.errors.EmptyDataError):
+            pass
+        time.sleep(2 * (k + 1))
+    if serie_id in DISTRIBUCIONES:
+        url, columna = DISTRIBUCIONES[serie_id]
+        r = requests.get(url, headers=UA, timeout=180)
+        r.raise_for_status()
+        d = pd.read_csv(io.BytesIO(r.content))
+        s = _serie(d['indice_tiempo'], d[columna])
+        s = s.loc[pd.Period(desde, 'M'):]
+        if len(s):
+            return s
+    raise RuntimeError(f'datos.gob.ar no devolvio datos para la serie {serie_id} (API y CSV de respaldo)')
 
 
 def leer_haber_minimo(refrescar: bool = False) -> pd.Series:
-    """Haber minimo jubilatorio mensual (pesos corrientes, sin bono)."""
+    """Haber minimo jubilatorio mensual (pesos corrientes, sin bono), desde dic-2016."""
     ruta = CACHE / 'haber_minimo.csv'
-    if refrescar or not ruta.exists():
-        s = serie_datos_gob(ID_HABER_MINIMO)
+    s = None
+    if ruta.exists() and not refrescar:
+        d = pd.read_csv(ruta)
+        s = pd.Series(d['haber_minimo'].values, index=pd.PeriodIndex(d['periodo'], freq='M'), name='haber_minimo')
+    if s is None or s.empty or s.index.min() > pd.Period('2016-12', 'M'):  # cache vacio o incompleto
+        s = serie_datos_gob(ID_HABER_MINIMO).rename('haber_minimo')
         ruta.parent.mkdir(parents=True, exist_ok=True)
-        s.rename('haber_minimo').to_frame().to_csv(ruta, index_label='periodo')
-    d = pd.read_csv(ruta)
-    return pd.Series(d['haber_minimo'].values, index=pd.PeriodIndex(d['periodo'], freq='M'),
-                     name='haber_minimo')
+        s.to_frame().to_csv(ruta, index_label='periodo')
+    return s
 
 
 def leer_bono() -> pd.Series:
@@ -169,7 +206,8 @@ def leer_bono() -> pd.Series:
 def leer_pib_anual(refrescar: bool = False) -> pd.Series:
     """PIB nominal anual en millones de pesos (promedio de los trimestres anualizados)."""
     ruta = CACHE / 'pib_nominal_trim.csv'
-    if refrescar or not ruta.exists():
+    vacio = ruta.exists() and len(pd.read_csv(ruta)) == 0
+    if refrescar or not ruta.exists() or vacio:
         s = serie_datos_gob(ID_PIB_NOMINAL, desde='2016-01-01')
         ruta.parent.mkdir(parents=True, exist_ok=True)
         s.rename('pib').to_frame().to_csv(ruta, index_label='periodo')
