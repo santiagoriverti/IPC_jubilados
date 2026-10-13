@@ -126,7 +126,7 @@ gasto lo deciden sobre todo los miembros más jóvenes, y la mezcla 0,69/0,31 po
 hogares (no por gasto, como el IPC). El IIJP corregido usa **hogares cuya principal fuente de ingreso
 son jubilaciones y pensiones** (≥ 50%). La tabla de variantes (hoja `Variantes` del Excel) prueba once
 definiciones alternativas (entre ellas la población del TP, hogares con algún mayor de 65): la brecha
-dic-23 → ago-26 va de 2,4% a 4,6% según la definición y siempre es positiva.
+nov-23 → ago-26 va de 2,4% a 4,5% según la definición y siempre es positiva.
 
 **M4. Una brecha de un período no es una corrección permanente.** El 3,84% surge casi entero del
 ajuste de precios relativos de 2024. En dic-19 → nov-23 la brecha fue −4,9%. La diferencia media

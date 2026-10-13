@@ -2,6 +2,7 @@
 y devuelve la figura. Paleta categorica validada (azul, naranja, aqua) y divergente azul/rojo."""
 from __future__ import annotations
 
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import pandas as pd
@@ -106,7 +107,7 @@ def g04_descomposicion(R, clave='nov23_ultimo'):
     a = t.attrs
     fig, axes = plt.subplots(1, 2, figsize=(11, 5.4), sharey=True)
     orden = t.sort_values('aporte_vs_ipc_oficial').index
-    for ax, col, tit in [(axes[0], 'aporte_vs_ipc_oficial', f'vs IPC oficial: {a["brecha_vs_oficial"]:+.2f}%'),
+    for ax, col, tit in [(axes[0], 'aporte_vs_ipc_oficial', f'vs IPC oficial replicado: {a["brecha_vs_oficial"]:+.2f}%'),
                          (axes[1], 'aporte_efecto_edad', f'Efecto edad (vs IPC 2017/18): {a["brecha_edad"]:+.2f}%')]:
         v = t.loc[orden, col]
         ax.barh(range(len(v)), v, color=[AZUL if x >= 0 else ROJO for x in v], height=0.7)
@@ -208,6 +209,202 @@ def g08_variantes(R):
     _pie(fig, FUENTE + '. Cada fila cambia una sola decisión respecto de la principal.')
     fig.tight_layout()
     return fig
+
+
+# ---------------------------------------------------------------------------------------------
+# Graficos de divulgacion (documento de prensa y presentacion de docs/divulgacion/): sin titulo (lo
+# pone el epigrafe o el titulo de la diapositiva), letra mas grande, decimales con coma y rotulos
+# directos. Se exportan a figuras/ (output/figuras/ y la carpeta figuras/ de cada ZIP), con los mismos
+# nombres que usan los .tex: esa carpeta se sube tal cual a la carpeta "figuras" de Overleaf.
+# ---------------------------------------------------------------------------------------------
+RC_DIVULGACION = {'font.size': 12.5, 'axes.titlesize': 13, 'legend.fontsize': 12, 'savefig.dpi': 200}
+FUENTE_CORTA = 'Fuente: INECO-UADE con datos del INDEC (IPC y ENGHo 2017/18)'
+MILEI = 'Milei (nov-23 al último dato)'
+
+
+MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
+         'noviembre', 'diciembre']
+
+
+def _coma(x, dec=1, signo=False) -> str:
+    """Numero con coma decimal (3,1 o +3,1); el cero va sin signo."""
+    if round(x, dec) == 0:
+        x, signo = 0.0, False
+    s = f'{x:+.{dec}f}' if signo else f'{x:.{dec}f}'
+    return s.replace('.', ',').replace('-', '−')
+
+
+def _eje_pct(ax, eje='y', dec=0, signo=False):
+    f = mticker.FuncFormatter(lambda v, _: _coma(v, dec, signo) + '%')
+    (ax.yaxis if eje == 'y' else ax.xaxis).set_major_formatter(f)
+
+
+def _mes(p) -> str:
+    """'ene-24' (Period o Timestamp)."""
+    return f'{MESES[p.month - 1][:3]}-{str(p.year)[2:]}'
+
+
+def _mes_largo(p) -> str:
+    """'agosto 2026'."""
+    return f'{MESES[p.month - 1]} {p.year}'
+
+
+def _eje_meses(ax):
+    """Marcas en enero y julio, rotuladas 'ene-24'."""
+    ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _mes(mdates.num2date(v))))
+
+
+def iijp_01_canasta(R):
+    W = R['ponderaciones']
+    orden = W.sort_values('jubilados').index
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9, 6))
+        y = range(len(orden))
+        alto = 0.38
+        for k, (col, lab, c) in enumerate([('ipc_oficial', 'Canasta del IPC oficial (2004/05)', NARANJA),
+                                           ('jubilados', 'Canasta de los hogares jubilados (2017/18)', AZUL)]):
+            v = W.loc[orden, col] * 100
+            yy = [i + (k - 0.5) * alto for i in y]
+            ax.barh(yy, v, height=alto - 0.04, color=c, label=lab)
+            for yi, vi in zip(yy, v):
+                ax.annotate(_coma(vi), (vi, yi), xytext=(3, 0), textcoords='offset points', va='center',
+                            fontsize=10, color=TINTA2)
+        ax.set_yticks(list(y))
+        ax.set_yticklabels([pond.DIVISIONES_CORTO[c] for c in orden])
+        _eje_pct(ax, 'x')
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('% del gasto de consumo')
+        ax.legend(loc='lower right')
+        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC (ENGHo 2004/05 y 2017/18)')
+    return fig
+
+
+def iijp_02_historia(R):
+    niv = R['niveles']
+    base = niv.index.min()
+    b = ((niv['IIJP'] / niv['IIJP'].loc[base]) / (niv['IPC oficial'] / niv['IPC oficial'].loc[base]) - 1) * 100
+    x = _fecha(niv.index)
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9.5, 5))
+        cortes = [pd.Period('2019-12', 'M'), pd.Period('2023-11', 'M')]
+        tramos = [(base, cortes[0], 'Macri'), (cortes[0], cortes[1], 'Fernández'), (cortes[1], niv.index.max(), 'Milei')]
+        for k, (d, h, nombre) in enumerate(tramos):
+            if k % 2 == 1:
+                ax.axvspan(d.to_timestamp(), h.to_timestamp(), color='#f3f2ee', lw=0)
+            medio = d.to_timestamp() + (h.to_timestamp() - d.to_timestamp()) / 2
+            ax.text(medio, 1.0, nombre, transform=ax.get_xaxis_transform(), ha='center', va='bottom',
+                    fontsize=12, color=TINTA2)
+        ax.fill_between(x, b, 0, where=b >= 0, color=AZUL, alpha=0.18, lw=0, interpolate=True)
+        ax.fill_between(x, b, 0, where=b < 0, color=ROJO, alpha=0.18, lw=0, interpolate=True)
+        ax.plot(x, b, color=AZUL, lw=2.2)
+        ax.annotate(_coma(b.iloc[-1], signo=True) + '%', (x[-1], b.iloc[-1]), xytext=(5, 0),
+                    textcoords='offset points', va='center', fontsize=11, color=AZUL, fontweight='bold')
+        ax.axhline(0, color=GRIS, lw=1)
+        _eje_pct(ax, 'y', signo=True)
+        ax.set_ylabel('IIJP sobre IPC oficial (acumulado)')
+        _pie(fig, FUENTE_CORTA + '. Base diciembre 2016. Arriba de cero: los precios de la canasta de los '
+                                 'jubilados subieron más que el IPC.')
+    return fig
+
+
+def iijp_03_desde_nov23(R):
+    niv = R['niveles']
+    base = pd.Period('2023-11', 'M')
+    ipc = niv['IPC oficial'].loc[base:]
+    b = lambda s: ((s.loc[base:] / s.loc[base]) / (ipc / ipc.loc[base]) - 1) * 100  # noqa: E731
+    x = _fecha(ipc.index)
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9.5, 5))
+        for s, lab, c in [(niv['IIJP haber mínimo'], 'Jubilados que cobran la mínima', NARANJA),
+                          (niv['IIJP'], 'Todos los hogares jubilados (IIJP)', AZUL)]:
+            y = b(s)
+            ax.plot(x, y, color=c, lw=2.4, label=lab)
+            ax.annotate(_coma(y.iloc[-1], signo=True) + '%', (x[-1], y.iloc[-1]), xytext=(5, 0),
+                        textcoords='offset points', va='center', fontsize=11, color=c, fontweight='bold')
+        ax.axhline(0, color=GRIS, lw=1)
+        _eje_pct(ax, 'y', signo=True)
+        _eje_meses(ax)
+        ax.set_ylabel('inflación acumulada sobre el IPC oficial')
+        ax.legend(loc='upper left')
+        _pie(fig, FUENTE_CORTA + '. Base noviembre 2023.')
+    return fig
+
+
+def iijp_04_que_explica(R):
+    t = R['descomposicion']['nov23_ultimo']
+    t = t.sort_values('aporte_vs_ipc_oficial')
+    v = t['aporte_vs_ipc_oficial']
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.barh(range(len(v)), v, color=[AZUL if x >= 0 else ROJO for x in v], height=0.7)
+        for i, vi in enumerate(v):
+            ax.annotate(_coma(vi, signo=True), (vi, i), xytext=(4 if vi >= 0 else -4, 0), textcoords='offset points',
+                        ha='left' if vi >= 0 else 'right', va='center', fontsize=10, color=TINTA2)
+        ax.set_yticks(range(len(v)))
+        ax.set_yticklabels(t['division'])
+        ax.axvline(0, color=GRIS, lw=1)
+        ax.margins(x=0.12)
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda z, _: _coma(z, 1, True)))
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('aporte a la diferencia con el IPC oficial (puntos porcentuales)')
+        _pie(fig, FUENTE_CORTA + f'. Noviembre 2023 a {_mes_largo(R["niveles"].index.max())}. '
+                                 'Azul: suma; rojo: resta.')
+    return fig
+
+
+def iijp_05_regiones(R):
+    t = R['periodos_regionales']
+    s = t[t['periodo'] == MILEI].set_index('region')['brecha (%)']
+    nombres = {'GBA': 'Gran Buenos Aires'}
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9, 4.8))
+        y = range(len(s))
+        ax.barh(list(y), s.values, color=AZUL, height=0.62)
+        for yi, vi in zip(y, s.values):
+            ax.annotate(_coma(vi, signo=True) + '%', (vi, yi), xytext=(4, 0), textcoords='offset points',
+                        va='center', fontsize=11, color=TINTA2)
+        ax.set_yticks(list(y))
+        ax.set_yticklabels([nombres.get(r, r) for r in s.index])
+        ax.invert_yaxis()
+        ax.axvline(0, color=GRIS, lw=1)
+        ax.margins(x=0.1)
+        _eje_pct(ax, 'x')
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('IIJP de la región sobre el IPC de la misma región')
+        _pie(fig, FUENTE_CORTA + f'. Noviembre 2023 a {_mes_largo(R["niveles"].index.max())}.')
+    return fig
+
+
+def iijp_06_jubilacion_minima(R):
+    h = R['haberes'].dropna(subset=['real_con_bono_ipc']).loc[pd.Period('2023-11', 'M'):]
+    base = h['haber_con_bono'].iloc[0]
+    x = _fecha(h.index)
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9.5, 5))
+        for col, lab, c in [('real_con_bono_ipc', 'Medida con el IPC oficial', AZUL),
+                            ('real_con_bono_iijp_minimo', 'Medida con la inflación de los jubilados de la mínima', NARANJA)]:
+            y = h[col] / base * 100
+            ax.plot(x, y, color=c, lw=2.4, label=lab)
+            ax.annotate(_coma(y.iloc[-1]), (x[-1], y.iloc[-1]), xytext=(5, 0), textcoords='offset points',
+                        va='center', fontsize=11, color=c, fontweight='bold')
+        ax.axhline(100, color=GRIS, lw=1)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _coma(v, 0)))
+        _eje_meses(ax)
+        ax.set_ylabel('poder de compra (noviembre 2023 = 100)')
+        ax.legend(loc='lower right')
+        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC, datos.gob.ar (haber mínimo) y decretos del bono.')
+    return fig
+
+
+GRAFICOS_DIVULGACION = {
+    'iijp_01_canasta': iijp_01_canasta,
+    'iijp_02_historia': iijp_02_historia,
+    'iijp_03_desde_nov23': iijp_03_desde_nov23,
+    'iijp_04_que_explica': iijp_04_que_explica,
+    'iijp_05_regiones': iijp_05_regiones,
+    'iijp_06_jubilacion_minima': iijp_06_jubilacion_minima,
+}
 
 
 GRAFICOS = {

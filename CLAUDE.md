@@ -18,9 +18,13 @@
 - Idioma: español (rioplatense) en respuestas, commits y documentación.
 - El usuario corre los notebooks en **Google Colab** (cada notebook clona el repo desde GitHub: un
   cambio no llega a Colab hasta que se pushea).
-- **Cada notebook termina descargando un ZIP con todo** (Excel, gráficos PNG, CSV y LEEME.txt), vía
-  `src.exportar.zip_resultados` (celdas de `descarga()` en `gen_notebooks.py`). Escribe en
-  `_descargas/` (ignorado); no toca `data/processed` ni `output/`, que solo actualiza `construir.py`.
+- **Cada notebook termina descargando un ZIP con todo** (Excel, `graficos/`, `figuras/`, CSV y
+  LEEME.txt), vía `src.exportar.zip_resultados` (celdas de `descarga()` en `gen_notebooks.py`). Escribe
+  en `_descargas/` (ignorado); no toca `data/processed` ni `output/`, que solo actualiza `construir.py`.
+  `figuras/` = las figuras de `graficos.GRAFICOS_DIVULGACION`, con los nombres que usan los `.tex` de
+  `docs/divulgacion/`: el usuario la sube tal cual a la carpeta `figuras` de Overleaf. Una figura nueva
+  para esos documentos va en ese diccionario (el test `tests/test_divulgacion.py` verifica que cada
+  `\includegraphics` tenga su figura y al revés).
 - Cuando el usuario pasa ZIPs de Colab: `python scripts/construir.py` (si cambió algo) y
   `python scripts/comparar_zip.py <zips>`. Esperable: diferencias solo en bootstrap y Notas.
 - El repo es **público**: los archivos del TP original (PDF, PPTX, XLSX con nombres y legajos de los
@@ -28,7 +32,11 @@
   Solo se versionan las series numéricas en `data/reference/tp_original_series.csv`.
 - `docs/revision_TP.md` cita celdas de la planilla original y cifras corregidas;
   `docs/informe_indicadores/seccion_iijp.tex` es la sección del informe INECO "Propuesta de Indicadores
-  Económicos" (el documento completo está en el Overleaf del usuario, con la figura en `figuras/`).
+  Económicos" (el documento completo está en el Overleaf del usuario, con la figura en `figuras/`);
+  `docs/divulgacion/` tiene el documento de prensa y la presentación Beamer (tema Madrid) para público
+  no técnico: lenguaje simple, coma decimal, sin intervalos de confianza (la firmeza se dice con las
+  variantes). Se entregan como código para copiar y pegar en Overleaf; antes, compilarlos con pdfLaTeX
+  (MiKTeX en la PC) y revisar 0 errores, 0 advertencias y 0 cajas desbordadas.
   Si cambian las cifras, actualizar todos los documentos de la tabla de `ESTADO.md` §3.
 
 ## Reglas técnicas que muerden

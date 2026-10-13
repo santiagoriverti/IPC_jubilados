@@ -10,7 +10,10 @@ El IIJP se valoriza **por región y al nivel de aperturas del IPC**, con los res
 deducidos de las ponderaciones oficiales del INDEC y una concordancia ENGHo → IPC (expensas). Incluye un
 subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a ago-2026.
 Colab verificado con `b419fa3` (versión con la concordancia de las expensas): los 3 ZIP = local. README
-y revision_TP al día. **Pendiente**: reescribir la sección LaTeX del informe INECO.
+y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
+errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`, generadas por
+`graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
+**Pendiente**: reescribir la sección LaTeX del informe INECO.
 
 ## 1. Cobertura de datos
 
@@ -68,18 +71,25 @@ y revision_TP al día. **Pendiente**: reescribir la sección LaTeX del informe I
 | `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-7, nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%, cobertura 83/16,5/0,5%) |
 | `docs/revision_TP.md` | al día: tabla resumen (ventana del TP, haberes may-26/sep-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
 | `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
+| `docs/divulgacion/iijp_prensa.tex` (documento de prensa) | al día (2026-10-13): recuadro inicial, cuadros de ago-26 y anual 2017-2026, períodos, regiones, haber real, contrafactual sep-26, costo fiscal, firmeza |
+| `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-10-13): mismas cifras que el documento de prensa |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
 ## 4. Verificación (2026-10-13)
 
-- `python -m pytest tests -q` → 14 passed (7 de `tests/test_estructura.py`, incluida la concordancia).
+- `python -m pytest tests -q` → 18 passed (7 de `tests/test_estructura.py`, incluida la concordancia; 4
+  de `tests/test_divulgacion.py`: los .tex usan justo las figuras de `GRAFICOS_DIVULGACION`).
 - `python scripts/control_calidad.py` → 0 ALERTAS: réplica del IPC nacional con la estructura de
   aperturas 0,081% (regiones ≤ 0,257%); agregados completos ≤ 0,056%; restos estables ante el redondeo
   (≤ 4,1%); 100% del gasto asignado; canastas suman 1; haber mínimo 39,6% de los jubilados; canasta
   valorizada con el índice del agregado 0,51%; canasta del TP 0,0006; regla de movilidad 29/29;
   contrafactual = haber efectivo; bono cargado; IMIG sin huecos.
 - Notebooks ejecutados en local (`_local_run/`, bootstrap 30) y sus ZIP comparados con `construir.py`:
-  0 diferencias no esperadas (`comparar_zip.py` ignora las columnas de intervalos p2.5/p97.5).
+  0 diferencias no esperadas (`comparar_zip.py` ignora las columnas de intervalos p2.5/p97.5). Con la
+  versión de la sesión 3, cada ZIP trae `graficos/` (8 PNG) y `figuras/` (6 PNG), y `comparar_zip.py`
+  lo verifica.
+- `docs/divulgacion/*.tex` compilados con pdfLaTeX (MiKTeX) con las figuras de `output/figuras/`: 8 y
+  15 páginas, 0 errores, 0 advertencias, 0 cajas desbordadas.
 - Colab: con `7c770cf` falló (API de datos.gob.ar vacía; corregido en `6e7aab1`); con `6e7aab1` y con
   `b419fa3` (concordancia de expensas) los 3 ZIP = local: 0 diferencias no esperadas.
 
@@ -88,6 +98,8 @@ y revision_TP al día. **Pendiente**: reescribir la sección LaTeX del informe I
 1. (Hecho) Corrida en Colab de los 3 notebooks con `b419fa3`.
 2. Sección LaTeX del informe INECO (metodología por aperturas, tabla de firmeza, subíndice haber mínimo)
    y, si se quiere, una versión resumida de la devolución a los alumnos.
+2b. Documento de prensa y presentación (`docs/divulgacion/`): el usuario los quiere "sencillos" para
+   empezar e irles agregando detalle a medida que avancemos.
 3. Precios propios de los jubilados (limitación conceptual): cobertura de PAMI en medicamentos, tarifa
    social de transporte, segmentación de subsidios energéticos, geriátricos y residencias (sin precio en
    el IPC). Requiere datos fuera del IPC.
@@ -104,7 +116,9 @@ y revision_TP al día. **Pendiente**: reescribir la sección LaTeX del informe I
    $70.000; el control de calidad avisa si falta un mes).
 3. `python scripts/construir.py --refrescar` (baja divisiones y aperturas).
 4. `python scripts/control_calidad.py` → 0 ALERTAS; `python -m pytest tests -q`.
-5. Actualizar §1-§2 (y los documentos de §3 cuando estén redactados). Commit + push.
+5. Actualizar §1-§2 y los documentos de §3 (en `docs/divulgacion/`, las cifras del texto y de los
+   cuadros; las figuras se regeneran solas en `output/figuras/` y en el ZIP, y el usuario las vuelve a
+   subir a Overleaf). Recompilar los `.tex` con pdfLaTeX. Commit + push.
 6. Si el usuario corre los notebooks en Colab y pasa los ZIP: `python scripts/comparar_zip.py <zips>`.
 
 ## 7. PC nueva

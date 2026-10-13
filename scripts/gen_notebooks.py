@@ -51,13 +51,29 @@ def code(texto: str) -> dict:
             'source': texto.strip('\n').splitlines(keepends=True)}
 
 
+def figuras_divulgacion(nombres: list[str]) -> list[dict]:
+    """Celdas que muestran las figuras del documento de prensa y la presentacion (docs/divulgacion)."""
+    return [
+        md(r'''
+## Figuras para el documento de prensa y la presentación
+
+Versiones simplificadas para público no técnico, las que usan `docs/divulgacion/iijp_prensa.tex` y
+`docs/divulgacion/iijp_presentacion.tex`. El ZIP de **cualquiera** de los tres notebooks trae las 6 en la
+carpeta `figuras/`, con los nombres que esperan los `.tex`: se sube tal cual a la carpeta `figuras` de
+Overleaf.
+'''),
+        code('\n'.join(f'fig = graficos.{n}(R); plt.show()' for n in nombres)),
+    ]
+
+
 def descarga(nombre: str) -> list[dict]:
     """Celdas finales comunes: exportan todo y, en Colab, descargan el ZIP."""
     return [
         md(r'''
 ## Descargar todos los resultados
 
-ZIP con el Excel (una hoja por tabla), los gráficos en PNG (`graficos/`) y las tablas en CSV
+ZIP con el Excel (una hoja por tabla), los gráficos del análisis en PNG (`graficos/`), las figuras del
+documento de prensa y de la presentación (`figuras/`, para subir a Overleaf) y las tablas en CSV
 (`datos/`). En Colab se descarga solo; en la PC queda en la carpeta `_descargas/` del repo.
 '''),
         code(f'''from src.exportar import zip_resultados
@@ -170,6 +186,7 @@ de cada hogar (democráticas) da más peso a los hogares de menores ingresos.
 '''),
     code(r'''D = R['ponderaciones_democraticas'].set_index('division')
 display((D * 100).round(1))'''),
+    *figuras_divulgacion(['iijp_01_canasta']),
     *descarga('IIJP_01_canasta_jubilados'),
 ]
 
@@ -302,6 +319,7 @@ firme si mantiene el signo en todas las variantes (`mismo_signo_en_todas`).
     code(r'''fig = graficos.g08_variantes(R); plt.show()
 display(R['variantes_resumen'])'''),
     code(r'''display(R['variantes'].drop(columns=['descripcion']))'''),
+    *figuras_divulgacion(['iijp_02_historia', 'iijp_03_desde_nov23', 'iijp_04_que_explica', 'iijp_05_regiones']),
     *descarga('IIJP_02_iijp_vs_ipc'),
 ]
 
@@ -381,6 +399,7 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
 '''),
     code(r'''print(f"Gasto previsional / PIB {R['meta']['anio_pib_ref']}: {R['meta']['gasto_prev_pct_pib']:.2f}%")
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
+    *figuras_divulgacion(['iijp_06_jubilacion_minima']),
     *descarga('IIJP_03_haberes_y_fiscal'),
 ]
 

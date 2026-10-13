@@ -3,7 +3,8 @@
 Uso:  python scripts/comparar_zip.py <ruta al ZIP> [<otro ZIP> ...]
 
 Compara hoja por hoja el Excel del ZIP con output/IIJP_resultados.xlsx y cada CSV de datos/ con
-data/processed/. Antes conviene correr `python scripts/construir.py` para que la referencia local
+data/processed/, y verifica que esten todos los PNG de graficos/ y de figuras/ (las figuras de
+docs/divulgacion). Antes conviene correr `python scripts/construir.py` para que la referencia local
 este al dia. Diferencias esperadas: las hojas de bootstrap (Colab usa 300 replicas y construir.py
 500) y la hoja Notas (commit y cantidad de replicas). Cualquier otra diferencia > 1e-6 indica que el
 ZIP se genero con otra version del codigo o con otros datos: mirar la linea "Version del codigo" del
@@ -20,6 +21,10 @@ import numpy as np
 import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(RAIZ))
+
+from src.graficos import GRAFICOS, GRAFICOS_DIVULGACION  # noqa: E402
+
 ESPERADAS = {'Notas', 'Bootstrap_brechas', 'Bootstrap_pond', 'bootstrap_brechas.csv', 'bootstrap_ponderaciones.csv'}
 # Tablas con algunas columnas de bootstrap (intervalos): esas columnas no se comparan, el resto si
 COLUMNAS_BOOTSTRAP = ('p2.5', 'p97.5')
@@ -48,6 +53,12 @@ def comparar(ruta_zip: Path) -> int:
                 print('   ', linea)
 
         problemas = 0
+        # Graficos del analisis y figuras del documento de prensa / presentacion (para Overleaf)
+        for carpeta, dic in (('graficos', GRAFICOS), ('figuras', GRAFICOS_DIVULGACION)):
+            faltan = [n for n in dic if f'{carpeta}/{n}.png' not in nombres]
+            if faltan:
+                problemas += 1
+            print(f'    {carpeta + "/":22s} ' + (f'faltan {faltan}' if faltan else f'ok ({len(dic)} png)'))
         loc = pd.read_excel(RAIZ / 'output' / 'IIJP_resultados.xlsx', sheet_name=None)
         col = pd.read_excel(dest / 'IIJP_resultados.xlsx', sheet_name=None)
         for hoja, a in col.items():

@@ -1,7 +1,9 @@
 """Exportacion de resultados: CSV (datos), Excel y graficos PNG.
 
-- `exportar(R, dir_salida, dir_datos)`: escribe IIJP_resultados.xlsx y graficos/ en dir_salida y los
-  CSV en dir_datos. scripts/construir.py lo usa con output/ y data/processed/ (versionados).
+- `exportar(R, dir_salida, dir_datos)`: escribe IIJP_resultados.xlsx, graficos/ (analisis) y figuras/
+  (documento de prensa y presentacion, mismos nombres que en los .tex de docs/divulgacion) en
+  dir_salida y los CSV en dir_datos. scripts/construir.py lo usa con output/ y data/processed/
+  (versionados).
 - `zip_resultados(R, nombre)`: lo que llaman los notebooks al final. Exporta todo a
   _descargas/<nombre>/ (ignorado por git, no toca los archivos versionados) y lo comprime en
   _descargas/<nombre>.zip.
@@ -141,7 +143,8 @@ def notas(R: dict) -> list[str]:
 def exportar(R: dict, dir_salida: Path, dir_datos: Path) -> None:
     dir_salida, dir_datos = Path(dir_salida), Path(dir_datos)
     dir_datos.mkdir(parents=True, exist_ok=True)
-    (dir_salida / 'graficos').mkdir(parents=True, exist_ok=True)
+    for carpeta in ('graficos', 'figuras'):
+        (dir_salida / carpeta).mkdir(parents=True, exist_ok=True)
 
     for archivo, (df, con_indice) in tablas_csv(R).items():
         _sin_period(df).to_csv(dir_datos / archivo, index=con_indice, float_format='%.6f', lineterminator='\n')
@@ -151,20 +154,24 @@ def exportar(R: dict, dir_salida: Path, dir_datos: Path) -> None:
         for nombre, df in hojas_excel(R).items():
             _sin_period(df).to_excel(xw, sheet_name=nombre[:31])
 
-    for nombre, f in graficos.GRAFICOS.items():
-        fig = f(R)
-        fig.savefig(dir_salida / 'graficos' / f'{nombre}.png')
-        plt.close(fig)
+    for carpeta, dic in (('graficos', graficos.GRAFICOS), ('figuras', graficos.GRAFICOS_DIVULGACION)):
+        for nombre, f in dic.items():
+            fig = f(R)
+            fig.savefig(dir_salida / carpeta / f'{nombre}.png')
+            plt.close(fig)
 
 
 def zip_resultados(R: dict, nombre: str) -> str:
-    """Exporta Excel, graficos y CSV a _descargas/<nombre>/ y devuelve la ruta del ZIP."""
+    """Exporta Excel, graficos, figuras y CSV a _descargas/<nombre>/ y devuelve la ruta del ZIP."""
     carpeta = DESCARGAS / nombre
     if carpeta.exists():
         shutil.rmtree(carpeta)
     exportar(R, carpeta, carpeta / 'datos')
     (carpeta / 'LEEME.txt').write_text(
         '\n'.join(notas(R) + ['', 'Contenido:', '  IIJP_resultados.xlsx  todas las tablas (una hoja por tabla)',
-                              '  graficos/             graficos en PNG', '  datos/                las mismas tablas en CSV']) + '\n',
+                              '  graficos/             graficos del analisis en PNG',
+                              '  figuras/              figuras del documento de prensa y de la presentacion '
+                              '(docs/divulgacion): subir tal cual a la carpeta "figuras" de Overleaf',
+                              '  datos/                las mismas tablas en CSV']) + '\n',
         encoding='utf-8')
     return shutil.make_archive(str(carpeta), 'zip', carpeta)

@@ -2,7 +2,8 @@
 
 - data/processed/*.csv   (series y tablas, versionadas)
 - output/IIJP_resultados.xlsx
-- output/graficos/*.png
+- output/graficos/*.png   (graficos del analisis)
+- output/figuras/*.png    (figuras del documento de prensa y la presentacion, docs/divulgacion)
 
 Uso:  python scripts/construir.py [--refrescar] [--bootstrap N]
   --refrescar   vuelve a descargar IPC, ENGHo, haber minimo y PIB (si no, usa data/cache/)

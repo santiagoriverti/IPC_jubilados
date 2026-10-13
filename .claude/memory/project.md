@@ -83,3 +83,24 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
     viene de 2016-2019.
 - Commit `b419fa3` pusheado; Colab con `b419fa3`: los 3 ZIP = local (0 diferencias no esperadas).
   Proyecto verificado de punta a punta. Próximo paso: sección LaTeX del informe INECO.
+
+## Sesión 3 (2026-10-13): divulgación
+- Pedido del usuario: documento LaTeX "para prensa", sencillo (se irán agregando detalles), y una
+  presentación Beamer estilo Madrid para autoridades de la Facultad (público no técnico). Código para
+  copiar y pegar en Overleaf; las figuras las sube él a la carpeta `figuras/`.
+- `docs/divulgacion/iijp_prensa.tex` (8 páginas) y `docs/divulgacion/iijp_presentacion.tex` (15
+  diapositivas, 16:9). Compilan con pdfLaTeX (MiKTeX) sin errores, advertencias ni cajas desbordadas.
+  Prueba local en `_local_run/divulgacion/` (copia de los .tex + `figuras/`).
+- Figuras nuevas `iijp_01..06` en `src/graficos.py` (`GRAFICOS_DIVULGACION`, aparte de `GRAFICOS`):
+  se exportan a `output/figuras/` y a la carpeta `figuras/` del ZIP de cada notebook (el usuario la sube
+  tal cual a Overleaf); cada notebook las muestra antes de la descarga (`figuras_divulgacion()` en
+  gen_notebooks). Sin título, letra grande, coma decimal, meses "ene-24". `comparar_zip.py` verifica que
+  el ZIP traiga todos los PNG; `tests/test_divulgacion.py`, que los .tex usen justo esas figuras. El
+  g04 ahora dice "vs IPC oficial replicado" (3,02 vs 3,06 publicado). `iijp_04` reparte la brecha contra la RÉPLICA del IPC (suma 3,02, no 3,06):
+  el epígrafe lo aclara.
+- Mensaje honesto en ambos: la brecha desde nov-23 (+3,1%) se debe sobre todo a la canasta vieja del
+  IPC (con la canasta de todos los hogares da +3,8%); la de todo el período (+1,2%) no es firme.
+- Trampas LaTeX: babel spanish pone espacio antes de % → `\spanishplainpercent`; viñetas cuadradas →
+  `es-nolists`; `\text` sin amsmath → `\mathrm`; en Madrid, `\institute[]` evita "(UADE)" en el pie.
+- Corregido redondeo doble en README (+4,6 → +4,5% haber mínimo Milei; +1,5 → +1,4% vs IIJP) y en
+  revision_TP M3 (dic-23 → nov-23; 4,6 → 4,5%).

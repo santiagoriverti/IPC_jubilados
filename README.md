@@ -17,7 +17,7 @@ metodología. La revisión del TP original está en [`docs/revision_TP.md`](docs
 | Dic-2016 → ago-2026 | 12.177% | 12.325% | **+1,2%** | **+1,6%** | +3,8% |
 | Macri (dic-16 → dic-19) | 183,4% | 192,6% | +3,2% | +2,9% | +4,5% |
 | Fernández (dic-19 → nov-23) | 893,5% | 845,3% | −4,9% | −0,6% | −5,0% |
-| Milei (nov-23 → ago-26) | 336,0% | 349,3% | **+3,1%** | −0,7% | +4,6% |
+| Milei (nov-23 → ago-26) | 336,0% | 349,3% | **+3,1%** | −0,7% | +4,5% |
 | Desde 2025 (dic-24 → ago-26) | 59,6% | 60,4% | +0,5% | −0,9% | +1,6% |
 
 Brecha: (1 + inflación del IIJP) / (1 + inflación del IPC) − 1. Efecto edad: IIJP frente al mismo cálculo
@@ -35,8 +35,8 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
    las 20 variantes queda en torno a cero (jubilados de ingresos altos, hogares solo de mayores de 65,
    todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,6%; IC 1,2 a 2,0), pero
    viene de 2016-2019 (+2,9%, normalización tarifaria y medicamentos); desde 2019 es negativo.
-4. **Los jubilados de haber mínimo enfrentan más inflación**: +3,8% sobre el IPC desde 2016 y +4,6%
-   desde noviembre de 2023; sobre el IIJP, +2,6% (IC 2,0 a 3,2) y +1,5% (IC 0,7 a 2,3). El resultado no
+4. **Los jubilados de haber mínimo enfrentan más inflación**: +3,8% sobre el IPC desde 2016 y +4,5%
+   desde noviembre de 2023; sobre el IIJP, +2,6% (IC 2,0 a 3,2) y +1,4% (IC 0,7 a 2,3). El resultado no
    depende del tope que define al grupo (de 1 a 2 haberes mínimos). Su canasta pesa más alimentos
    (33%), electricidad y gas, transporte público y medicamentos.
 5. **Regiones**: desde noviembre de 2023 la brecha con el IPC de cada región va de +2,0% (Pampeana) y
@@ -63,7 +63,8 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
 ## Cómo usarlo
 
 **En Colab** (no hace falta instalar nada; cada notebook clona el repo, descarga los datos y al
-terminar baja a tu computadora un ZIP con el Excel, los gráficos y las tablas en CSV):
+terminar baja a tu computadora un ZIP con el Excel, los gráficos, las figuras del documento de prensa y
+la presentación (`figuras/`) y las tablas en CSV):
 
 | Notebook | Contenido |
 |---|---|
@@ -82,6 +83,12 @@ python -m pytest tests -q
 
 `python scripts/construir.py --refrescar` vuelve a descargar todas las fuentes (rutina mensual: ver
 [`ESTADO.md`](ESTADO.md)).
+
+**Divulgación**: [`docs/divulgacion/iijp_prensa.tex`](docs/divulgacion/iijp_prensa.tex) (documento
+técnico para prensa) y [`docs/divulgacion/iijp_presentacion.tex`](docs/divulgacion/iijp_presentacion.tex)
+(presentación Beamer, tema Madrid, para público no técnico). Se compilan con pdfLaTeX (Overleaf) con las
+figuras de `output/figuras/` o de la carpeta `figuras/` del ZIP de cualquier notebook, subidas a una
+carpeta `figuras/` junto a los `.tex`.
 
 ## Nota metodológica
 
@@ -159,11 +166,12 @@ scripts/        construir.py · control_calidad.py · comparar_zip.py (ZIP de Co
 notebooks/      01 canasta · 02 IIJP vs IPC · 03 haberes y fiscal (Colab)
 data/reference  ponderaciones oficiales del IPC (nacionales y regionales), bono previsional, series del TP
 data/processed  resultados en CSV (versionados)
-output/         IIJP_resultados.xlsx y graficos/
+output/         IIJP_resultados.xlsx, graficos/ (análisis) y figuras/ (prensa y presentación)
 docs/           revision_TP.md (revisión del TP original)
+                divulgacion/ (documento de prensa y presentación Beamer, LaTeX)
                 informe_indicadores/seccion_iijp.tex (sección del informe INECO "Propuesta de
                 Indicadores Económicos"; pendiente de actualizar a la metodología actual)
-tests/          tests rápidos con datos sintéticos
+tests/          tests rápidos con datos sintéticos (y que los .tex usen las figuras que exporta el código)
 ```
 
 **Para continuar el proyecto** (otra sesión u otra PC): [`ESTADO.md`](ESTADO.md) tiene el estado, las
