@@ -37,6 +37,14 @@ SUFIJO_RESTO = '.r'
 # Codigos publicados cuyo ponderador figura con otro codigo en ponderadores_ipc (prepagas: grupo 06.4)
 ALIAS_PONDERADOR = {'06.4.1': '06.4'}
 DIVS = [f'{i:02d}' for i in range(1, 13)]
+# Clases de la ENGHo que el IPC clasifica con otro codigo (comparando las descripciones del archivo de
+# articulos de la ENGHo, engho2018_articulos.txt, con las de ponderadores_ipc). Siempre dentro de la
+# misma division, para que las tablas por division coincidan con gc_01..gc_12.
+CONCORDANCIA_ENGHO = {
+    'A0444': '04.1.3',  # Gastos comunes (expensas), abonos de mantenimiento: en el IPC, 04.1.3 "Gastos
+                        # comunes por la vivienda y/o cochera y otros gastos" (la ENGHo los pone en 04.4)
+    'A0412': '04.1.1',  # Otros alquileres efectivos (vivienda secundaria, temporal, de otro hogar): alquiler
+}
 
 
 def codigo_engho(c: str) -> str:
@@ -44,6 +52,16 @@ def codigo_engho(c: str) -> str:
     c = str(c).strip()
     d = c[1:3]
     return '.'.join([d] + list(c[3:]))
+
+
+def codigos_ipc(clase: str, grupo: str, division: str) -> list[str]:
+    """Codigos COICOP del IPC de un gasto de la ENGHo, del mas especifico al menos especifico, con la
+    concordancia de CONCORDANCIA_ENGHO."""
+    clase = str(clase).strip()
+    if clase in CONCORDANCIA_ENGHO:
+        c = CONCORDANCIA_ENGHO[clase]
+        return [c] + ancestros(c)
+    return [codigo_engho(clase), codigo_engho(grupo), codigo_engho(division)]
 
 
 def ancestros(c: str) -> list[str]:

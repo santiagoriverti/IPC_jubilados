@@ -70,6 +70,15 @@ def test_codigos_y_jerarquia():
     assert estr.hijos_publicados('06', {'06', '06.1', '06.4.1', '06.1.1'}) == ['06.1', '06.4.1']
 
 
+def test_concordancia_engho_ipc():
+    # Expensas: la ENGHo las codifica en 04.4.4; el IPC, en 04.1.3 (gastos comunes)
+    assert estr.codigos_ipc('A0444', 'A044', 'A04') == ['04.1.3', '04.1', '04']
+    assert estr.codigos_ipc('A0412', 'A041', 'A04') == ['04.1.1', '04.1', '04']
+    assert estr.codigos_ipc('A0441', 'A044', 'A04') == ['04.4.1', '04.4', '04']
+    # la concordancia nunca cambia la division
+    assert all(v[:2] == k[1:3] for k, v in estr.CONCORDANCIA_ENGHO.items())
+
+
 def test_huecos_se_completan_con_la_variacion_del_agregado():
     idx = pd.period_range('2020-01', periods=4, freq='M')
     P = pd.DataFrame({'0': [100, 110, 121, 133.1], '03': [100, 110, 121, 133.1], '03.1': [100, np.nan, np.nan, 140]},

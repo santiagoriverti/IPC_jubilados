@@ -17,11 +17,11 @@ nodo,descripcion,division,tipo,ipc_oficial,jubilados,total,jub_minimo,ipc_oficia
 03.1,Prendas de vestir y materiales,03,publicado,0.072273,0.035861,0.046108,0.031911,0.729312,0.684411,0.676205,0.631986
 03.2,Calzado,03,publicado,0.026780,0.016536,0.022078,0.018582,0.270238,0.315589,0.323795,0.368014
 03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000045,0.000000,0.000000,0.000000,0.000451,0.000000,0.000000,0.000000
-04.1.1,Alquiler de la vivienda,04,publicado,0.034292,0.020355,0.045443,0.019025,0.364662,0.140805,0.314203,0.115437
-04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.011715,0.002897,0.004634,0.000905,0.124575,0.020042,0.032039,0.005491
+04.1.1,Alquiler de la vivienda,04,publicado,0.034292,0.023252,0.050077,0.019929,0.364662,0.160847,0.346241,0.120928
+04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.011715,0.017948,0.013059,0.009864,0.124575,0.124158,0.090292,0.059852
 04.3,Mantenimiento y reparación de la vivienda,04,publicado,0.005493,0.004403,0.004680,0.003026,0.058408,0.030455,0.032356,0.018360
 04.5,"Electricidad, gas y otros combustibles",04,publicado,0.028790,0.072959,0.058785,0.099648,0.306152,0.504694,0.406446,0.604644
-04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.013749,0.043947,0.031089,0.042201,0.146203,0.304004,0.214957,0.256068
+04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.013749,0.025999,0.018030,0.032337,0.146203,0.179846,0.124665,0.196216
 05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.036804,0.044340,0.031362,0.029176,0.578248,0.666738,0.569317,0.565142
 05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.026844,0.022163,0.023725,0.022450,0.421752,0.333262,0.430683,0.434858
 06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.041981,0.061146,0.027144,0.068900,0.524613,0.535582,0.421120,0.724062

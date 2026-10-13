@@ -87,6 +87,9 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
     for c in ['ipc_oficial'] + principales:
         ag[f'{c}_en_division'] = ag[c] / ag.groupby('division')[c].transform('sum')
     R['ponderaciones_aperturas'] = ag
+    # Que parte de cada canasta se valoriza con un indice publicado, con un resto derivado o con el
+    # indice del agregado (aproximacion)
+    R['cobertura_precios'] = nodos.groupby('tipo')[['ipc_oficial'] + principales].sum()
     R['estructura'] = est.nodos
     R['indices_residuales'] = estr.residuos(est)
     R['imputaciones'] = est.imputados
@@ -114,6 +117,22 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
                           'brecha (%)': indices.brecha(reg[f'IIJP {r}'], reg[f'IPC {r}'], d, hh)})
     R['niveles_regionales'] = pd.DataFrame(reg)
     R['periodos_regionales'] = pd.DataFrame(filas)
+
+    # Sensibilidad del subindice haber minimo al tope (haberes minimos que puede cobrar cada perceptor)
+    filas = []
+    for tope in (1.0, 1.05, pond.TOPE_HABER_MINIMO, 1.25, 1.5, 2.0):
+        h['_tope'] = pond.marcar_haber_minimo(h, tope)
+        nv = indices.lowe(P, pond.canasta_nodos(E, h, '_tope'))
+        fila = {'tope_haberes_minimos': tope, 'hogares_muestra': int(h['_tope'].sum()),
+                'pct_hogares_jubilados': float(h.loc[h['_tope'], 'pondera'].sum() / h.loc[h['jubilados'], 'pondera'].sum() * 100)}
+        for nombre, d, hh in indices.periodos_vigentes(ultimo):
+            if nombre in ('Completo', 'Milei (nov-23 al último dato)', 'Desde 2025 (dic-24 al último dato)'):
+                corto = nombre.split(' ')[0].lower()
+                fila[f'vs_ipc_{corto}'] = indices.brecha(nv, I['0'], d, hh)
+                fila[f'vs_iijp_{corto}'] = indices.brecha(nv, niv['IIJP'], d, hh)
+        filas.append(fila)
+    h.drop(columns='_tope', inplace=True)
+    R['sensibilidad_haber_minimo'] = pd.DataFrame(filas)
     jr = G['jubilados'].groupby(level='region').sum()
     R['peso_regiones'] = pd.DataFrame({'ipc_oficial': est.pond_oficial().groupby(level='region').sum(),
                                        'jubilados': jr, 'total': G['total'].groupby(level='region').sum(),
@@ -202,13 +221,30 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
             vs_ofi = (acu['jubilados'] / ofi - 1) * 100
             edad = (acu['jubilados'] / acu['total'] - 1) * 100
             vs_ofi_min = (acu['jub_minimo'] / ofi - 1) * 100
+            min_vs_iijp = (acu['jub_minimo'] / acu['jubilados'] - 1) * 100  # pareado: misma replica
             filas.append({'periodo': nombre, 'desde': d, 'hasta': hh,
                           'brecha_vs_oficial_p2.5': np.percentile(vs_ofi, 2.5),
                           'brecha_vs_oficial_p97.5': np.percentile(vs_ofi, 97.5),
                           'efecto_edad_p2.5': np.percentile(edad, 2.5), 'efecto_edad_p97.5': np.percentile(edad, 97.5),
                           'haber_minimo_vs_oficial_p2.5': np.percentile(vs_ofi_min, 2.5),
-                          'haber_minimo_vs_oficial_p97.5': np.percentile(vs_ofi_min, 97.5)})
+                          'haber_minimo_vs_oficial_p97.5': np.percentile(vs_ofi_min, 97.5),
+                          'haber_minimo_vs_iijp_p2.5': np.percentile(min_vs_iijp, 2.5),
+                          'haber_minimo_vs_iijp_p97.5': np.percentile(min_vs_iijp, 97.5)})
         R['bootstrap_brechas'] = pd.DataFrame(filas)
+
+        # Intervalos de las brechas regionales (cada region con su IPC)
+        reg_cols = np.array([c[0] for c in P.columns])
+        ic = {}
+        for r in fuentes.REGIONES:
+            sel = reg_cols == r
+            Lr = _niveles_bootstrap(P.loc[:, sel], bs['jubilados'][:, sel])
+            for nombre, d, hh in indices.periodos_vigentes(ultimo):
+                dd, hp = pd.Period(d, 'M'), pd.Period(hh, 'M')
+                b = (Lr.loc[hp] / Lr.loc[dd]) / (ipc_reg[r].loc[hp] / ipc_reg[r].loc[dd]) * 100 - 100
+                ic[(r, nombre)] = (np.percentile(b, 2.5), np.percentile(b, 97.5))
+        pr = R['periodos_regionales']
+        pr['brecha_p2.5'] = [ic[(r, p)][0] for r, p in zip(pr['region'], pr['periodo'])]
+        pr['brecha_p97.5'] = [ic[(r, p)][1] for r, p in zip(pr['region'], pr['periodo'])]
         base = pd.Period('2023-11', 'M')
         tray = (L['jubilados'].loc[base:] / L['jubilados'].loc[base]).div(I['0'].loc[base:] / I['0'].loc[base],
                                                                           axis=0) * 100 - 100

@@ -21,9 +21,12 @@ import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[1]
 ESPERADAS = {'Notas', 'Bootstrap_brechas', 'Bootstrap_pond', 'bootstrap_brechas.csv', 'bootstrap_ponderaciones.csv'}
+# Tablas con algunas columnas de bootstrap (intervalos): esas columnas no se comparan, el resto si
+COLUMNAS_BOOTSTRAP = ('p2.5', 'p97.5')
 
 
 def _max_dif(a: pd.DataFrame, b: pd.DataFrame) -> float:
+    a = a[[c for c in a.columns if not str(c).endswith(COLUMNAS_BOOTSTRAP)]]
     na = a.select_dtypes('number')
     if na.empty:
         return 0.0

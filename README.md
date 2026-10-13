@@ -14,36 +14,40 @@ metodología. La revisión del TP original está en [`docs/revision_TP.md`](docs
 
 | Período | IPC oficial | IIJP | Brecha IIJP vs IPC | Efecto edad | Brecha IIJP haber mínimo vs IPC |
 |---|---|---|---|---|---|
-| Dic-2016 → ago-2026 | 12.177% | 12.458% | **+2,3%** | **+2,0%** | +4,4% |
-| Macri (dic-16 → dic-19) | 183,4% | 192,4% | +3,2% | +2,9% | +4,4% |
-| Fernández (dic-19 → nov-23) | 893,5% | 849,3% | −4,5% | −0,4% | −4,8% |
-| Milei (nov-23 → ago-26) | 336,0% | 352,4% | **+3,8%** | −0,4% | +5,0% |
-| Desde 2025 (dic-24 → ago-26) | 59,6% | 60,3% | +0,4% | −0,9% | +1,6% |
+| Dic-2016 → ago-2026 | 12.177% | 12.325% | **+1,2%** | **+1,6%** | +3,8% |
+| Macri (dic-16 → dic-19) | 183,4% | 192,6% | +3,2% | +2,9% | +4,5% |
+| Fernández (dic-19 → nov-23) | 893,5% | 845,3% | −4,9% | −0,6% | −5,0% |
+| Milei (nov-23 → ago-26) | 336,0% | 349,3% | **+3,1%** | −0,7% | +4,6% |
+| Desde 2025 (dic-24 → ago-26) | 59,6% | 60,4% | +0,5% | −0,9% | +1,6% |
 
 Brecha: (1 + inflación del IIJP) / (1 + inflación del IPC) − 1. Efecto edad: IIJP frente al mismo cálculo
 con la canasta de *todos* los hogares de la ENGHo 2017/18.
 
 1. **La canasta de los jubilados es distinta**, entre divisiones y dentro de cada una: más alimentos
    (26,4% vs 22,7% del total de hogares) y salud (11,4% vs 6,4%); dentro de salud, más medicamentos
-   (54% vs 42%) y menos prepagas; dentro de vivienda, mucho menos alquiler (14% vs 31%) y más
+   (54% vs 42%) y menos prepagas; dentro de vivienda, mucho menos alquiler (16% vs 35%) y más
    electricidad y gas (51% vs 41%); dentro de transporte, más transporte público (27% vs 22%).
-2. **Entre 2016 y 2026 el IPC oficial subestimó la inflación de los jubilados en 2,3%** (IC 95%
-   muestral: 1,9 a 2,7), y casi todo es efecto propio de la edad (+2,0%). Ambos resultados mantienen el
-   signo en las 19 variantes metodológicas. La diferencia no es pareja: cambia de signo según el
-   período (−4,5% con las tarifas congeladas de 2019-2023).
-3. **Desde noviembre de 2023 la brecha es de +3,8%** (IC 3,2 a 4,3; entre 2,7% y 8,6% según la
-   especificación), **pero se explica por la canasta vieja del IPC**: el mismo cálculo con la canasta de
-   todos los hogares da +4,2%. En este período el efecto edad es chico (−0,4%) y su signo depende de la
-   especificación.
-4. **Los jubilados de haber mínimo enfrentaron más inflación**: +4,4% sobre el IPC desde 2016 y +5,0%
-   desde noviembre de 2023. Su canasta pesa más alimentos (33%), electricidad y gas, transporte público
-   y medicamentos.
-5. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,1% arriba en términos
-   reales con el IPC y 4,9% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
-   2024) está 9,7% y 14,0% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
-   daría un haber 1,95% mayor en septiembre de 2026 ($8.350 por mes en la mínima).
-6. **Costo fiscal** de indexar por IIJP desde abril de 2024: 1,2%-1,4% del gasto en jubilaciones y
-   pensiones, ~0,07%-0,08% del PIB por año.
+2. **Desde noviembre de 2023 el IPC oficial subestima la inflación de los jubilados en 3,1%** (IC 95%
+   muestral: 2,5 a 3,6; entre 2,4% y 6,5% en las 20 variantes metodológicas, siempre positiva), **pero
+   se explica por la canasta vieja del IPC**: el mismo cálculo con la canasta de todos los hogares da
+   +3,8%. El efecto propio de la edad es negativo (−0,7%), aunque su signo depende de la especificación.
+3. **En todo el período 2016-2026 la brecha es menor (+1,2%; IC 0,8 a 1,6) y no es firme**: en tres de
+   las 20 variantes queda en torno a cero (jubilados de ingresos altos, hogares solo de mayores de 65,
+   todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,6%; IC 1,2 a 2,0), pero
+   viene de 2016-2019 (+2,9%, normalización tarifaria y medicamentos); desde 2019 es negativo.
+4. **Los jubilados de haber mínimo enfrentan más inflación**: +3,8% sobre el IPC desde 2016 y +4,6%
+   desde noviembre de 2023; sobre el IIJP, +2,6% (IC 2,0 a 3,2) y +1,5% (IC 0,7 a 2,3). El resultado no
+   depende del tope que define al grupo (de 1 a 2 haberes mínimos). Su canasta pesa más alimentos
+   (33%), electricidad y gas, transporte público y medicamentos.
+5. **Regiones**: desde noviembre de 2023 la brecha con el IPC de cada región va de +2,0% (Pampeana) y
+   +2,7% (GBA) a +5,7% (Noroeste) y +9,0% (Noreste; IC 7,1 a 11,0).
+6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,1% arriba en términos
+   reales con el IPC y 5,3% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
+   2024) está 9,7% y 13,7% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
+   daría un haber 1,1% mayor en septiembre de 2026 ($4.698 por mes en la mínima); por IIJP haber mínimo,
+   2,6% ($11.188).
+7. **Costo fiscal** de indexar por IIJP desde abril de 2024: 0,2%-0,6% del gasto en jubilaciones y
+   pensiones, ~0,02% del PIB por año.
 
 ![Brecha desde nov-2023](output/graficos/g02_brecha_nov23.png)
 
@@ -87,7 +91,9 @@ menos la mitad del ingreso del hogar (5.350 hogares en la muestra, 2,96 millones
 momento de la entrevista (2.081 hogares, 40% de los hogares jubilados).
 
 **Canasta.** Gasto de consumo de cada hogar en cada artículo de la ENGHo 2017/18 (archivo de gastos),
-agregado con el factor de expansión (ponderaciones plutocráticas, como el IPC).
+agregado con el factor de expansión (ponderaciones plutocráticas, como el IPC). La clasificación de la
+ENGHo se lleva a la del IPC con una tabla de concordancia (p. ej. las expensas, que la ENGHo registra
+junto al agua y el IPC como gastos comunes de la vivienda).
 
 **Estructura de precios.** El IPC se calcula en 6 regiones y se publica, en cada una, por división,
 grupo y algunas clases ("aperturas"). Cada gasto se valoriza con el índice más específico publicado en
@@ -96,6 +102,8 @@ etc.). La parte de cada agregado sin índice propio publicado (p. ej. agua dentr
 con un índice deducido de la estructura oficial de ponderaciones del INDEC: como el IPC agrega con la
 fórmula de Laspeyres, I_resto = (W_agregado · I_agregado − Σ W_hijo · I_hijo) / W_resto. Con las
 ponderaciones oficiales, esta estructura reproduce el IPC nacional con error máximo de 0,08% desde 2016.
+El 83% de la canasta de los jubilados se valoriza con aperturas publicadas, el 16,5% con restos
+derivados y el 0,5% con el índice del agregado.
 
 **Índice.** Canasta fija (índice de Lowe): IIJPₜ = Σ qₖ · Iₖ,ₜ con qₖ = gₖ / Īₖ, donde gₖ es el gasto en
 el componente k (región × apertura) e Īₖ su índice promedio durante el relevamiento (nov-2017 a
@@ -108,16 +116,19 @@ ENGHo 2017/18. *Efecto canasta vieja*: ese índice vs el IPC oficial (ENGHo 2004
 componente: (ponderación efectiva A − ponderación efectiva B) × (variación del componente − variación
 promedio de B) / (1 + variación de B), sumada por división y por apertura.
 
-**Sensibilidad.** 19 variantes que cambian una sola decisión por vez: nivel de detalle (12 divisiones
+**Sensibilidad.** 20 variantes que cambian una sola decisión por vez: nivel de detalle (12 divisiones
 nacionales o regionales, restos con el índice del agregado), definición de la población (sin pensiones
 no contributivas, umbral 25% o 75%, jefe/a o cónyuge jubilado, jefe/a de 65+, hogares con o solo de
 mayores de 65, mitades de ingreso, haber mínimo), ponderaciones democráticas, fórmulas de Young y
-geométrica, y gasto deflactado por el trimestre de la entrevista. Una conclusión se considera firme si
-mantiene el signo en todas.
+geométrica (esta última comparada con el IPC oficial recalculado con la misma fórmula), gasto
+deflactado por el trimestre de la entrevista y efecto edad contra los hogares no jubilados. Una
+conclusión se considera firme si mantiene el signo en todas. El subíndice haber mínimo se prueba además
+con topes de 1 a 2 haberes mínimos.
 
-**Incertidumbre muestral.** 500 réplicas bootstrap de hogares estratificadas por región (la ENGHo
-pública no trae las unidades primarias de muestreo: los intervalos son una cota inferior). Test de
-brecha persistente: media de la diferencia mensual en logaritmos con error estándar de Newey-West.
+**Incertidumbre muestral.** 500 réplicas bootstrap de hogares estratificadas por región, también para
+las brechas regionales y para la diferencia entre el IIJP haber mínimo y el IIJP (la ENGHo pública no
+trae las unidades primarias de muestreo: los intervalos son una cota inferior). Test de brecha
+persistente: media de la diferencia mensual en logaritmos con error estándar de Newey-West.
 
 **Haberes.** Haber mínimo de datos.gob.ar (serie `58.1_MP_0_M_24`); bono cargado a mano desde los
 decretos ([`data/reference/bono_previsional.csv`](data/reference/bono_previsional.csv)). Regla vigente
@@ -133,8 +144,9 @@ Cota superior: ese gasto incluye el bono, que no se indexa. PIB nominal de datos
 **Limitaciones.** La canasta es de 2017/18 (no captura cambios de hábitos posteriores). El índice cambia
 las ponderaciones pero usa los precios del IPC: no capta precios propios de los jubilados (cobertura de
 PAMI en medicamentos, tarifa social del transporte, segmentación de subsidios energéticos por ingreso).
-La ENGHo registra gasto de bolsillo (lo que cubre PAMI no entra en la canasta). Las muestras regionales
-de hogares jubilados son chicas fuera de GBA y Pampeana.
+El IPC no releva precios de geriátricos ni residencias (0,4% de la canasta de los jubilados, valorizado
+con el resto de bienes y servicios varios). La ENGHo registra gasto de bolsillo (lo que cubre PAMI no
+entra en la canasta). Las muestras regionales de hogares jubilados son chicas fuera de GBA y Pampeana.
 
 ## Estructura
 

@@ -69,3 +69,15 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   Arreglo: `serie_datos_gob` con reintentos y respaldo al CSV de la distribución, caché vacío se vuelve a
   bajar, validaciones que cortan si el haber no cubre la ENGHo o una población queda vacía. Probado con
   una copia del repo sin caché (simula Colab): mismas cifras.
+- Colab con `6e7aab1`: los 3 ZIP = local. Segunda revisión "de expertos":
+  - **Error de concordancia ENGHo → IPC**: la ENGHo clasifica las expensas en `A0444` (04.4, con el
+    agua) y el IPC en 04.1.3 (gastos comunes). Se valorizaban con el índice derivado del agua (GBA 14.256
+    vs 6.017 de gastos comunes). Corregido con `estructura.CONCORDANCIA_ENGHO` (también `A0412` otros
+    alquileres → 04.1.1), encontrado comparando `engho2018_articulos.zip` con ponderadores_ipc.
+    Cambio: completo 2,29 → 1,20%; Milei 3,78 → 3,06%; edad completo 2,01 → 1,60; haber sep-26 +1,95 →
+    +1,10%; costo 1,2-1,4% → 0,2-0,6% del gasto previsional.
+  - Agregado: variante geométrica vs IPC oficial geométrico; variante comparador = no jubilados;
+    intervalos regionales; IC pareado haber mínimo vs IIJP (+2,6% completo, +1,5% Milei, significativo);
+    sensibilidad del tope del haber mínimo (1-2 mínimos: resultado estable); cobertura de precios
+    (83/16,5/0,5%). Ahora la brecha del período completo NO es firme; el efecto edad completo sí, pero
+    viene de 2016-2019.

@@ -1,6 +1,7 @@
 poblacion,rol,descripcion,hogares_muestra,hogares_expandidos,gasto_medio_hogar
 jubilados,principal,Hogares jubilados: jubilaciones y pensiones (contributivas y no contributivas) >= 50% del ingreso,5350,2958653.000000,17164.654100
 total,comparador,Todos los hogares (IPC con la canasta de la ENGHo 2017/18),21547,12642525.000000,24622.218894
+no_jubilados,comparador,Hogares no jubilados (el resto de los hogares),16197,9683872.000000,26900.682142
 jub_minimo,subindice,"Hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos",2081,1171173.000000,10963.423305
 jub_sin_pnc,variante,Jubilaciones y pensiones contributivas >= 50% del ingreso (sin pensiones no contributivas),4759,2699258.000000,17619.061395
 jub_umbral_75,variante,Jubilaciones y pensiones >= 75% del ingreso,3879,2118751.000000,16331.747148

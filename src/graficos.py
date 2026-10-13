@@ -160,12 +160,19 @@ def g07_regiones(R):
     regiones = list(dict.fromkeys(t['region']))
     fig, ax = plt.subplots(figsize=(9, 4.8))
     alto = 0.38
+    con_ic = 'brecha_p2.5' in t.columns
     for k, (p, lab, c) in enumerate(per):
-        v = t[t['periodo'] == p].set_index('region').loc[regiones, 'brecha (%)']
+        s = t[t['periodo'] == p].set_index('region').loc[regiones]
+        v = s['brecha (%)']
         y = [i + (k - 0.5) * alto for i in range(len(regiones))]
         ax.barh(y, v, height=alto - 0.04, color=c, label=lab)
-        for yi, vi in zip(y, v):
-            ax.annotate(f'{vi:+.1f}', (vi, yi), xytext=(3 if vi >= 0 else -3, 0), textcoords='offset points',
+        extremo = v
+        if con_ic:
+            ax.errorbar(v, y, xerr=[v - s['brecha_p2.5'], s['brecha_p97.5'] - v], fmt='none', ecolor=TINTA2,
+                        elinewidth=1, capsize=2)
+            extremo = s['brecha_p97.5'].where(v >= 0, s['brecha_p2.5'])
+        for yi, vi, xi in zip(y, v, extremo):
+            ax.annotate(f'{vi:+.1f}', (xi, yi), xytext=(4 if vi >= 0 else -4, 0), textcoords='offset points',
                         ha='left' if vi >= 0 else 'right', va='center', fontsize=8, color=TINTA2)
     ax.set_yticks(range(len(regiones)))
     ax.set_yticklabels(regiones)
@@ -175,7 +182,7 @@ def g07_regiones(R):
     ax.grid(axis='y', visible=False)
     ax.set_title('Brecha del IIJP contra el IPC de cada región')
     ax.legend(loc='lower right', fontsize=9)
-    _pie(fig)
+    _pie(fig, FUENTE + ('. Barras de error: intervalo de 95% por bootstrap.' if con_ic else ''))
     return fig
 
 

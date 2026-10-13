@@ -53,6 +53,7 @@ POBLACIONES = {
     'jubilados': ('Hogares jubilados: jubilaciones y pensiones (contributivas y no contributivas) >= 50% del ingreso',
                   'principal'),
     'total': ('Todos los hogares (IPC con la canasta de la ENGHo 2017/18)', 'comparador'),
+    'no_jubilados': ('Hogares no jubilados (el resto de los hogares)', 'comparador'),
     'jub_minimo': ('Hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos', 'subindice'),
     'jub_sin_pnc': ('Jubilaciones y pensiones contributivas >= 50% del ingreso (sin pensiones no contributivas)',
                     'variante'),
@@ -108,6 +109,7 @@ def preparar_hogares(hogares: pd.DataFrame, personas: pd.DataFrame,
 
     h['total'] = True
     h['jubilados'] = (h['ing_prev'] > 0) & (h['sh_prev'] >= UMBRAL_JUBILADOS)
+    h['no_jubilados'] = ~h['jubilados']
     h['jub_sin_pnc'] = (h['ing_jub'] > 0) & (h['sh_jub'] >= UMBRAL_JUBILADOS)
     h['jub_umbral_75'] = (h['ing_prev'] > 0) & (h['sh_prev'] >= 0.75)
     h['jub_umbral_25'] = (h['ing_prev'] > 0) & (h['sh_prev'] >= 0.25)
@@ -128,11 +130,18 @@ def preparar_hogares(hogares: pd.DataFrame, personas: pd.DataFrame,
         if not all(np.isfinite(list(tope.values()))):
             raise ValueError('La serie del haber minimo no cubre el relevamiento de la ENGHo (nov-2017 a nov-2018): '
                              f'{haber_minimo.index.min()} a {haber_minimo.index.max()}')
+        # Cociente entre el mayor ingreso previsional de un miembro y el haber minimo de referencia
         pp = per[per['prev'] > 0]
-        rel = pp['prev'] / pp['id'].map(h['trimestre']).map(tope)
-        max_rel = rel.groupby(pp['id']).max().reindex(h.index)
-        h['jub_minimo'] = h['jubilados'] & (max_rel <= 1).fillna(False)
+        rel = pp['prev'] / pp['id'].map(h['trimestre']).map(tope) * TOPE_HABER_MINIMO
+        h['max_haberes_minimos'] = rel.groupby(pp['id']).max().reindex(h.index)
+        h['jub_minimo'] = marcar_haber_minimo(h)
     return h
+
+
+def marcar_haber_minimo(h: pd.DataFrame, tope: float = TOPE_HABER_MINIMO) -> pd.Series:
+    """Hogares jubilados en los que ningun perceptor de jubilacion o pension cobra mas de `tope` haberes
+    minimos (sensibilidad del subindice al tope)."""
+    return h['jubilados'] & (h['max_haberes_minimos'] <= tope).fillna(False)
 
 
 def mediana_ponderada(x: pd.Series, w: pd.Series) -> float:
@@ -151,8 +160,7 @@ def gasto_por_nodo(gastos: pd.DataFrame, h: pd.DataFrame, est: estr.Estructura) 
     regs = est.regiones()
     g['region'] = g['id'].map(h['region_ipc']) if regs != ['Nacional'] else 'Nacional'
     combos = g[['region', 'clase', 'grupo', 'division']].drop_duplicates()
-    combos['nodo'] = [est.asignar(r, [estr.codigo_engho(c), estr.codigo_engho(gr), estr.codigo_engho(d)])
-                      for r, c, gr, d in combos.itertuples(index=False)]
+    combos['nodo'] = [est.asignar(r, estr.codigos_ipc(c, gr, d)) for r, c, gr, d in combos.itertuples(index=False)]
     g = g.merge(combos, on=['region', 'clase', 'grupo', 'division'], how='left')
     t = g.groupby(['id', 'region', 'nodo'])['monto'].sum().unstack(['region', 'nodo'])
     return t.reindex(index=h.index, columns=est.precios.columns).fillna(0.0)

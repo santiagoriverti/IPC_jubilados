@@ -52,6 +52,8 @@ def tablas_csv(R: dict) -> dict[str, tuple[pd.DataFrame, bool]]:
         'fiscal_mensual.csv': (R['fiscal_mensual'], True),
         'fiscal_anual.csv': (R['fiscal_anual'], True),
         'validacion.csv': (R['validacion'], True),
+        'cobertura_precios.csv': (R['cobertura_precios'], True),
+        'sensibilidad_haber_minimo.csv': (R['sensibilidad_haber_minimo'], False),
         'revision_tp_periodos.csv': (R['revision_tp']['periodos'], False),
     }
     for k, d in R['descomposicion'].items():
@@ -87,6 +89,8 @@ def hojas_excel(R: dict) -> dict[str, pd.DataFrame]:
         'Variantes': R['variantes'],
         'Variantes_resumen': R['variantes_resumen'],
         'Variantes_niveles': R['variantes_niveles'],
+        'Sensibilidad_haber_minimo': R['sensibilidad_haber_minimo'],
+        'Cobertura_precios': R['cobertura_precios'],
         'Haberes': R['haberes'],
         'Regla_movilidad': R['regla_movilidad'],
         'Fiscal_mensual': R['fiscal_mensual'],

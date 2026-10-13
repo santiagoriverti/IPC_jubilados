@@ -12,7 +12,7 @@
 10,GBA,02.2,Tabaco,02,publicado,0.008261,0.002213,0.003730,0.003191
 11,GBA,03.1,Prendas de vestir y materiales,03,publicado,0.028267,0.010956,0.017770,0.008985
 12,GBA,03.2,Calzado,03,publicado,0.009601,0.005274,0.008026,0.006134
-13,GBA,04.1.1,Alquiler de la vivienda,04,publicado,0.015540,0.007333,0.020955,0.005984
+13,GBA,04.1.1,Alquiler de la vivienda,04,publicado,0.015540,0.008586,0.023124,0.006511
 14,GBA,04.3,Mantenimiento y reparación de la vivienda,04,publicado,0.005493,0.004403,0.004680,0.003026
 15,GBA,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.011342,0.025947,0.023447,0.038618
 16,GBA,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.016344,0.018382,0.014619,0.008673
@@ -33,8 +33,8 @@
 31,GBA,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 32,GBA,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 33,GBA,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000045,0.000000,0.000000,0.000000
-34,GBA,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.003974,0.019848,0.014595,0.014976
-35,GBA,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.010360,0.001253,0.002170,0.000527
+34,GBA,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.003974,0.005741,0.004175,0.007151
+35,GBA,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.010360,0.014107,0.010420,0.007826
 36,GBA,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.011655,0.007133,0.009550,0.006019
 37,GBA,06.r,Resto de Salud,06,resto derivado,0.007457,0.006599,0.005217,0.004101
 38,GBA,07.r,Resto de Transporte,07,resto = indice del agregado,0.000045,0.000000,0.000000,0.000000
@@ -56,7 +56,7 @@
 54,Pampeana,02.2,Tabaco,02,publicado,0.006867,0.003378,0.003423,0.004736
 55,Pampeana,03.1,Prendas de vestir y materiales,03,publicado,0.026239,0.016025,0.016900,0.013574
 56,Pampeana,03.2,Calzado,03,publicado,0.009396,0.006718,0.007908,0.007769
-57,Pampeana,04.1.1,Alquiler de la vivienda,04,publicado,0.012265,0.008430,0.014548,0.008372
+57,Pampeana,04.1.1,Alquiler de la vivienda,04,publicado,0.012265,0.008981,0.015714,0.008493
 58,Pampeana,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.010181,0.026705,0.020318,0.033498
 59,Pampeana,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.013017,0.014875,0.009624,0.011914
 60,Pampeana,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.016263,0.024021,0.009598,0.026989
@@ -75,8 +75,8 @@
 73,Pampeana,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 74,Pampeana,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 75,Pampeana,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
-76,Pampeana,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.006081,0.014500,0.009789,0.016695
-77,Pampeana,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.001093,0.000551,0.001165,0.000120
+76,Pampeana,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.006081,0.011610,0.007927,0.015111
+77,Pampeana,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto derivado,0.001093,0.002890,0.001862,0.001585
 78,Pampeana,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.008644,0.008604,0.008104,0.008994
 79,Pampeana,06.r,Resto de Salud,06,resto derivado,0.005501,0.008092,0.005805,0.006440
 80,Pampeana,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
@@ -98,7 +98,7 @@
 96,Noroeste,02.2,Tabaco,02,publicado,0.001213,0.000529,0.000544,0.000939
 97,Noroeste,03.1,Prendas de vestir y materiales,03,publicado,0.005776,0.002622,0.003608,0.003459
 98,Noroeste,03.2,Calzado,03,publicado,0.002757,0.001623,0.002175,0.001910
-99,Noroeste,04.1.1,Alquiler de la vivienda,04,publicado,0.001289,0.001069,0.001815,0.001016
+99,Noroeste,04.1.1,Alquiler de la vivienda,04,publicado,0.001289,0.001273,0.002078,0.001147
 100,Noroeste,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.002509,0.006091,0.005011,0.009207
 101,Noroeste,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.002544,0.002816,0.002052,0.002268
 102,Noroeste,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.002764,0.003809,0.002029,0.004645
@@ -117,8 +117,8 @@
 115,Noroeste,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 116,Noroeste,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 117,Noroeste,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
-118,Noroeste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000951,0.002644,0.001970,0.003367
-119,Noroeste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000076,0.000204,0.000263,0.000131
+118,Noroeste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000951,0.002331,0.001775,0.003151
+119,Noroeste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000076,0.000313,0.000195,0.000216
 120,Noroeste,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001675,0.001948,0.001830,0.002680
 121,Noroeste,06.r,Resto de Salud,06,resto derivado,0.001082,0.001439,0.001072,0.001161
 122,Noroeste,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
@@ -140,7 +140,7 @@
 138,Noreste,02.2,Tabaco,02,publicado,0.000719,0.000336,0.000345,0.000907
 139,Noreste,03.1,Prendas de vestir y materiales,03,publicado,0.003583,0.001775,0.002147,0.003190
 140,Noreste,03.2,Calzado,03,publicado,0.001632,0.000673,0.000966,0.001266
-141,Noreste,04.1.1,Alquiler de la vivienda,04,publicado,0.000998,0.000852,0.001193,0.001672
+141,Noreste,04.1.1,Alquiler de la vivienda,04,publicado,0.000998,0.001223,0.001341,0.001672
 142,Noreste,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001681,0.004924,0.003122,0.010002
 143,Noreste,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001596,0.001989,0.001303,0.003623
 144,Noreste,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.001519,0.001952,0.000988,0.004035
@@ -159,8 +159,8 @@
 157,Noreste,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 158,Noreste,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 159,Noreste,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
-160,Noreste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000904,0.002425,0.001553,0.004481
-161,Noreste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000063,0.000371,0.000148,0.000000
+160,Noreste,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000904,0.002311,0.001468,0.004273
+161,Noreste,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000063,0.000114,0.000085,0.000208
 162,Noreste,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001902,0.001705,0.001238,0.002968
 163,Noreste,06.r,Resto de Salud,06,resto derivado,0.000530,0.000899,0.000514,0.001645
 164,Noreste,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
@@ -182,7 +182,7 @@
 180,Cuyo,02.2,Tabaco,02,publicado,0.001117,0.000476,0.000653,0.000695
 181,Cuyo,03.1,Prendas de vestir y materiales,03,publicado,0.004291,0.002440,0.002651,0.002379
 182,Cuyo,03.2,Calzado,03,publicado,0.001621,0.001095,0.001500,0.001267
-183,Cuyo,04.1.1,Alquiler de la vivienda,04,publicado,0.001906,0.001734,0.002615,0.001873
+183,Cuyo,04.1.1,Alquiler de la vivienda,04,publicado,0.001906,0.001821,0.002972,0.002000
 184,Cuyo,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001725,0.004749,0.003469,0.006880
 185,Cuyo,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001912,0.003253,0.001807,0.002382
 186,Cuyo,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.002587,0.003972,0.002061,0.004642
@@ -201,8 +201,8 @@
 199,Cuyo,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 200,Cuyo,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 201,Cuyo,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
-202,Cuyo,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000914,0.002048,0.001557,0.002235
-203,Cuyo,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000068,0.000087,0.000357,0.000127
+202,Cuyo,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000914,0.001927,0.001247,0.002205
+203,Cuyo,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000068,0.000121,0.000310,0.000030
 204,Cuyo,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001351,0.001439,0.001508,0.001722
 205,Cuyo,06.r,Resto de Salud,06,resto derivado,0.000738,0.001700,0.001003,0.000797
 206,Cuyo,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
@@ -224,7 +224,7 @@
 222,Patagonia,02.2,Tabaco,02,publicado,0.000965,0.000639,0.000576,0.000213
 223,Patagonia,03.1,Prendas de vestir y materiales,03,publicado,0.004117,0.002041,0.003032,0.000323
 224,Patagonia,03.2,Calzado,03,publicado,0.001774,0.001154,0.001504,0.000236
-225,Patagonia,04.1.1,Alquiler de la vivienda,04,publicado,0.002293,0.000937,0.004318,0.000108
+225,Patagonia,04.1.1,Alquiler de la vivienda,04,publicado,0.002293,0.001369,0.004848,0.000108
 226,Patagonia,04.5,"Electricidad, gas y otros combustibles",04,publicado,0.001351,0.004542,0.003418,0.001444
 227,Patagonia,05.6,Bienes y servicios para la conservación del hogar,05,publicado,0.001392,0.003024,0.001957,0.000315
 228,Patagonia,06.1,"Productos medicinales, artefactos y equipos para la salud",06,publicado,0.001209,0.002541,0.001155,0.001046
@@ -243,8 +243,8 @@
 241,Patagonia,01.2.r,Resto de Bebidas no alcohólicas,01,resto = indice del agregado,0.000000,0.000000,0.000001,0.000000
 242,Patagonia,02.r,Resto de Bebidas alcohólicas y tabaco,02,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
 243,Patagonia,03.r,Resto de Prendas de vestir y calzado,03,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000
-244,Patagonia,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000924,0.002483,0.001626,0.000447
-245,Patagonia,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000055,0.000432,0.000530,0.000000
+244,Patagonia,04.r,"Resto de Vivienda, agua, electricidad, gas y otros combustibles",04,resto derivado,0.000924,0.002078,0.001438,0.000447
+245,Patagonia,04.1.r,Resto de Alquiler de la vivienda y gastos conexos,04,resto = indice del agregado,0.000055,0.000404,0.000187,0.000000
 246,Patagonia,05.r,Resto de Equipamiento y mantenimiento del hogar,05,resto derivado,0.001618,0.001334,0.001495,0.000067
 247,Patagonia,06.r,Resto de Salud,06,resto derivado,0.000689,0.001248,0.000798,0.000371
 248,Patagonia,07.r,Resto de Transporte,07,resto = indice del agregado,0.000000,0.000000,0.000000,0.000000

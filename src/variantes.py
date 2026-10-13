@@ -4,8 +4,11 @@ Cada variante cambia UNA decision respecto del indice principal (aperturas regio
 derivados, hogares jubilados, ponderaciones plutocraticas, formula de Lowe, precios de referencia del
 relevamiento) y recalcula:
 
-- la brecha contra el IPC oficial en cada periodo;
-- el efecto edad: contra un indice de todos los hogares calculado con la misma especificacion;
+- la brecha contra el IPC oficial en cada periodo. En la variante geometrica, contra el IPC oficial
+  recalculado con la misma formula (ponderaciones oficiales, media geometrica): si no, la brecha mezclaria
+  la diferencia de canasta con la de formula. Con Lowe y Young el IPC oficial es su propio equivalente
+  (sus ponderaciones son del periodo base);
+- el efecto edad: contra un indice de todos los hogares (o de los no jubilados) con la misma especificacion;
 - cuanto mas alto seria hoy el haber si se hubiera indexado por esa variante desde abril 2024.
 
 Regla de lectura: una conclusion es firme si vale (mismo signo) en todas las variantes.
@@ -21,7 +24,8 @@ from . import estructura as estr
 from . import fuentes, haberes, indices
 from . import ponderaciones as pond
 
-ESPEC_BASE = {'estructura': 'aperturas', 'poblacion': 'jubilados', 'metodo': 'plutocratica', 'formula': 'lowe'}
+ESPEC_BASE = {'estructura': 'aperturas', 'poblacion': 'jubilados', 'metodo': 'plutocratica', 'formula': 'lowe',
+              'comparador': 'total'}
 
 VARIANTES = [
     ('Principal', 'principal', 'Aperturas regionales, restos derivados, hogares jubilados, Lowe, plutocrática', {}),
@@ -41,6 +45,8 @@ VARIANTES = [
     ('Fórmula', 'geometrica', 'Geométrica (Cobb-Douglas) con participaciones de 2017/18', {'formula': 'geometrica'}),
     ('Precios de referencia', 'deflactado_trimestre', 'Gasto de cada hogar deflactado por el trimestre de la entrevista',
      {'formula': 'lowe_trimestre'}),
+    ('Comparador', 'vs_no_jubilados', 'Efecto edad medido contra los hogares no jubilados (en vez de todos)',
+     {'comparador': 'no_jubilados'}),
 ]
 
 ETIQUETAS = {
@@ -51,7 +57,7 @@ ETIQUETAS = {
     'adultos_jub': 'Todos los adultos jubilados', 'con_65': 'Con algún 65+', 'solo_65': 'Solo 65+',
     'jub_bajos': 'Jubilados, ingreso bajo', 'jub_altos': 'Jubilados, ingreso alto',
     'democratica': 'Ponderación democrática', 'young': 'Fórmula de Young', 'geometrica': 'Fórmula geométrica',
-    'deflactado_trimestre': 'Gasto deflactado por trimestre',
+    'deflactado_trimestre': 'Gasto deflactado por trimestre', 'vs_no_jubilados': 'Edad vs no jubilados',
 }
 
 PERIODOS_VARIANTES = {'Completo': 'completo', 'Macri (dic-16 a dic-19)': 'macri',
@@ -69,7 +75,7 @@ class Contexto:
 
 
 def indice(ctx: Contexto, estructura='aperturas', poblacion='jubilados', metodo='plutocratica',
-           formula='lowe') -> pd.Series:
+           formula='lowe', comparador='total') -> pd.Series:
     est, E = ctx.estructuras[estructura]
     P = est.precios
     if formula == 'lowe_trimestre':
@@ -98,11 +104,16 @@ def tabla_variantes(ctx: Contexto) -> tuple[pd.DataFrame, pd.DataFrame]:
     for grupo, clave, desc, espec in VARIANTES:
         e = {**ESPEC_BASE, **espec}
         a = indice(ctx, **e)
-        t = indice(ctx, **{**e, 'poblacion': 'total'})
+        t = indice(ctx, **{**e, 'poblacion': e['comparador']})
+        if e['formula'] == 'geometrica':  # IPC oficial con la misma formula
+            est = ctx.estructuras[e['estructura']][0]
+            ref = indices.geometrica(est.precios, est.pond_oficial())
+        else:
+            ref = ctx.ipc
         niveles[clave] = a
         fila = {'grupo': grupo, 'variante': clave, 'etiqueta': ETIQUETAS[clave], 'descripcion': desc,
                 'hogares': int(ctx.h[e['poblacion']].sum())}
-        fila.update({f'brecha_{k}': indices.brecha(a, ctx.ipc, d, h) for k, d, h in per})
+        fila.update({f'brecha_{k}': indices.brecha(a, ref, d, h) for k, d, h in per})
         fila.update({f'edad_{k}': indices.brecha(a, t, d, h) for k, d, h in per})
         fila['haber_vs_ipc'] = factor_haber(ctx, a)
         fila['var_mensual_ult'] = float(a.pct_change().iloc[-1] * 100)

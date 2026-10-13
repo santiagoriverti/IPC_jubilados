@@ -144,6 +144,14 @@ jubilados (en el IPC oficial, según el gasto de todos sus hogares en 2004/05).
 '''),
     code(r'''display(R['peso_regiones'].style.format({'ipc_oficial': '{:.1%}', 'jubilados': '{:.1%}', 'total': '{:.1%}'}))'''),
     md(r'''
+## Sensibilidad del subíndice haber mínimo al tope
+
+El subíndice toma los hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos.
+Con otros topes cambia la cantidad de hogares; la tabla muestra cuánto cambia la brecha con el IPC y con
+el IIJP.
+'''),
+    code(r'''display(R['sensibilidad_haber_minimo'])'''),
+    md(r'''
 ## Incertidumbre muestral
 
 Intervalos de 95% por bootstrap: remuestreo de hogares estratificado por región. La ENGHo pública no
@@ -180,6 +188,8 @@ los hogares jubilados en 2017/18 se valorizan cada mes con los precios del INDEC
 - **Restos**: la parte de cada agregado sin índice propio publicado (p. ej. agua dentro de Vivienda) se
   valoriza con un índice deducido de la estructura oficial de ponderaciones del INDEC (agregación de
   Laspeyres). Si esa parte pesa menos de 0,2% de la región, usa el índice del agregado.
+- **Concordancia**: la clasificación de gastos de la ENGHo se lleva a la del IPC (p. ej. las expensas, que
+  la ENGHo registra junto al agua y el IPC como gastos comunes de la vivienda).
 - **Precios de referencia**: promedio del relevamiento (nov-2017 a nov-2018). Es decir, las ponderaciones
   se actualizan por precios relativos, como recomienda el Manual del IPC (OIT/FMI) y hace el INDEC.
 - **Nacional**: suma de las 6 canastas regionales (cada región pesa según el gasto de sus jubilados).
@@ -198,6 +208,8 @@ derivados ante el redondeo de las ponderaciones oficiales (4 decimales).
 '''),
     code(r'''e = R['estructura']
 display(pd.crosstab(e['region'], e['tipo']))
+display(Markdown('Parte de cada canasta valorizada con cada tipo de índice (%):'))
+display((R['cobertura_precios'] * 100).round(1))
 display(R['imputaciones'])
 display(R['sensibilidad_restos'].sort_values('dispersion_p5_p95_%', ascending=False).head(8))'''),
     md(r'''
@@ -252,7 +264,8 @@ jubilados son chicas fuera de GBA y Pampeana (ver `hogares_jubilados_muestra`).
 '''),
     code(r'''fig = graficos.g07_regiones(R); plt.show()
 display(R['peso_regiones'])
-display(R['periodos_regionales'].pivot(index='region', columns='periodo', values='brecha (%)'))'''),
+pr = R['periodos_regionales']
+display(pr[pr['periodo'].isin(['Completo', 'Milei (nov-23 al último dato)'])])'''),
     md(r'''
 ## Qué explica la brecha
 

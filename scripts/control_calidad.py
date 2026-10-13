@@ -74,6 +74,10 @@ def main() -> int:
     pob = R['poblaciones'].set_index('poblacion')
     sh = pob.loc['jub_minimo', 'hogares_expandidos'] / pob.loc['jubilados', 'hogares_expandidos']
     chequear(0.2 < sh < 0.6, f'Hogares de haber minimo: {sh * 100:.1f}% de los hogares jubilados (entre 20% y 60%)')
+    cob = R['cobertura_precios']
+    aprox = float(cob.loc['resto = indice del agregado', 'jubilados']) if 'resto = indice del agregado' in cob.index else 0.0
+    chequear(aprox < 0.02, f'Canasta de jubilados valorizada con el indice del agregado (aproximacion): '
+                           f'{aprox * 100:.2f}% (< 2%)')
 
     tp = R['revision_tp']
     dif = (tp['ponderaciones']['tp'] - tp['ponderaciones']['tp_original']).abs().max()

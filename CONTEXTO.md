@@ -18,8 +18,11 @@
     Laspeyres): I_resto = (W_p I_p − Σ W_c I_c) / (W_p − Σ W_c). Si W_resto < 0,002 del gasto regional
     (`UMBRAL_RESTO`), el redondeo de las ponderaciones lo vuelve inestable y se usa el índice del agregado.
   - 254 nodos en total (47 restos derivados). Cada gasto de la ENGHo (clase/grupo/división COICOP) va al
-    nodo más específico que lo contiene; los rubros que no están en la canasta del IPC (p. ej. 06.3
-    hospitalarios, 12.4 protección social) caen en el resto de su división.
+    nodo más específico que lo contiene, después de la concordancia ENGHo → IPC
+    (`estructura.CONCORDANCIA_ENGHO`: expensas `A0444` → 04.1.3, otros alquileres `A0412` → 04.1.1);
+    los rubros que no están en la canasta del IPC (p. ej. 06.3 hospitalarios, 12.4 geriátricos y
+    residencias) caen en el resto de su división. Cobertura de la canasta de jubilados: 83% aperturas
+    publicadas, 16,5% restos derivados, 0,5% índice del agregado (`R['cobertura_precios']`).
 - **Hogar jubilado**: (Σ `ijubilacion` + Σ `ipensionesnc` de sus miembros) / `ingtoth` ≥ 0,5.
   `ijubilacion` = ingreso neto por jubilación o pensión (contributiva); `ipensionesnc` = pensiones no
   contributivas (discapacidad, graciables, veteranos). Criterio de fuente principal de ingreso, como los
@@ -27,7 +30,9 @@
 - **Haber mínimo** (`jub_minimo`, subíndice): hogares jubilados en los que ningún perceptor de
   jubilación o pensión cobra más de 1,1 haberes mínimos (el máximo vigente en el trimestre operativo de
   la entrevista; 1,1 cubre el descuento de PAMI y los aumentos dentro del trimestre). 2.081 hogares, 40%
-  de los hogares jubilados expandidos.
+  de los hogares jubilados expandidos. `h['max_haberes_minimos']` guarda el cociente de cada hogar y
+  `ponderaciones.marcar_haber_minimo(h, tope)` permite otros topes (`R['sensibilidad_haber_minimo']`, de
+  1 a 2 haberes mínimos).
 - **IPC ENGHo 17/18**: el mismo cálculo con la canasta de todos los hogares. Separa:
   - *efecto edad* = IIJP vs IPC 17/18 (misma especificación);
   - *efecto canasta vieja* = IPC 17/18 vs IPC oficial (canasta ENGHo 2004/05).
@@ -60,11 +65,16 @@
 - Ponderaciones plutocráticas (como el IPC); democráticas como variante.
 - Precio de referencia de la canasta: promedio del relevamiento (nov-17/nov-18). Variante: gasto de
   cada hogar deflactado por el índice de su trimestre operativo (cambia ≤ 0,15 p.p.).
-- Fórmula de Lowe. Variantes: Young (sin actualizar por precios relativos) y geométrica.
-- **Regla de firmeza**: una conclusión es firme si mantiene el signo en las 19 variantes
+- Fórmula de Lowe. Variantes: Young (sin actualizar por precios relativos) y geométrica; la geométrica se
+  compara con el IPC oficial recalculado con la misma fórmula (si no, la brecha mezcla canasta y fórmula).
+- Comparador del efecto edad: todos los hogares (equivale a un IPC con canasta 2017/18). Variante: los
+  hogares no jubilados (contraste puro; el efecto del período completo pasa de +1,6% a +1,9%).
+- **Regla de firmeza**: una conclusión es firme si mantiene el signo en las 20 variantes
   (`R['variantes_resumen']`, gráfico g08).
 - Bootstrap: 500 réplicas en `construir.py`, 300 en los notebooks (semilla 2018), remuestreo de hogares
-  estratificado por región. Sin conglomerados (la ENGHo pública no trae UPM ni estrato): cota inferior.
+  estratificado por región; da intervalos para la brecha nacional, el efecto edad, el haber mínimo (vs IPC
+  y, pareado, vs IIJP) y las brechas regionales. Sin conglomerados (la ENGHo pública no trae UPM ni
+  estrato): cota inferior.
 - Test de brecha persistente: media de la diferencia mensual en logaritmos, error de Newey-West
   (rezagos = ⌊4 (T/100)^(2/9)⌋). Con períodos cortos, poca potencia.
 
@@ -94,9 +104,10 @@
   `ponderaciones_aperturas` (nacional por apertura, con participación dentro de la división),
   `ponderaciones_nodos` (región × nodo), `ponderaciones_democraticas`, `peso_regiones`, `poblaciones`.
   Estructura: `estructura` (nodos), `indices_residuales`, `sensibilidad_restos`, `imputaciones`,
-  `validacion`. Sensibilidad: `variantes`, `variantes_resumen`, `variantes_niveles`. Haberes y fiscal:
+  `validacion`, `cobertura_precios`. Sensibilidad: `variantes`, `variantes_resumen`, `variantes_niveles`,
+  `sensibilidad_haber_minimo`; `periodos_regionales` trae los intervalos bootstrap. Haberes y fiscal:
   `haberes`, `regla_movilidad`, `fiscal_*`. TP: `revision_tp`. `meta`.
-- `src/exportar.py`: `exportar(R, dir_salida, dir_datos)` (Excel con una hoja por tabla + 8 PNG + 27 CSV)
+- `src/exportar.py`: `exportar(R, dir_salida, dir_datos)` (Excel con una hoja por tabla + 8 PNG + 29 CSV)
   y `zip_resultados(R, nombre)` (lo mismo + `LEEME.txt` en `_descargas/<nombre>.zip`; lo usan los
   notebooks). La hoja Notas y el LEEME traen el commit.
 - Gráficos (`src/graficos.py`): g01 ponderaciones, g02 brecha desde nov-23 (banda bootstrap, haber mínimo,
@@ -105,6 +116,11 @@
 
 ## 5. Trampas conocidas
 
+- **Concordancia ENGHo ≠ IPC**: la ENGHo 2017/18 clasifica las expensas en 04.4.4 (con el agua); el IPC,
+  en 04.1.3 (gastos comunes). Sin la concordancia, las expensas (1,8% de la canasta de jubilados) se
+  valorizaban con el índice del agua, que en GBA subió 2,4 veces más desde 2016: la brecha del período
+  completo daba +2,3% en vez de +1,2%. Antes de agregar rubros, comparar las descripciones de
+  `engho2018_articulos.zip` (INDEC, mismo FTP que la ENGHo) con las de `ponderadores_ipc_regiones.csv`.
 - **Aperturas solo regionales**: no hay aperturas nacionales; el IIJP nacional se arma sumando regiones.
   GBA publica además `04.3` y `09.1`. Prepagas se publica como `06.4.1` pero su ponderador es `06.4`
   (`estructura.ALIAS_PONDERADOR`).
