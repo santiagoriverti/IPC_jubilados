@@ -113,3 +113,6 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   con fuentes. 30 MB, ~2 min con openpyxl (gastos: 901.804 filas, entra en el límite de Excel).
 - La ENGHo 2004/05 no tiene microdatos en el análisis: entra solo vía ponderaciones oficiales del IPC.
 - Pendiente: probar en Colab (dos files.download seguidos: el navegador puede pedir permiso).
+- ZIP del notebook 03 con `fuentes_originales/` (`exportar.FUENTES_ORIGINALES`): archivos tal como
+  se publican, bajados a data/cache/originales si no estaban; IMIG original = imig-mensual.csv de datos.gob.ar
+  (dataset 452) + imig_consolidado.csv de cuentas_publicas. ZIP 17,7 MB.

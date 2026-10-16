@@ -80,6 +80,9 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`
 - 2026-10-16: el notebook 03 descarga además `IIJP_resultados_y_datos_originales.xlsx`
   (`exportar.excel_completo`, 49 hojas: resultados + datos originales `Dato_*` + `Indice`; 30 MB, ~2 min).
   Ejecutado en local con nbconvert: OK. 19 tests passed. Falta probarlo en Colab.
+- 2026-10-16: el ZIP del notebook 03 trae `fuentes_originales/` (16 archivos: IPC, ponderadores_ipc.xls,
+  metodologia IPC, ENGHo 2017/18 y su manual, haber, PIB e IMIG de datos.gob.ar, IMIG consolidada, carga
+  manual). ZIP de 1,7 a 17,7 MB. `comparar_zip.py` sobre ese ZIP: 0 diferencias no esperadas.
 
 - `python -m pytest tests -q` → 18 passed (7 de `tests/test_estructura.py`, incluida la concordancia; 4
   de `tests/test_divulgacion.py`: los .tex usan justo las figuras de `GRAFICOS_DIVULGACION`).

@@ -66,8 +66,16 @@ Overleaf.
     ]
 
 
-def descarga(nombre: str) -> list[dict]:
-    """Celdas finales comunes: exportan todo y, en Colab, descargan el ZIP."""
+def descarga(nombre: str, fuentes_originales: bool = False) -> list[dict]:
+    """Celdas finales comunes: exportan todo y, en Colab, descargan el ZIP. Con fuentes_originales el ZIP
+    trae ademas la carpeta fuentes_originales/ (notebook 03)."""
+    extra = r'''
+La carpeta `fuentes_originales/` trae los datos de entrada **tal como se publican**: CSV del IPC, Excel
+de ponderaciones, microdatos de la ENGHo 2017/18 (ZIP) y su manual, metodología del IPC (PDF), haber
+mínimo, PIB e IMIG de datos.gob.ar, y lo que se cargó a mano (bono). Su `LEEME.txt` da la URL de cada
+archivo.
+''' if fuentes_originales else ''
+    arg = ', fuentes_originales=True' if fuentes_originales else ''
     return [
         md(r'''
 ## Descargar todos los resultados
@@ -75,9 +83,9 @@ def descarga(nombre: str) -> list[dict]:
 ZIP con el Excel (una hoja por tabla), los gráficos del análisis en PNG (`graficos/`), las figuras del
 documento de prensa y de la presentación (`figuras/`, para subir a Overleaf) y las tablas en CSV
 (`datos/`). En Colab se descarga solo; en la PC queda en la carpeta `_descargas/` del repo.
-'''),
+''' + extra),
         code(f'''from src.exportar import zip_resultados
-zip_path = zip_resultados(R, '{nombre}')
+zip_path = zip_resultados(R, '{nombre}'{arg})
 print('ZIP:', zip_path)
 if 'google.colab' in sys.modules:
     from google.colab import files
@@ -400,7 +408,7 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
     code(r'''print(f"Gasto previsional / PIB {R['meta']['anio_pib_ref']}: {R['meta']['gasto_prev_pct_pib']:.2f}%")
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
     *figuras_divulgacion(['iijp_06_jubilacion_minima']),
-    *descarga('IIJP_03_haberes_y_fiscal'),
+    *descarga('IIJP_03_haberes_y_fiscal', fuentes_originales=True),
     md(r'''
 ## Excel completo: resultados y datos originales
 

@@ -254,17 +254,97 @@ def excel_completo(R: dict, nombre: str) -> str:
     return str(ruta)
 
 
-def zip_resultados(R: dict, nombre: str) -> str:
-    """Exporta Excel, graficos, figuras y CSV a _descargas/<nombre>/ y devuelve la ruta del ZIP."""
+# --------------------------------------------------------------------------------------------
+# Fuentes originales: los archivos tal como se publican (carpeta fuentes_originales/ del ZIP del notebook 03)
+# --------------------------------------------------------------------------------------------
+_INDEC = 'https://www.indec.gob.ar/ftp/cuadros/'
+_DATOS_GOB = 'https://infra.datos.gob.ar/catalog/sspm/dataset/'
+# (ruta dentro de fuentes_originales/, URL de origen, archivo local si ya esta descargado o versionado, descripcion)
+FUENTES_ORIGINALES = [
+    ('INDEC/serie_ipc_divisiones.csv', fuentes.URL_IPC_DIVISIONES, fuentes.CACHE / 'serie_ipc_divisiones.csv',
+     'IPC por division COICOP, nacional y regional (dic-2016=100)'),
+    ('INDEC/serie_ipc_aperturas.csv', fuentes.URL_IPC_APERTURAS, fuentes.CACHE / 'serie_ipc_aperturas.csv',
+     'IPC por aperturas (grupos y clases), regional'),
+    ('INDEC/ponderadores_ipc.xls', _INDEC + 'economia/ponderadores_ipc.xls', None,
+     'Ponderaciones del IPC por region (ENGHo 2004/05 actualizada a dic-2016)'),
+    ('INDEC/metodologia_ipc_nacional_2019.pdf', _INDEC + 'economia/metodologia_ipc_nacional_2019.pdf', None,
+     'Metodologia del IPC: ponderaciones nacionales por division y peso de las regiones (cuadro 6)'),
+    *[(f'INDEC/engho2018_{t}.zip', fuentes.URL_ENGHO.format(tabla=t), fuentes.CACHE / f'engho2018_{t}.zip',
+       f'Microdatos de la ENGHo 2017/18: base de {t}') for t in ('hogares', 'personas', 'gastos')],
+    ('INDEC/engho2018_articulos.zip', fuentes.URL_ENGHO.format(tabla='articulos'), None,
+     'ENGHo 2017/18: clasificador de articulos (concordancia ENGHo -> IPC)'),
+    ('INDEC/engho2017_18_manual_uso_bases.pdf', _INDEC + 'menusuperior/engho/engho2017_18_manual_uso_bases.pdf',
+     None, 'ENGHo 2017/18: manual de uso de las bases de microdatos'),
+    ('datos_gob_ar/haber-minimo-jubilatorio-pesos-corrientes-valores-mensuales-desde-1971.csv',
+     fuentes.DISTRIBUCIONES[fuentes.ID_HABER_MINIMO][0], None,
+     f'Haber minimo jubilatorio, pesos corrientes (serie {fuentes.ID_HABER_MINIMO})'),
+    ('datos_gob_ar/oferta-demanda-globales-precios-corrientes-valores-trimestrales-base-2004.csv',
+     fuentes.DISTRIBUCIONES[fuentes.ID_PIB_NOMINAL][0], None,
+     f'PIB a precios corrientes, trimestral anualizado (serie {fuentes.ID_PIB_NOMINAL})'),
+    ('datos_gob_ar/imig-mensual.csv', _DATOS_GOB + '452/distribution/452.3/download/imig-mensual.csv', None,
+     'Secretaria de Hacienda, IMIG mensual del Sector Publico Nacional (jubilaciones y pensiones contributivas '
+     'y no contributivas)'),
+    ('cuentas_publicas/imig_consolidado.csv', fuentes.URL_CUENTAS.format(archivo='imig_consolidado.csv'),
+     fuentes.RAIZ.parent / 'cuentas_publicas' / 'output' / 'imig_consolidado.csv',
+     'IMIG consolidada por el repo cuentas_publicas a partir de los informes de Hacienda (la que lee el calculo)'),
+    ('carga_manual/bono_previsional.csv', None, fuentes.REFERENCIA / 'bono_previsional.csv',
+     'Bono previsional, cargado a mano de los decretos del Boletin Oficial (no hay serie publica)'),
+    ('carga_manual/ponderaciones_ipc_indec.csv', None, fuentes.REFERENCIA / 'ponderaciones_ipc_indec.csv',
+     'Ponderaciones del IPC nacional por division, transcriptas de la Metodologia del IPC 2019'),
+    ('carga_manual/ponderadores_ipc_regiones.csv', None, fuentes.REFERENCIA / 'ponderadores_ipc_regiones.csv',
+     'Copia en CSV de ponderadores_ipc.xls (la que lee el calculo)'),
+]
+
+
+def copiar_fuentes_originales(destino: Path) -> pd.DataFrame:
+    """Copia a destino los archivos originales de FUENTES_ORIGINALES (los que no estan en disco se bajan a
+    data/cache/originales/). Un archivo que no se puede bajar no corta la exportacion: queda anotado en el
+    LEEME.txt de la carpeta. Devuelve la tabla archivo / origen / estado."""
+    destino = Path(destino)
+    filas = []
+    for rel, url, local, desc in FUENTES_ORIGINALES:
+        ruta = destino / rel
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            if local is None or not Path(local).exists():
+                if url is None:
+                    raise FileNotFoundError(local)
+                local = fuentes._bajar(url, fuentes.CACHE / 'originales' / Path(rel).name)
+            shutil.copy2(local, ruta)
+            estado = 'ok'
+        except Exception as e:  # noqa: BLE001 (sin red o URL caida: se informa y se sigue)
+            estado = f'no se pudo obtener ({type(e).__name__}: {e})'
+        filas.append({'archivo': rel, 'origen': url or 'carga manual (data/reference del repo)',
+                      'descripcion': desc, 'estado': estado})
+    t = pd.DataFrame(filas)
+    lineas = ['Fuentes originales del IIJP: archivos tal como se publican (INDEC, datos.gob.ar, Hacienda).',
+              'Los de carga_manual/ no tienen una serie publica descargable: se cargaron a mano en el repo.', '']
+    for f in filas:
+        lineas += [f['archivo'], f'    {f["descripcion"]}', f'    origen: {f["origen"]}']
+        if f['estado'] != 'ok':
+            lineas.append(f'    ATENCION: {f["estado"]}')
+    (destino / 'LEEME.txt').write_text('\n'.join(lineas) + '\n', encoding='utf-8')
+    return t
+
+
+def zip_resultados(R: dict, nombre: str, fuentes_originales: bool = False) -> str:
+    """Exporta Excel, graficos, figuras y CSV a _descargas/<nombre>/ y devuelve la ruta del ZIP. Con
+    fuentes_originales=True agrega la carpeta fuentes_originales/ (los archivos tal como se publican)."""
     carpeta = DESCARGAS / nombre
     if carpeta.exists():
         shutil.rmtree(carpeta)
     exportar(R, carpeta, carpeta / 'datos')
-    (carpeta / 'LEEME.txt').write_text(
-        '\n'.join(notas(R) + ['', 'Contenido:', '  IIJP_resultados.xlsx  todas las tablas (una hoja por tabla)',
-                              '  graficos/             graficos del analisis en PNG',
-                              '  figuras/              figuras del documento de prensa y de la presentacion '
-                              '(docs/divulgacion): subir tal cual a la carpeta "figuras" de Overleaf',
-                              '  datos/                las mismas tablas en CSV']) + '\n',
-        encoding='utf-8')
+    contenido = ['', 'Contenido:', '  IIJP_resultados.xlsx  todas las tablas (una hoja por tabla)',
+                 '  graficos/             graficos del analisis en PNG',
+                 '  figuras/              figuras del documento de prensa y de la presentacion '
+                 '(docs/divulgacion): subir tal cual a la carpeta "figuras" de Overleaf',
+                 '  datos/                las mismas tablas en CSV']
+    if fuentes_originales:
+        t = copiar_fuentes_originales(carpeta / 'fuentes_originales')
+        faltan = t.loc[t['estado'] != 'ok', 'archivo'].tolist()
+        contenido.append('  fuentes_originales/   datos de entrada tal como los publican el INDEC, datos.gob.ar y '
+                         'Hacienda (ver su LEEME.txt)' + (f'. FALTAN: {faltan}' if faltan else ''))
+        if faltan:
+            print('ATENCION: no se pudieron bajar', faltan)
+    (carpeta / 'LEEME.txt').write_text('\n'.join(notas(R) + contenido) + '\n', encoding='utf-8')
     return shutil.make_archive(str(carpeta), 'zip', carpeta)

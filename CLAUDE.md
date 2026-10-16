@@ -25,6 +25,9 @@
   `docs/divulgacion/`: el usuario la sube tal cual a la carpeta `figuras` de Overleaf. Una figura nueva
   para esos documentos va en ese diccionario (el test `tests/test_divulgacion.py` verifica que cada
   `\includegraphics` tenga su figura y al revés).
+- El ZIP del notebook 03 trae además `fuentes_originales/` (`exportar.FUENTES_ORIGINALES` y
+  `copiar_fuentes_originales`: CSV, XLS, ZIP y PDF tal como se publican, con su URL en un LEEME.txt; si uno
+  no se puede bajar se anota y no corta). Un dato de entrada nuevo va también en esa lista.
 - El notebook 03 además descarga `IIJP_resultados_y_datos_originales.xlsx` (`exportar.excel_completo`:
   hojas de resultados + hojas `Dato_*` de `exportar.datos_originales()`, hoja `Indice` con las fuentes; ~30 MB,
   ~2 min). Un dato de entrada nuevo en `fuentes.py` va también en `datos_originales()`.
