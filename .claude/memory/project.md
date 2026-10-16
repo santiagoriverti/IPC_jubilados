@@ -104,3 +104,12 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   `es-nolists`; `\text` sin amsmath → `\mathrm`; en Madrid, `\institute[]` evita "(UADE)" en el pie.
 - Corregido redondeo doble en README (+4,6 → +4,5% haber mínimo Milei; +1,5 → +1,4% vs IIJP) y en
   revision_TP M3 (dic-23 → nov-23; 4,6 → 4,5%).
+
+## Sesión 4 (2026-10-16): Excel con datos originales
+- Pedido: al terminar el notebook 03, descargar un Excel con todos los resultados y los datos originales.
+- `exportar.datos_originales()` (IPC divisiones y aperturas, ponderaciones IPC = ENGHo 2004/05, peso de
+  regiones, ENGHo 2017/18 hogares/personas/gastos solo con las columnas que usa el cálculo, haber, bono,
+  IMIG, PIB, series del TP) y `exportar.excel_completo(R, nombre)` → `_descargas/<nombre>.xlsx`, hoja Indice
+  con fuentes. 30 MB, ~2 min con openpyxl (gastos: 901.804 filas, entra en el límite de Excel).
+- La ENGHo 2004/05 no tiene microdatos en el análisis: entra solo vía ponderaciones oficiales del IPC.
+- Pendiente: probar en Colab (dos files.download seguidos: el navegador puede pedir permiso).

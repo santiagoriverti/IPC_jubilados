@@ -401,6 +401,22 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
     *figuras_divulgacion(['iijp_06_jubilacion_minima']),
     *descarga('IIJP_03_haberes_y_fiscal'),
+    md(r'''
+## Excel completo: resultados y datos originales
+
+Un solo Excel con **todos los resultados** (las mismas hojas que el Excel del ZIP) y **los datos
+originales** que usa el análisis, en las hojas `Dato_*`: IPC por divisiones y por aperturas (INDEC),
+ponderaciones oficiales del IPC (canasta de la ENGHo 2004/05), microdatos de la ENGHo 2017/18 (hogares,
+personas y gastos, con las columnas que usa el cálculo), haber mínimo, bono, gasto previsional (IMIG) y
+PIB. La hoja `Indice` describe cada hoja y su fuente. Pesa unos 30 MB y tarda un par de minutos en
+escribirse. En Colab se descarga solo (si el navegador pregunta, permitir descargas múltiples).
+'''),
+    code(r'''from src.exportar import excel_completo
+xlsx_path = excel_completo(R, 'IIJP_resultados_y_datos_originales')
+print('Excel:', xlsx_path)
+if 'google.colab' in sys.modules:
+    from google.colab import files
+    files.download(xlsx_path)'''),
 ]
 
 

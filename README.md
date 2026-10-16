@@ -70,7 +70,7 @@ la presentación (`figuras/`) y las tablas en CSV):
 |---|---|
 | [01 · Canasta de los jubilados](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/01_canasta_jubilados.ipynb) | ENGHo 2017/18 → poblaciones, ponderaciones por división y dentro de cada división, peso de las regiones, bootstrap |
 | [02 · IIJP vs IPC](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/02_iijp_vs_ipc.ipynb) | Estructura de precios, validación, índice, brecha por período, efecto edad vs canasta vieja, regiones, descomposición, tabla de variantes |
-| [03 · Haberes y costo fiscal](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/03_haberes_y_fiscal.ipynb) | Haber mínimo y bono, poder adquisitivo, contrafactual IIJP, costo fiscal |
+| [03 · Haberes y costo fiscal](https://colab.research.google.com/github/santiagoriverti/IPC_jubilados/blob/main/notebooks/03_haberes_y_fiscal.ipynb) | Haber mínimo y bono, poder adquisitivo, contrafactual IIJP, costo fiscal. Al final baja además `IIJP_resultados_y_datos_originales.xlsx` (~30 MB): todos los resultados y los datos originales (IPC, ponderaciones ENGHo 2004/05, microdatos ENGHo 2017/18, haber, bono, IMIG, PIB) |
 
 **En la PC**:
 

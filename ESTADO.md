@@ -77,6 +77,10 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`
 
 ## 4. Verificación (2026-10-13)
 
+- 2026-10-16: el notebook 03 descarga además `IIJP_resultados_y_datos_originales.xlsx`
+  (`exportar.excel_completo`, 49 hojas: resultados + datos originales `Dato_*` + `Indice`; 30 MB, ~2 min).
+  Ejecutado en local con nbconvert: OK. 19 tests passed. Falta probarlo en Colab.
+
 - `python -m pytest tests -q` → 18 passed (7 de `tests/test_estructura.py`, incluida la concordancia; 4
   de `tests/test_divulgacion.py`: los .tex usan justo las figuras de `GRAFICOS_DIVULGACION`).
 - `python scripts/control_calidad.py` → 0 ALERTAS: réplica del IPC nacional con la estructura de
