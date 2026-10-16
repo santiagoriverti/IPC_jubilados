@@ -4,7 +4,7 @@
 % - Beamer, tema Madrid, formato 16:9. Compilar con pdfLaTeX (Overleaf: Menu > Compiler > pdfLaTeX).
 % - Figuras: subir a la carpeta "figuras" del proyecto de Overleaf los 6 PNG iijp_*.png de
 %   output/figuras/ (los genera python scripts/construir.py) o la carpeta figuras/ del ZIP de cualquier notebook.
-% - Cifras: datos hasta agosto de 2026 (IPC) y septiembre de 2026 (haber minimo), las mismas del
+% - Cifras: datos hasta septiembre de 2026 (IPC) y septiembre de 2026 (haber minimo), las mismas del
 %   documento de prensa (docs/divulgacion/iijp_prensa.tex) y de ESTADO.md, seccion 2.
 % =============================================================================================
 \documentclass[aspectratio=169,11pt]{beamer}
@@ -34,7 +34,7 @@
 \subtitle{Un índice de precios para la canasta de los jubilados argentinos}
 \author[INECO -- UADE]{INECO -- UADE}
 \institute[]{Universidad Argentina de la Empresa}  % [] = sin "(UADE)" en el pie
-\date[Octubre de 2026]{Octubre de 2026 \\[0.3em] {\footnotesize Datos hasta agosto de 2026}}
+\date[Octubre de 2026]{Octubre de 2026 \\[0.3em] {\footnotesize Datos hasta septiembre de 2026}}
 
 \begin{document}
 
@@ -114,22 +114,22 @@
 \end{frame}
 
 % ------------------------------------------------------------------------------- 6
-\begin{frame}{El último dato: agosto de 2026}
+\begin{frame}{El último dato: septiembre de 2026}
   \begin{center}
     \large
     \begin{tabular}{@{}lrrr@{}}
       \toprule
                                    & En el mes & Últimos 12 meses & En 2026 \\
       \midrule
-      IPC oficial (INDEC)          & 1,7\%     & 33,5\%           & 21,3\% \\
-      \textbf{IIJP (jubilados)}    & \textbf{1,6\%} & \textbf{34,8\%} & \textbf{22,0\%} \\
-      IIJP de la jubilación mínima & 1,8\%     & 36,5\%           & 23,6\% \\
+      IPC oficial (INDEC)          & 1,9\%     & 33,4\%           & 23,6\% \\
+      \textbf{IIJP (jubilados)}    & \textbf{1,9\%} & \textbf{34,6\%} & \textbf{24,4\%} \\
+      IIJP de la jubilación mínima & 2,1\%     & 36,6\%           & 26,2\% \\
       \bottomrule
     \end{tabular}
   \end{center}
   \vspace{1em}
   \begin{block}{En pocas palabras}
-    En agosto, la canasta de los jubilados subió algo menos que el IPC; en los últimos doce meses, más.
+    En septiembre, la canasta de los jubilados subió lo mismo que el IPC; en los últimos doce meses, más.
   \end{block}
 \end{frame}
 
@@ -137,7 +137,7 @@
 \begin{frame}{Desde noviembre de 2023, la canasta de los jubilados se encareció más}
   \figura{iijp_03_desde_nov23.png}
   \centering
-  Se encareció un \textbf{3,1\% más} que la del IPC; para quienes cobran la mínima, un \textbf{4,5\% más}.
+  Se encareció un \textbf{3,1\% más} que la del IPC; para quienes cobran la mínima, un \textbf{4,7\% más}.
 \end{frame}
 
 % ------------------------------------------------------------------------------- 8
@@ -154,7 +154,7 @@
       \end{itemize}
       \vspace{0.4em}
       \begin{alertblock}{Ojo}
-        Con la canasta actualizada de \emph{todos} los hogares la diferencia también aparece (3,8\%): el problema principal es que el IPC usa una canasta vieja.
+        Con la canasta actualizada de \emph{todos} los hogares la diferencia también aparece (3,7\%): el problema principal es que el IPC usa una canasta vieja.
       \end{alertblock}
     \end{column}
   \end{columns}
@@ -171,7 +171,7 @@
 \begin{frame}{La diferencia aparece en todas las regiones}
   \figura{iijp_05_regiones.png}
   \centering
-  Desde noviembre de 2023: de $+$2,0\% (Pampeana) a $+$9,0\% (Noreste).
+  Desde noviembre de 2023: de $+$2,0\% (Pampeana) a $+$9,3\% (Noreste).
 \end{frame}
 
 % ------------------------------------------------------------------------------- 11
@@ -179,7 +179,7 @@
   \figura[0.64]{iijp_06_jubilacion_minima.png}
   \centering
   Bono congelado en \$70.000 desde marzo de 2024.\\
-  Agosto 2026 vs.\ noviembre 2023: \textbf{$-$9,7\%} (IPC) y \textbf{$-$13,7\%} (inflación de la mínima).
+  Septiembre 2026 vs.\ noviembre 2023: \textbf{$-$9,8\%} (IPC) y \textbf{$-$13,9\%} (inflación de la mínima).
 \end{frame}
 
 % ------------------------------------------------------------------------------- 12
@@ -213,7 +213,7 @@
   \begin{itemize}
     \setlength{\itemsep}{0.6em}
     \item \textbf{Mismos precios que el INDEC}: con la canasta oficial, el método reproduce el IPC con un error máximo de 0,08\%.
-    \item \textbf{Probado de 20 maneras distintas}: la diferencia desde noviembre de 2023 es siempre positiva (entre 2,4\% y 6,5\%).
+    \item \textbf{Probado de 20 maneras distintas}: la diferencia desde noviembre de 2023 es siempre positiva (entre 2,4\% y 6,7\%).
     \item \textbf{Código y datos abiertos}: cualquiera puede reproducir los resultados.
     \item \textbf{Se actualiza todos los meses}, con cada publicación del IPC.
     \item \textbf{Límites conocidos}: canasta de 2017/18; no capta descuentos propios de los jubilados (PAMI, tarifa social).

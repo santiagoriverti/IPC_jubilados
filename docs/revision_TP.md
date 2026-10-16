@@ -5,7 +5,7 @@ Materiales revisados: informe (PDF, 17 págs.), presentación (21 diapositivas) 
 versionan** en este repo (tienen nombres y legajos); las series que calcula la planilla están en
 [`data/reference/tp_original_series.csv`](../data/reference/tp_original_series.csv) para poder
 comparar. Todas las cifras "corregidas" salen de `python scripts/construir.py` (datos hasta
-ago-2026) y se pueden reproducir con los notebooks. Las del IIJP corresponden a la metodología vigente
+sep-2026) y se pueden reproducir con los notebooks. Las del IIJP corresponden a la metodología vigente
 (octubre 2026): canasta de los hogares jubilados valorizada por región con las aperturas del IPC (ver el
 [README](../README.md)); las del método y la canasta del TP están en las hojas `Revision_TP_*` del Excel.
 
@@ -17,7 +17,7 @@ noviembre 2023 al de mayo 2026; las cifras corregidas usan esa misma ventana.
 | Afirmación del TP | Resultado con el método corregido | Causa principal de la diferencia |
 |---|---|---|
 | Brecha IIJP vs IPC dic-23 → may-26: **+3,84%** | **+2,74%** (IC 95% muestral: 2,18 a 3,23). Con la canasta y el método del TP la brecha sería 6,3%; con canasta fija y 12 divisiones, 2,6% | Método de agregación (M1), febrero 2024 sin Vivienda (B1) y nivel de detalle de los precios (M1b) |
-| La brecha se debe al patrón de consumo de los jubilados | Desde nov-23 el **efecto edad es −0,7%** (su signo depende de la especificación); la brecha viene de que el IPC oficial usa la canasta de 2004/05 (+3,8%) | No separa edad de canasta vieja (M2) |
+| La brecha se debe al patrón de consumo de los jubilados | Desde nov-23 el **efecto edad es −0,6%** (su signo depende de la especificación); la brecha viene de que el IPC oficial usa la canasta de 2004/05 (+3,7%) | No separa edad de canasta vieja (M2) |
 | Corregir permanentemente un 3,8% | La brecha cambia de signo por período (Macri +3,2%, Fernández −4,9%, Milei +3,1%) y en 2016-2026 la media mensual no es distinta de 0 | Generaliza un episodio (M4) |
 | Pérdida de poder adquisitivo de la mínima dic-23 → may-26: **−9,77%** | Haber **sin bono: +13,2%** (vs dic-23) / +9,1% (vs nov-23). **Con bono: −9,7%** (vs nov-23; −13,3% con el IIJP haber mínimo) | Fechas mezcladas (B6); el bono congelado es lo que explica la pérdida |
 | Indexando por IIJP desde dic-23 la mínima sería $484.827 en may-26 (pérdida ~19%, $1,8 M acumulados) | El nivel es parecido ($483.176), pero de esa diferencia **19,3 de 22,9 puntos son la transición de fórmula** (ene-feb 2024 sin aumento); el efecto del índice es **3,0%** | Atribuye al índice un efecto de la fórmula (M5) |
@@ -68,7 +68,7 @@ compara ambos como si fueran lo mismo ("casi el doble", "diferencia de $202.790 
 inflación desde noviembre (incluye el 25,5% de diciembre). Comparado de forma consistente, el haber
 sin bono de mayo 2026 está **13,2% por encima** del de diciembre 2023 (9,1% sobre noviembre). La
 pérdida real aparece al sumar el bono: haber + bono cae 9,7% entre nov-23 y may-26, porque el bono
-quedó fijo en $70.000 (actualizado por IPC desde marzo 2024 sería $194.268 en ago-26). D2 divide el
+quedó fijo en $70.000 (actualizado por IPC desde marzo 2024 sería $198.367 en sep-26). D2 divide el
 haber con la corrección duplicada (B3) por la inflación del IIJP.
 
 **B7. Cobertura de la CBT** (`Indicadores sociales!C9`). Divide el haber por la CBT de un adulto
@@ -108,29 +108,29 @@ recalculado con la misma encuesta:
 
 | Período | IIJP vs IPC oficial | Efecto edad (IIJP vs IPC 2017/18) | Efecto canasta vieja (IPC 2017/18 vs oficial) |
 |---|---|---|---|
-| dic-16 → ago-26 | +1,20% | **+1,60%** | −0,39% |
+| dic-16 → sep-26 | +1,21% | **+1,69%** | −0,47% |
 | Macri (dic-16 → dic-19) | +3,22% | +2,91% | +0,30% |
 | Fernández (dic-19 → nov-23) | −4,86% | −0,57% | −4,31% |
-| Milei (nov-23 → ago-26) | +3,06% | −0,70% | +3,78% |
+| Milei (nov-23 → sep-26) | +3,06% | −0,62% | +3,71% |
 
 Desde fines de 2023 la canasta de los jubilados subió algo menos que la de todos los hogares, pero el
-efecto edad es chico y su signo depende de cómo se defina la población (entre −1,3% y +0,7% en las
+efecto edad es chico y su signo depende de cómo se defina la población (entre −1,3% y +1,0% en las
 variantes). A favor de los jubilados juegan que compran menos ropa (que subió poco) y más electricidad
 y gas; en contra, que alquilan mucho menos y compran más medicamentos, que subieron menos que las
 prepagas. Lo que hace que el IPC oficial quede abajo es su canasta de 2004/05, que sobrepondera ropa
 (9,9%) y subpondera vivienda (9,4%): afecta a todos los hogares, no solo a los jubilados. En cambio, en
-todo el período 2016-2026 sí hay un efecto edad positivo y robusto (+1,6%), concentrado en 2016-2019.
+todo el período 2016-2026 sí hay un efecto edad positivo y robusto (+1,7%), concentrado en 2016-2019.
 
 **M3. Población.** "Hogares con al menos un mayor de 65" incluye hogares multigeneracionales donde el
 gasto lo deciden sobre todo los miembros más jóvenes, y la mezcla 0,69/0,31 pondera por cantidad de
 hogares (no por gasto, como el IPC). El IIJP corregido usa **hogares cuya principal fuente de ingreso
 son jubilaciones y pensiones** (≥ 50%). La tabla de variantes (hoja `Variantes` del Excel) prueba once
 definiciones alternativas (entre ellas la población del TP, hogares con algún mayor de 65): la brecha
-nov-23 → ago-26 va de 2,4% a 4,5% según la definición y siempre es positiva.
+nov-23 → sep-26 va de 2,4% a 4,7% según la definición y siempre es positiva.
 
 **M4. Una brecha de un período no es una corrección permanente.** El 3,84% surge casi entero del
 ajuste de precios relativos de 2024. En dic-19 → nov-23 la brecha fue −4,9%. La diferencia media
-mensual 2016-2026 es 0,010 p.p. con IC 95% (Newey-West) de −0,045 a +0,066: no hay evidencia de una
+mensual 2016-2026 es 0,010 p.p. con IC 95% (Newey-West) de −0,045 a +0,065: no hay evidencia de una
 brecha persistente mes a mes; la acumulada del período es +1,2% y no se sostiene en todas las variantes.
 
 **M5. La pérdida del haber se atribuye al índice.** El ejercicio "IIJP desde diciembre 2023" compara
@@ -159,10 +159,10 @@ distribución real de haberes.
   transporte, ropa y restaurantes), también dentro de cada división. ✔
 - En períodos sin grandes cambios de precios relativos el IIJP y el IPC convergen. ✔
 - Desde fines de 2023 el IPC oficial subestima la inflación de los jubilados (≈ 3,1%)… pero también la
-  de todos los hogares (≈ 3,8%), porque su canasta es de 2004/05. La primera recomendación de política
+  de todos los hogares (≈ 3,7%), porque su canasta es de 2004/05. La primera recomendación de política
   es **actualizar la canasta del IPC** (la ENGHo 2017/18 está disponible). El índice específico agrega
-  información en plazos largos (efecto edad +1,6% en 2016-2026, concentrado en 2016-2019) y, sobre
-  todo, para los jubilados de haber mínimo (+3,8% sobre el IPC y +2,6% sobre el IIJP en 2016-2026).
+  información en plazos largos (efecto edad +1,7% en 2016-2026, concentrado en 2016-2019) y, sobre
+  todo, para los jubilados de haber mínimo (+4,0% sobre el IPC y +2,8% sobre el IIJP en 2016-2026).
 - El costo fiscal de indexar por IIJP es bajo (~0,02% del PIB por año en 2024-2025). La pérdida de
   poder adquisitivo de la jubilación mínima se explica sobre todo por el **bono congelado** y por la
   transición de fórmula de comienzos de 2024, no por el índice de actualización.

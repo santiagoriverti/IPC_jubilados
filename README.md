@@ -10,15 +10,15 @@ El punto de partida fue el trabajo práctico de un grupo de la materia *Medició
 estructuras económicas* (INECO · UADE); el índice actual es una reconstrucción completa de la
 metodología. La revisión del TP original está en [`docs/revision_TP.md`](docs/revision_TP.md).
 
-## Resultados (datos hasta agosto 2026)
+## Resultados (datos hasta septiembre 2026)
 
 | Período | IPC oficial | IIJP | Brecha IIJP vs IPC | Efecto edad | Brecha IIJP haber mínimo vs IPC |
 |---|---|---|---|---|---|
-| Dic-2016 → ago-2026 | 12.177% | 12.325% | **+1,2%** | **+1,6%** | +3,8% |
+| Dic-2016 → sep-2026 | 12.414% | 12.566% | **+1,2%** | **+1,7%** | +4,0% |
 | Macri (dic-16 → dic-19) | 183,4% | 192,6% | +3,2% | +2,9% | +4,5% |
 | Fernández (dic-19 → nov-23) | 893,5% | 845,3% | −4,9% | −0,6% | −5,0% |
-| Milei (nov-23 → ago-26) | 336,0% | 349,3% | **+3,1%** | −0,7% | +4,5% |
-| Desde 2025 (dic-24 → ago-26) | 59,6% | 60,4% | +0,5% | −0,9% | +1,6% |
+| Milei (nov-23 → sep-26) | 344,4% | 358,0% | **+3,1%** | −0,6% | +4,7% |
+| Desde 2025 (dic-24 → sep-26) | 62,6% | 63,5% | +0,5% | −0,8% | +1,8% |
 
 Brecha: (1 + inflación del IIJP) / (1 + inflación del IPC) − 1. Efecto edad: IIJP frente al mismo cálculo
 con la canasta de *todos* los hogares de la ENGHo 2017/18.
@@ -28,22 +28,22 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
    (54% vs 42%) y menos prepagas; dentro de vivienda, mucho menos alquiler (16% vs 35%) y más
    electricidad y gas (51% vs 41%); dentro de transporte, más transporte público (27% vs 22%).
 2. **Desde noviembre de 2023 el IPC oficial subestima la inflación de los jubilados en 3,1%** (IC 95%
-   muestral: 2,5 a 3,6; entre 2,4% y 6,5% en las 20 variantes metodológicas, siempre positiva), **pero
+   muestral: 2,4 a 3,6; entre 2,4% y 6,7% en las 20 variantes metodológicas, siempre positiva), **pero
    se explica por la canasta vieja del IPC**: el mismo cálculo con la canasta de todos los hogares da
-   +3,8%. El efecto propio de la edad es negativo (−0,7%), aunque su signo depende de la especificación.
+   +3,7%. El efecto propio de la edad es negativo (−0,6%), aunque su signo depende de la especificación.
 3. **En todo el período 2016-2026 la brecha es menor (+1,2%; IC 0,8 a 1,6) y no es firme**: en tres de
    las 20 variantes queda en torno a cero (jubilados de ingresos altos, hogares solo de mayores de 65,
-   todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,6%; IC 1,2 a 2,0), pero
+   todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,7%; IC 1,3 a 2,1), pero
    viene de 2016-2019 (+2,9%, normalización tarifaria y medicamentos); desde 2019 es negativo.
-4. **Los jubilados de haber mínimo enfrentan más inflación**: +3,8% sobre el IPC desde 2016 y +4,5%
-   desde noviembre de 2023; sobre el IIJP, +2,6% (IC 2,0 a 3,2) y +1,4% (IC 0,7 a 2,3). El resultado no
+4. **Los jubilados de haber mínimo enfrentan más inflación**: +4,0% sobre el IPC desde 2016 y +4,7%
+   desde noviembre de 2023; sobre el IIJP, +2,8% (IC 2,1 a 3,4) y +1,6% (IC 0,8 a 2,4). El resultado no
    depende del tope que define al grupo (de 1 a 2 haberes mínimos). Su canasta pesa más alimentos
    (33%), electricidad y gas, transporte público y medicamentos.
 5. **Regiones**: desde noviembre de 2023 la brecha con el IPC de cada región va de +2,0% (Pampeana) y
-   +2,7% (GBA) a +5,7% (Noroeste) y +9,0% (Noreste; IC 7,1 a 11,0).
-6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,1% arriba en términos
+   +2,7% (GBA) a +5,7% (Noroeste) y +9,3% (Noreste; IC 7,5 a 11,4).
+6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,3% arriba en términos
    reales con el IPC y 5,3% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
-   2024) está 9,7% y 13,7% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
+   2024) está 9,8% y 13,9% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
    daría un haber 1,1% mayor en septiembre de 2026 ($4.698 por mes en la mínima); por IIJP haber mínimo,
    2,6% ($11.188).
 7. **Costo fiscal** de indexar por IIJP desde abril de 2024: 0,2%-0,6% del gasto en jubilaciones y

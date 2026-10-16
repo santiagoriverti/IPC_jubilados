@@ -116,3 +116,7 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
 - ZIP del notebook 03 con `fuentes_originales/` (`exportar.FUENTES_ORIGINALES`): archivos tal como
   se publican, bajados a data/cache/originales si no estaban; IMIG original = imig-mensual.csv de datos.gob.ar
   (dataset 452) + imig_consolidado.csv de cuentas_publicas. ZIP 17,7 MB.
+- Rutina mensual sep-2026: cifras actualizadas en ESTADO, README, revision_TP, prensa y presentación (sin
+  cambios de conclusiones: Milei +3,06%, completo +1,21%, edad completo +1,69%, haber mínimo vs IPC +4,0%).
+  Las cifras se sacaron con un script que compara los CSV de HEAD con los nuevos (scratchpad, no versionado).
+  Plantilla de prensa INECO: logo en `_local_run/prensa_ineco/figuras/logo_ineco.jpg` (no versionado).
