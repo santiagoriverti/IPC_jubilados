@@ -196,3 +196,28 @@ def tabla_periodos(niveles: dict[str, pd.Series], referencia: str = 'IPC oficial
                 fila[f'brecha {k} vs {referencia} (%)'] = ((1 + a) / (1 + ref) - 1) * 100
         filas.append(fila)
     return pd.DataFrame(filas)
+
+
+def tabla_anual(niveles: pd.DataFrame, referencia: str = 'IPC oficial') -> pd.DataFrame:
+    """Inflacion anual (diciembre a diciembre; el ultimo anio, de diciembre al ultimo dato) de cada indice
+    y su brecha anual (en %) contra la referencia."""
+    niv = niveles.dropna()
+    ultimo = niv.index.max()
+    filas = []
+    for anio in range(niv.index.min().year + 1, ultimo.year + 1):
+        d, h = pd.Period(f'{anio - 1}-12', 'M'), min(pd.Period(f'{anio}-12', 'M'), ultimo)
+        fila = {'anio': anio, 'hasta': str(h), 'completo': h.month == 12}
+        ref = niv.loc[h, referencia] / niv.loc[d, referencia] - 1
+        for k in niv.columns:
+            a = niv.loc[h, k] / niv.loc[d, k] - 1
+            fila[f'{k} (%)'] = a * 100
+            if k != referencia:
+                fila[f'brecha {k} vs {referencia} (%)'] = ((1 + a) / (1 + ref) - 1) * 100
+        filas.append(fila)
+    return pd.DataFrame(filas)
+
+
+def brecha_interanual(niveles: pd.DataFrame, referencia: str = 'IPC oficial') -> pd.DataFrame:
+    """Brecha de los ultimos 12 meses (en %) de cada indice contra la referencia, mes a mes."""
+    v = niveles / niveles.shift(12)
+    return ((v.drop(columns=referencia).div(v[referencia], axis=0) - 1) * 100).dropna(how='all')

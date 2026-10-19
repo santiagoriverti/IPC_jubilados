@@ -6,7 +6,7 @@
 % Compilar con pdfLaTeX + BibTeX (Overleaf lo hace solo).
 % Archivos que necesita el proyecto de Overleaf:
 % - figuras/logo_ineco.jpg (el logo de la plantilla)
-% - figuras/iijp_01_canasta.png ... figuras/iijp_06_jubilacion_minima.png: output/figuras/ del repo
+% - figuras/iijp_01_canasta.png ... figuras/iijp_08_inflacion_mensual.png: output/figuras/ del repo
 %   (python scripts/construir.py) o la carpeta figuras/ del ZIP de cualquier notebook.
 % - bibliografia.bib (docs/divulgacion/bibliografia.bib del repo)
 % Cifras: salen de python scripts/construir.py (ESTADO.md, seccion 2). Si se actualizan los datos,
@@ -280,10 +280,22 @@ El \textbf{Índice de Inflación de Jubilados y Pensionados (IIJP)}, elaborado p
 IPC oficial (INDEC)          & 1,9 & 33,4 & 23,6 \\
 IIJP                         & 1,9 & 34,6 & 24,4 \\
 IIJP de la jubilación mínima & 2,1 & 36,6 & 26,2 \\
+\midrule
+Brecha IIJP -- IPC                      & 0,0     & $+$0,9 & $+$0,6 \\
+Brecha IIJP jubilación mínima -- IPC    & $+$0,2  & $+$2,4 & $+$2,1 \\
 \bottomrule
 \end{tabular}\\[0.2cm]
-\caption*{Fuente: Instituto de Economía de UADE (INECO) en base a IPC y ENGHo 2017/18 (INDEC).}
+\caption*{Brecha: cuánto más (o menos) se encareció la canasta de los jubilados que la del IPC, en \%. Fuente: Instituto de Economía de UADE (INECO) en base a IPC y ENGHo 2017/18 (INDEC).}
 \end{table}
+
+Mes a mes, las dos inflaciones se mueven muy juntas, porque se calculan con los mismos precios: lo que cambia es el peso de cada producto en la canasta (figura \ref{fig:mensual}). Las diferencias de un mes suelen ser de pocas décimas, pero se acumulan con el tiempo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{iijp_08_inflacion_mensual.png}
+\caption{Inflación mensual del IIJP y del IPC oficial (\%).}
+\label{fig:mensual}
+\end{figure}
 
 \section*{Los jubilados consumen distinto}
 
@@ -298,32 +310,40 @@ La canasta de los jubilados surge de los gastos que registra la ENGHo 2017/18 \c
 
 \section*{Año por año}
 
-El IIJP no siempre sube más que el IPC (cuadro \ref{tab:anual}). Entre 2017 y 2019 y en 2023 y 2024 los precios de la canasta de los jubilados aumentaron más que los del IPC; entre 2020 y 2022, menos. En 2025 prácticamente no hubo diferencia, y en lo que va de 2026 el IIJP vuelve a estar por encima.
+El IIJP no siempre sube más que el IPC (figura \ref{fig:anual} y cuadro \ref{tab:anual}). La \emph{brecha anual} mide cuánto más (o menos) se encareció en cada año la canasta de los jubilados que la del IPC. Entre 2017 y 2019 y en 2023 y 2024 la brecha fue positiva: los precios de la canasta de los jubilados aumentaron más que los del IPC. Entre 2020 y 2022 fue negativa. En 2025 prácticamente no hubo diferencia, y en lo que va de 2026 el IIJP vuelve a estar por encima ($+$0,6\%; $+$2,1\% para la jubilación mínima).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{iijp_07_inflacion_anual.png}
+\caption{Inflación anual del IIJP y del IPC oficial (diciembre a diciembre, \%) y brecha de cada año.}
+\label{fig:anual}
+\end{figure}
 
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.15}
-\caption{Inflación anual (diciembre a diciembre, \%)}
+\caption{Inflación anual y brecha anual (diciembre a diciembre, \%)}
 \label{tab:anual}
-\begin{tabular}{@{}l c c c c@{}}
+\begin{tabular}{@{}l c c c c c@{}}
 \toprule
 \textbf{Año} & \textbf{IPC oficial} & \textbf{IIJP} &
 \shortstack{\textbf{IIJP}\\\textbf{jubilación mínima}} &
-\shortstack{\textbf{Diferencia}\\\textbf{IIJP -- IPC}} \\
+\shortstack{\textbf{Brecha}\\\textbf{IIJP -- IPC}} &
+\shortstack{\textbf{Brecha IIJP}\\\textbf{mínima -- IPC}} \\
 \midrule
-2017 & 24,8  & 26,4  & 27,4  & $+$1,3 \\
-2018 & 47,6  & 49,6  & 50,2  & $+$1,4 \\
-2019 & 53,8  & 54,6  & 54,8  & $+$0,5 \\
-2020 & 36,1  & 33,9  & 34,2  & $-$1,7 \\
-2021 & 50,9  & 48,3  & 46,8  & $-$1,8 \\
-2022 & 94,8  & 92,1  & 91,2  & $-$1,4 \\
-2023 & 211,4 & 213,3 & 218,2 & $+$0,6 \\
-2024 & 117,8 & 121,6 & 121,4 & $+$1,8 \\
-2025 & 31,5  & 31,4  & 31,2  & $-$0,1 \\
-2026 (enero a septiembre) & 23,6 & 24,4 & 26,2 & $+$0,6 \\
+2017 & 24,8  & 26,4  & 27,4  & $+$1,3 & $+$2,1 \\
+2018 & 47,6  & 49,6  & 50,2  & $+$1,4 & $+$1,7 \\
+2019 & 53,8  & 54,6  & 54,8  & $+$0,5 & $+$0,6 \\
+2020 & 36,1  & 33,9  & 34,2  & $-$1,7 & $-$1,4 \\
+2021 & 50,9  & 48,3  & 46,8  & $-$1,8 & $-$2,7 \\
+2022 & 94,8  & 92,1  & 91,2  & $-$1,4 & $-$1,9 \\
+2023 & 211,4 & 213,3 & 218,2 & $+$0,6 & $+$2,2 \\
+2024 & 117,8 & 121,6 & 121,4 & $+$1,8 & $+$1,6 \\
+2025 & 31,5  & 31,4  & 31,2  & $-$0,1 & $-$0,3 \\
+2026 (enero a septiembre) & 23,6 & 24,4 & 26,2 & $+$0,6 & $+$2,1 \\
 \bottomrule
 \end{tabular}\\[0.2cm]
-\caption*{Diferencia: cuánto más (o menos) se encareció la canasta de los jubilados que la del IPC, en \%. Fuente: Instituto de Economía de UADE (INECO) en base a IPC y ENGHo 2017/18 (INDEC).}
+\caption*{Brecha: cuánto más (o menos) se encareció en el año la canasta de los jubilados que la del IPC, en \%. Fuente: Instituto de Economía de UADE (INECO) en base a IPC y ENGHo 2017/18 (INDEC).}
 \end{table}
 
 \section*{Una historia en tres etapas}
@@ -343,13 +363,15 @@ Lo que mueve la brecha son, sobre todo, dos rubros: \textbf{la ropa, que pesa mu
 
 \section*{Desde noviembre de 2023}
 
-La brecha se abrió rápido, entre diciembre de 2023 y abril de 2024, se mantuvo entre 2\% y 3\% durante el resto de 2024 y 2025, y en 2026 volvió a subir: \textbf{en septiembre llega a 3,1\%} (figura \ref{fig:nov23}). Para los hogares jubilados que cobran la mínima es mayor, de 4,7\%, porque su canasta pesa más en alimentos, electricidad y gas, transporte público y medicamentos.
+Entre noviembre de 2023 y septiembre de 2026 la canasta de los jubilados se encareció \textbf{un 3,1\% más que la del IPC}. Para los hogares jubilados que cobran la mínima la brecha es mayor, de 4,7\%, porque su canasta pesa más en alimentos, electricidad y gas, transporte público y medicamentos.
+
+La figura \ref{fig:interanual} muestra, mes a mes y desde 2017, la brecha de los últimos doce meses. Fue positiva hasta fines de 2019, negativa entre 2020 y mediados de 2023 (con un piso de $-$2,0\% en septiembre de 2022) y volvió a ser positiva desde fines de 2023, con un máximo de 2,7\% en abril de 2024, cuando se recompusieron las tarifas. En 2025 la brecha de doce meses fue levemente negativa (hasta $-$0,6\%) y en 2026 volvió a subir: \textbf{en septiembre es de $+$0,9\%, y de $+$2,4\% para los jubilados que cobran la mínima}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{iijp_03_desde_nov23.png}
-\caption{Cuánto más subieron los precios de la canasta de los jubilados que los del IPC oficial desde noviembre de 2023 (\%).}
-\label{fig:nov23}
+\includegraphics[width=0.8\linewidth]{iijp_03_brecha_interanual.png}
+\caption{Brecha de los últimos doce meses: cuánto más subieron los precios de la canasta de los jubilados que los del IPC oficial en los doce meses anteriores a cada mes (\%).}
+\label{fig:interanual}
 \end{figure}
 
 ¿Significa esto que los jubilados enfrentan más inflación que el resto de los hogares? No exactamente. Si se calcula el mismo índice con la canasta de \emph{todos} los hogares de la ENGHo 2017/18, la diferencia con el IPC oficial es todavía mayor: 3,7\% desde noviembre de 2023. Es decir, \textbf{la mayor parte de la brecha no se debe a que los jubilados consuman distinto, sino a que el IPC oficial usa una canasta desactualizada, que subestima la inflación de todos los hogares}. Los jubilados que cobran la mínima, en cambio, sí enfrentaron más inflación que el jubilado promedio: 1,6\% más desde noviembre de 2023.
@@ -385,14 +407,14 @@ El INDEC calcula el IPC en seis regiones. Si se compara el IIJP de cada región 
 
 \section*{La jubilación mínima}
 
-La jubilación mínima se actualiza todos los meses por inflación, pero \textbf{el bono previsional está congelado en \$70.000 desde marzo de 2024}. Medido en poder de compra (figura \ref{fig:minima}), el haber mínimo con bono cayó fuerte a comienzos de 2024 (en febrero de ese año compraba un 25\% menos que en noviembre de 2023), se recuperó a mediados de 2024 y desde entonces vuelve a perder, porque el bono no se actualiza. \textbf{En septiembre de 2026 compraba un 9,8\% menos que en noviembre de 2023 según el IPC, y un 13,9\% menos si se usa la inflación de los jubilados que cobran la mínima}.
+La figura \ref{fig:minima} sigue el poder de compra de la jubilación mínima desde diciembre de 2016. Hasta 2023 los haberes se ajustaban cada tres o seis meses, por lo que el poder de compra subía con cada aumento y caía en los meses siguientes, y en los años de inflación alta la tendencia fue a la baja. Desde septiembre de 2022 se paga además un bono mensual, que no forma parte del haber. Con la aceleración de la inflación a fines de 2023, el haber mínimo con bono tocó su piso en febrero de 2024; se recuperó a mediados de ese año y desde entonces vuelve a perder, porque \textbf{el bono está congelado en \$70.000 desde marzo de 2024}.
 
-Sin el bono, el haber mínimo está un 10,3\% por encima de noviembre de 2023 según el IPC, y un 5,3\% por encima según el IIJP de la jubilación mínima. Para tener en septiembre de 2026 el mismo poder de compra que en marzo de 2024, el bono debería haber sido de \$198.367.
+\textbf{En septiembre de 2026 la jubilación mínima con bono compraba un 30\% menos que en diciembre de 2016 según el IPC, y un 32\% menos según la inflación de los jubilados que cobran la mínima}. Sin el bono, la pérdida es de 40\% y 42\%. Frente a noviembre de 2023, el haber con bono compra un 9,8\% menos según el IPC y un 13,9\% menos según el IIJP de la jubilación mínima. Para tener en septiembre de 2026 el mismo poder de compra que en marzo de 2024, el bono debería haber sido de \$198.367.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\linewidth]{iijp_06_jubilacion_minima.png}
-\caption{Poder de compra de la jubilación mínima más el bono (noviembre de 2023 = 100).}
+\caption{Poder de compra de la jubilación mínima, con y sin el bono (diciembre de 2016 = 100).}
 \label{fig:minima}
 \end{figure}
 
@@ -400,7 +422,7 @@ Sin el bono, el haber mínimo está un 10,3\% por encima de noviembre de 2023 se
 
 Si desde abril de 2024 los haberes se hubieran actualizado con el IIJP en lugar del IPC, con la misma regla de movilidad, \textbf{en septiembre de 2026 la jubilación mínima sería de \$433.331 en lugar de \$428.633: un 1,1\% más (\$4.698 por mes)}. Con el IIJP de la jubilación mínima la diferencia sería de 2,6\% (\$11.188 por mes).
 
-El costo fiscal sería acotado: 0,42\% del gasto en jubilaciones y pensiones en 2024 (abril a diciembre) y 0,22\% en 2025, \textbf{alrededor del 0,02\% del PIB por año}. En los primeros ocho meses de 2026 sube a 0,63\% del gasto, porque la diferencia entre ambos índices se fue acumulando.
+El costo fiscal sería acotado: 0,42\% del gasto en jubilaciones y pensiones en 2024 (abril a diciembre) y 0,22\% en 2025, \textbf{alrededor del 0,02\% del PIB por año}. En los primeros nueve meses de 2026 sube a 0,69\% del gasto, porque la diferencia entre ambos índices se fue acumulando.
 
 En síntesis, desde noviembre de 2023 la canasta de los jubilados se encareció más que la del IPC, sobre todo porque el IPC sigue usando una canasta de hace dos décadas. \textbf{Con el bono congelado, la jubilación mínima pierde poder de compra}, y ajustarla por el IIJP tendría un costo fiscal acotado.
 

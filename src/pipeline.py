@@ -153,6 +153,8 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
 
     # ---------------------------------------------------------------- brechas
     R['periodos'] = indices.tabla_periodos(niv)
+    R['inflacion_anual'] = indices.tabla_anual(niveles)
+    R['brecha_interanual'] = indices.brecha_interanual(niveles)
     filas = []
     for nombre, d, hh in indices.periodos_vigentes(ultimo):
         for a, b, etiqueta in [('IIJP', 'IPC oficial', 'IIJP vs IPC oficial'),

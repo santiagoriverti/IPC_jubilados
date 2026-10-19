@@ -327,7 +327,8 @@ firme si mantiene el signo en todas las variantes (`mismo_signo_en_todas`).
     code(r'''fig = graficos.g08_variantes(R); plt.show()
 display(R['variantes_resumen'])'''),
     code(r'''display(R['variantes'].drop(columns=['descripcion']))'''),
-    *figuras_divulgacion(['iijp_02_historia', 'iijp_03_desde_nov23', 'iijp_04_que_explica', 'iijp_05_regiones']),
+    *figuras_divulgacion(['iijp_07_inflacion_anual', 'iijp_08_inflacion_mensual', 'iijp_02_historia',
+                          'iijp_03_brecha_interanual', 'iijp_04_que_explica', 'iijp_05_regiones']),
     *descarga('IIJP_02_iijp_vs_ipc'),
 ]
 

@@ -1,6 +1,6 @@
 # ESTADO — IPC_jubilados (IIJP)
 
-**Última actualización:** 2026-10-16 (sesión 4: IPC de sep-2026, Excel y fuentes originales en el notebook 03). Punto de entrada para retomar:
+**Última actualización:** 2026-10-19 (sesión 5: brecha anual, figuras de inflación anual y mensual, figuras 3 y 6 sin base política). Punto de entrada para retomar:
 este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md`
 (historial).
 
@@ -11,7 +11,7 @@ deducidos de las ponderaciones oficiales del INDEC y una concordancia ENGHo → 
 subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a sep-2026.
 Colab verificado con `f9f5e82` (notebook 03 con Excel completo y `fuentes_originales/`): ZIP = local. README
 y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
-errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`, generadas por
+errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`, generadas por
 `graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
 **Pendiente**: reescribir la sección LaTeX del informe INECO.
 
@@ -23,7 +23,7 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`
 | Ponderaciones oficiales por región (`data/reference/ponderadores_ipc_regiones.csv`) | dic-2016 | fijas (cambian solo con un IPC nuevo) |
 | Haber mínimo (datos.gob.ar `58.1_MP_0_M_24`) | sep-2026 | automático |
 | Bono previsional (`data/reference/bono_previsional.csv`) | sep-2026 ($70.000) | **manual**, una fila por mes |
-| IMIG (vía repo `cuentas_publicas`) | ago-2026 | actualizar ese repo primero |
+| IMIG (vía repo `cuentas_publicas`) | sep-2026 | actualizar ese repo primero |
 | PIB nominal anual completo (datos.gob.ar) | 2025 | automático |
 | ENGHo | 2017/18 (canasta fija) | no cambia |
 
@@ -60,7 +60,7 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`
 - **Contrafactual desde abr-24** (sep-26): con IIJP el haber sería +1,10% ($4.698/mes en la mínima); con
   IIJP haber mínimo, +2,61% ($11.188).
 - **Costo fiscal** (indexar por IIJP): 2024 (abr-dic) $127.947 M = 0,42% del gasto previsional (0,022% PIB);
-  2025 $125.308 M = 0,22% (0,015% PIB); 2026 ene-ago $297.570 M = 0,63%. Mayo 2026: $42.559 M.
+  2025 $125.308 M = 0,22% (0,015% PIB); 2026 ene-sep $369.658 M = 0,69%. Mayo 2026: $42.559 M.
 - Movilidad: ANSES usa el IPC(t−2) desde niveles con 2 decimales (error 0 en 29/29 meses).
 
 ## 3. Dónde se citan las cifras (actualizar todo junto si cambian)
@@ -75,7 +75,15 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..06` de `output/figuras/`
 | `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-10-16, sep-26): mismas cifras que el documento de prensa |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
-## 4. Verificación (2026-10-13)
+## 4. Verificación (2026-10-19)
+
+- 2026-10-19 (sesión 5): `indices.tabla_anual` (inflación y brecha dic-dic; `inflacion_anual.csv`, hoja
+  Inflacion_anual) e `indices.brecha_interanual` (`brecha_interanual.csv`, hoja Brecha_interanual_%). Figuras
+  nuevas `iijp_07_inflacion_anual` e `iijp_08_inflacion_mensual`; `iijp_03_desde_nov23` → `iijp_03_brecha_interanual`
+  (brecha de 12 meses desde dic-17); `iijp_06` con base dic-2016. Bono cargado desde sep-2022 (decretos 532/2022,
+  788/2022, 105/2023, 282/2023): no cambia otras cifras. Brecha 12 meses sep-26: IIJP +0,9%, mínima +2,4%. Poder
+  de compra de la mínima con bono vs dic-16: −30% (IPC), −32% (IIJP mínima). 0 ALERTAS, 19 tests, prensa (13 págs.)
+  y presentación (15) compilan sin errores ni advertencias. Falta probar los notebooks en Colab.
 
 - 2026-10-16: el notebook 03 descarga además `IIJP_resultados_y_datos_originales.xlsx`
   (`exportar.excel_completo`, 49 hojas: resultados + datos originales `Dato_*` + `Indice`; 30 MB, ~2 min).

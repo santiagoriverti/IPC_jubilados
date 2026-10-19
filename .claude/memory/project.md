@@ -120,3 +120,12 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   cambios de conclusiones: Milei +3,06%, completo +1,21%, edad completo +1,69%, haber mínimo vs IPC +4,0%).
   Las cifras se sacaron con un script que compara los CSV de HEAD con los nuevos (scratchpad, no versionado).
   Plantilla de prensa INECO: logo en `_local_run/prensa_ineco/figuras/logo_ineco.jpg` (no versionado).
+
+## Sesión 5 (2026-10-19): brecha anual y figuras de divulgación
+- Pedido del usuario sobre el documento de prensa: brecha anual, figura 3 más larga, gráficos de inflación anual
+  (datos anuales) y mensual, y evitar gráficos que empiecen en fechas políticas (cambios de gobierno).
+- Hecho: tabla_anual y brecha_interanual en indices.py; iijp_03 = brecha de 12 meses desde dic-17; iijp_06 base
+  dic-2016 (con y sin bono); iijp_07 barras anuales con la brecha de cada año; iijp_08 mensual (completa + 24 meses).
+- Bono previsional cargado desde sep-2022 (antes solo bonos de pago único, no cargados).
+- Criterio del usuario: los gráficos no arrancan en nov-23 ni en otra fecha de cambio de gobierno (el texto sí
+  puede citar esos períodos).

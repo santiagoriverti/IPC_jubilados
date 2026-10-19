@@ -255,6 +255,12 @@ def _eje_meses(ax):
     ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _mes(mdates.num2date(v))))
 
 
+def _eje_anios(ax):
+    """Una marca por anio, rotulada '2017'."""
+    ax.xaxis.set_major_locator(mdates.YearLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+
+
 def iijp_01_canasta(R):
     W = R['ponderaciones']
     orden = W.sort_values('jubilados').index
@@ -308,26 +314,25 @@ def iijp_02_historia(R):
     return fig
 
 
-def iijp_03_desde_nov23(R):
-    niv = R['niveles']
-    base = pd.Period('2023-11', 'M')
-    ipc = niv['IPC oficial'].loc[base:]
-    b = lambda s: ((s.loc[base:] / s.loc[base]) / (ipc / ipc.loc[base]) - 1) * 100  # noqa: E731
-    x = _fecha(ipc.index)
+def iijp_03_brecha_interanual(R):
+    """Brecha de los ultimos 12 meses (serie completa: desde dic-2017, sin una base elegida a mano)."""
+    b = R['brecha_interanual']
+    x = _fecha(b.index)
     with plt.rc_context(RC_DIVULGACION):
-        fig, ax = plt.subplots(figsize=(9.5, 5))
-        for s, lab, c in [(niv['IIJP haber mínimo'], 'Jubilados que cobran la mínima', NARANJA),
-                          (niv['IIJP'], 'Todos los hogares jubilados (IIJP)', AZUL)]:
-            y = b(s)
-            ax.plot(x, y, color=c, lw=2.4, label=lab)
+        fig, ax = plt.subplots(figsize=(11, 5))
+        for col, lab, c in [('IIJP haber mínimo', 'Jubilados que cobran la mínima', NARANJA),
+                            ('IIJP', 'Todos los hogares jubilados (IIJP)', AZUL)]:
+            y = b[col]
+            ax.plot(x, y, color=c, lw=2.2, label=lab)
             ax.annotate(_coma(y.iloc[-1], signo=True) + '%', (x[-1], y.iloc[-1]), xytext=(5, 0),
                         textcoords='offset points', va='center', fontsize=11, color=c, fontweight='bold')
         ax.axhline(0, color=GRIS, lw=1)
         _eje_pct(ax, 'y', signo=True)
-        _eje_meses(ax)
-        ax.set_ylabel('inflación acumulada sobre el IPC oficial')
+        _eje_anios(ax)
+        ax.set_ylabel('inflación de 12 meses sobre el IPC')
         ax.legend(loc='upper left')
-        _pie(fig, FUENTE_CORTA + '. Base noviembre 2023.')
+        _pie(fig, FUENTE_CORTA + '. Cada punto compara los últimos 12 meses. Arriba de cero: los precios de la '
+                                 'canasta de los jubilados subieron más que el IPC.')
     return fig
 
 
@@ -377,33 +382,101 @@ def iijp_05_regiones(R):
 
 
 def iijp_06_jubilacion_minima(R):
-    h = R['haberes'].dropna(subset=['real_con_bono_ipc']).loc[pd.Period('2023-11', 'M'):]
-    base = h['haber_con_bono'].iloc[0]
+    """Poder de compra de la jubilacion minima en toda la serie (diciembre 2016 = 100). El bono se suma desde
+    el primer mes cargado en data/reference/bono_previsional.csv."""
+    h = R['haberes'].dropna(subset=['real_haber_ipc'])
     x = _fecha(h.index)
     with plt.rc_context(RC_DIVULGACION):
-        fig, ax = plt.subplots(figsize=(9.5, 5))
-        for col, lab, c in [('real_con_bono_ipc', 'Medida con el IPC oficial', AZUL),
-                            ('real_con_bono_iijp_minimo', 'Medida con la inflación de los jubilados de la mínima', NARANJA)]:
-            y = h[col] / base * 100
-            ax.plot(x, y, color=c, lw=2.4, label=lab)
-            ax.annotate(_coma(y.iloc[-1]), (x[-1], y.iloc[-1]), xytext=(5, 0), textcoords='offset points',
-                        va='center', fontsize=11, color=c, fontweight='bold')
+        fig, ax = plt.subplots(figsize=(11, 5.2))
+        for defl, lab, c in [('ipc', 'medida con el IPC oficial', AZUL),
+                             ('iijp_minimo', 'medida con la inflación de los jubilados de la mínima', NARANJA)]:
+            base = h[f'real_haber_{defl}'].iloc[0]
+            sin = h[f'real_haber_{defl}'] / base * 100
+            con = (h[f'real_con_bono_{defl}'] / base * 100).fillna(sin)  # meses sin bono: el haber solo
+            ax.plot(x, con, color=c, lw=2.4, label=f'Con bono, {lab}')
+            sin = sin.loc[h['bono'].first_valid_index():]
+            ax.plot(_fecha(sin.index), sin, color=c, lw=1.6, ls='--', label=f'Sin bono, {lab}')
+            for y in (sin, con):
+                ax.annotate(_coma(y.iloc[-1], 0), (x[-1], y.iloc[-1]), xytext=(5, 0), textcoords='offset points',
+                            va='center', fontsize=11, color=c, fontweight='bold')
         ax.axhline(100, color=GRIS, lw=1)
         ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _coma(v, 0)))
-        _eje_meses(ax)
-        ax.set_ylabel('poder de compra (noviembre 2023 = 100)')
-        ax.legend(loc='lower right')
-        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC, datos.gob.ar (haber mínimo) y decretos del bono.')
+        _eje_anios(ax)
+        ax.set_ylabel('poder de compra (diciembre 2016 = 100)')
+        ax.legend(loc='lower left', fontsize=10.5)
+        inicio = _mes_largo(h['bono'].dropna().index.min())
+        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC, datos.gob.ar (haber mínimo) y decretos del bono. '
+                  f'El bono se incluye desde {inicio}.')
+    return fig
+
+
+def iijp_07_inflacion_anual(R):
+    """Inflacion anual (diciembre a diciembre) del IPC y del IIJP, con la brecha de cada anio."""
+    t = R['inflacion_anual']
+    rot = [str(a) if c else f'{a}*' for a, c in zip(t['anio'], t['completo'])]
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(11, 5.4))
+        ancho = 0.4
+        xs = range(len(t))
+        for k, (col, lab, c) in enumerate([('IPC oficial (%)', 'IPC oficial', NARANJA), ('IIJP (%)', 'IIJP', AZUL)]):
+            xx = [i + (k - 0.5) * ancho for i in xs]
+            ax.bar(xx, t[col], width=ancho - 0.03, color=c, label=lab)
+            for xi, vi in zip(xx, t[col]):
+                ax.annotate(_coma(vi, 0), (xi, vi), xytext=(0, 2), textcoords='offset points', ha='center',
+                            va='bottom', fontsize=9.5, color=TINTA2)
+        tope = t[['IPC oficial (%)', 'IIJP (%)']].max(axis=1)
+        for i, (vi, bi) in enumerate(zip(tope, t['brecha IIJP vs IPC oficial (%)'])):
+            ax.annotate(_coma(bi, 1, True), (i, vi), xytext=(0, 17), textcoords='offset points', ha='center',
+                        va='bottom', fontsize=10.5, fontweight='bold', color=AZUL if bi >= 0 else ROJO)
+        ax.set_xticks(list(xs))
+        ax.set_xticklabels(rot)
+        ax.margins(y=0.14)
+        _eje_pct(ax, 'y')
+        ax.grid(axis='x', visible=False)
+        ax.set_ylabel('inflación anual (diciembre a diciembre)')
+        ax.legend(loc='upper left')
+        ult = t.iloc[-1]
+        nota = '' if ult['completo'] else f' *{ult["anio"]}: diciembre a {_mes_largo(pd.Period(ult["hasta"], "M"))}.'
+        _pie(fig, FUENTE_CORTA + '. En negrita: brecha del año (IIJP sobre IPC, en %).' + nota)
+    return fig
+
+
+def iijp_08_inflacion_mensual(R):
+    """Inflacion mensual del IPC y del IIJP: serie completa y ultimos 24 meses."""
+    v = R['var_mensual'].dropna()
+    with plt.rc_context(RC_DIVULGACION):
+        fig, (a1, a2) = plt.subplots(2, 1, figsize=(11, 8), gridspec_kw={'hspace': 0.35})
+        for ax, d, ancho, marca in ((a1, v, 2, None), (a2, v.iloc[-24:], 2.4, 'o')):
+            x = _fecha(d.index)
+            for col, c in [('IPC oficial', NARANJA), ('IIJP', AZUL)]:
+                ax.plot(x, d[col], color=c, lw=ancho, label=col, marker=marca, ms=4)
+            ax.set_ylabel('inflación mensual')
+        _eje_pct(a1, 'y')
+        _eje_pct(a2, 'y', dec=1)
+        _eje_anios(a1)
+        a1.set_title('Desde enero de 2017', fontweight='normal')
+        a1.legend(loc='upper left')
+        a2.set_title('Últimos 24 meses', fontweight='normal')
+        a2.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 4, 7, 10]))
+        a2.xaxis.set_major_formatter(mticker.FuncFormatter(lambda z, _: _mes(mdates.num2date(z))))
+        xu = _fecha(v.index)[-1]
+        a, b = v['IPC oficial'].iloc[-1], v['IIJP'].iloc[-1]
+        for y, c, dy in [(a, NARANJA, -9 if a <= b else 9), (b, AZUL, 9 if a <= b else -9)]:
+            a2.annotate(_coma(y) + '%', (xu, y), xytext=(6, dy), textcoords='offset points', va='center',
+                        fontsize=11, color=c, fontweight='bold')
+        _pie(fig, FUENTE_CORTA + f'. Último dato: {_mes_largo(v.index.max())}.')
     return fig
 
 
 GRAFICOS_DIVULGACION = {
     'iijp_01_canasta': iijp_01_canasta,
     'iijp_02_historia': iijp_02_historia,
-    'iijp_03_desde_nov23': iijp_03_desde_nov23,
+    'iijp_03_brecha_interanual': iijp_03_brecha_interanual,
     'iijp_04_que_explica': iijp_04_que_explica,
     'iijp_05_regiones': iijp_05_regiones,
     'iijp_06_jubilacion_minima': iijp_06_jubilacion_minima,
+    'iijp_07_inflacion_anual': iijp_07_inflacion_anual,
+    'iijp_08_inflacion_mensual': iijp_08_inflacion_mensual,
 }
 
 
