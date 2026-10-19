@@ -44,8 +44,8 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
 6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,3% arriba en términos
    reales con el IPC y 5,3% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
    2024) está 9,8% y 13,9% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
-   daría un haber 1,1% mayor en septiembre de 2026 ($4.698 por mes en la mínima); por IIJP haber mínimo,
-   2,6% ($11.188).
+   daría un haber 1,0% mayor en octubre de 2026 ($4.473 por mes en la mínima); por IIJP haber mínimo,
+   2,7% ($11.989).
 7. **Costo fiscal** de indexar por IIJP desde abril de 2024: 0,2%-0,6% del gasto en jubilaciones y
    pensiones, ~0,02% del PIB por año.
 

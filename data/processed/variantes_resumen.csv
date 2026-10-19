@@ -9,4 +9,4 @@ edad_macri,2.910579,1.482986,div_nacional,4.170791,jub_minimo,True
 edad_fernandez,-0.574533,-2.155161,solo_65,0.009155,div_nacional,False
 edad_milei,-0.618371,-1.287885,jub_altos,1.005229,jub_minimo,False
 edad_desde_2025,-0.849404,-1.441877,jub_altos,0.413879,jub_minimo,False
-haber_vs_ipc,1.096066,0.285068,jub_altos,6.152760,geometrica,True
+haber_vs_ipc,1.026454,0.146962,jub_altos,6.110992,geometrica,True
