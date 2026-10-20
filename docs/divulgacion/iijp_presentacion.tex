@@ -2,9 +2,9 @@
 % IIJP - Presentacion para autoridades de la Facultad (publico no tecnico). INECO-UADE, oct-2026.
 %
 % - Beamer, tema Madrid, formato 16:9. Compilar con pdfLaTeX (Overleaf: Menu > Compiler > pdfLaTeX).
-% - Figuras: subir a la carpeta "figuras" del proyecto de Overleaf los 6 PNG iijp_*.png de
+% - Figuras: subir a la carpeta "figuras" del proyecto de Overleaf los 8 PNG iijp_01..iijp_08 de
 %   output/figuras/ (los genera python scripts/construir.py) o la carpeta figuras/ del ZIP de cualquier notebook.
-% - Cifras: datos hasta septiembre de 2026 (IPC) y septiembre de 2026 (haber minimo), las mismas del
+% - Cifras: datos hasta septiembre de 2026 (IPC) y octubre de 2026 (haber minimo), las mismas del
 %   documento de prensa (docs/divulgacion/iijp_prensa.tex) y de ESTADO.md, seccion 2.
 % =============================================================================================
 \documentclass[aspectratio=169,11pt]{beamer}
@@ -33,8 +33,8 @@
 \title[IIJP: la inflación de los jubilados]{IIJP: la inflación de los jubilados}
 \subtitle{Un índice de precios para la canasta de los jubilados argentinos}
 \author[INECO -- UADE]{INECO -- UADE}
-\institute[]{Universidad Argentina de la Empresa}  % [] = sin "(UADE)" en el pie
-\date[Octubre de 2026]{Octubre de 2026 \\[0.3em] {\footnotesize Datos hasta septiembre de 2026}}
+\institute[]{}  % [] = sin "(UADE)" en el pie
+\date[Octubre, 2026]{Octubre, 2026 \\[0.3em] {\footnotesize Datos hasta septiembre de 2026}}
 
 \begin{document}
 
@@ -53,7 +53,7 @@
     \setlength{\itemsep}{0.6em}
     \item El \textbf{IIJP} (Índice de Inflación de Jubilados y Pensionados) mide, cada mes, cuánto cuesta la canasta de consumo de los hogares que viven de una jubilación o pensión.
     \item Usa los \textbf{precios oficiales del INDEC}, pero con la \textbf{canasta de los jubilados}.
-    \item Lo elabora INECO -- UADE. Es un indicador académico, no oficial.
+    \item Lo elabora INECO -- UADE. Es un indicador académico.
   \end{itemize}
 \end{frame}
 
@@ -124,24 +124,50 @@
       IPC oficial (INDEC)          & 1,9\%     & 33,4\%           & 23,6\% \\
       \textbf{IIJP (jubilados)}    & \textbf{1,9\%} & \textbf{34,6\%} & \textbf{24,4\%} \\
       IIJP de la jubilación mínima & 2,1\%     & 36,6\%           & 26,2\% \\
+      \midrule
+      Brecha IIJP -- IPC           & 0,0\%     & $+$0,9\%         & $+$0,6\% \\
       \bottomrule
     \end{tabular}
   \end{center}
   \vspace{1em}
   \begin{block}{En pocas palabras}
-    En septiembre, la canasta de los jubilados subió lo mismo que el IPC; en los últimos doce meses, más.
+    En septiembre, la canasta de los jubilados subió lo mismo que el IPC; en los últimos doce meses, algo más.
   \end{block}
 \end{frame}
 
 % ------------------------------------------------------------------------------- 7
-\begin{frame}{La brecha de los últimos 12 meses cambia de signo}
+\begin{frame}{Mes a mes, las dos inflaciones se mueven juntas}
+  \begin{columns}[c]
+    \begin{column}{0.62\textwidth}
+      \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figuras/iijp_08_inflacion_mensual.png}
+    \end{column}
+    \begin{column}{0.36\textwidth}
+      \begin{itemize}
+        \setlength{\itemsep}{0.6em}
+        \item \textbf{Mismos precios, distinta canasta}: por eso las dos líneas casi se superponen.
+        \item Las diferencias de un mes son de \textbf{décimas}, pero se acumulan.
+        \item Septiembre 2026: \textbf{1,9\%} el IIJP y \textbf{1,9\%} el IPC.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------- 8
+\begin{frame}{Año por año: la brecha cambia de signo}
+  \figura{iijp_07_inflacion_anual.png}
+  \centering
+  Brecha positiva en 2017--2019, 2023--2024 y 2026; negativa en 2020--2022; casi nula en 2025.
+\end{frame}
+
+% ------------------------------------------------------------------------------- 9
+\begin{frame}{La brecha de los últimos 12 meses}
   \figura{iijp_03_brecha_interanual.png}
   \centering
   Septiembre 2026: \textbf{$+$0,9\%} (IIJP) y \textbf{$+$2,4\%} (jubilación mínima) en 12 meses.\\
   Desde noviembre de 2023: \textbf{$+$3,1\%} y \textbf{$+$4,7\%}.
 \end{frame}
 
-% ------------------------------------------------------------------------------- 8
+% ------------------------------------------------------------------------------- 10
 \begin{frame}{¿Por qué? Sobre todo, ropa y tarifas}
   \begin{columns}[c]
     \begin{column}{0.56\textwidth}
@@ -154,36 +180,36 @@
         \item \textbf{Tarifas} (luz y gas): pesan más para los jubilados y aumentaron más.
       \end{itemize}
       \vspace{0.4em}
-      \begin{alertblock}{Ojo}
+      \begin{alertblock}{Detalle}
         Con la canasta actualizada de \emph{todos} los hogares la diferencia también aparece (3,7\%): el problema principal es que el IPC usa una canasta vieja.
       \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------------------- 9
+% ------------------------------------------------------------------------------- 11
 \begin{frame}{Una historia en tres etapas}
   \figura{iijp_02_historia.png}
   \centering
   Macri: \textbf{$+$3,2\%} \quad$\cdot$\quad Fernández: \textbf{$-$4,9\%} \quad$\cdot$\quad Milei: \textbf{$+$3,1\%} \quad$\cdot$\quad Todo el período: \textbf{$+$1,2\%}
 \end{frame}
 
-% ------------------------------------------------------------------------------- 10
+% ------------------------------------------------------------------------------- 12
 \begin{frame}{La diferencia aparece en todas las regiones}
   \figura{iijp_05_regiones.png}
   \centering
   Desde noviembre de 2023: de $+$2,0\% (Pampeana) a $+$9,3\% (Noreste).
 \end{frame}
 
-% ------------------------------------------------------------------------------- 11
-\begin{frame}{La jubilación mínima con bono pierde poder de compra}
+% ------------------------------------------------------------------------------- 13
+\begin{frame}{La jubilación mínima pierde poder de compra}
   \figura[0.64]{iijp_06_jubilacion_minima.png}
   \centering
   Bono congelado en \$70.000 desde marzo de 2024.\\
   Con bono, septiembre 2026 vs.\ diciembre 2016: \textbf{$-$30\%} (IPC) y \textbf{$-$32\%} (inflación de la mínima).
 \end{frame}
 
-% ------------------------------------------------------------------------------- 12
+% ------------------------------------------------------------------------------- 14
 \begin{frame}{¿Y si las jubilaciones se ajustaran por el IIJP?}
   \begin{center}
     Simulación: mismo sistema de ajuste, pero con el IIJP desde abril de 2024.
@@ -209,7 +235,7 @@
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------------------- 13
+% ------------------------------------------------------------------------------- 15
 \begin{frame}{¿Por qué confiar en el resultado?}
   \begin{itemize}
     \setlength{\itemsep}{0.6em}
@@ -221,24 +247,31 @@
   \end{itemize}
 \end{frame}
 
-% ------------------------------------------------------------------------------- 14
-\begin{frame}{Qué aporta a la Facultad}
+% ------------------------------------------------------------------------------- 16
+\begin{frame}{Qué aporta a la Facultad y cómo publicarlo}
   \begin{itemize}
-    \setlength{\itemsep}{0.7em}
-    \item \textbf{Nació en el aula}: un trabajo práctico de alumnos de \emph{Medición de la coyuntura y estructuras económicas} que se convirtió en un indicador profesional.
+    \setlength{\itemsep}{0.5em}
+    \item \textbf{Nació en el aula}: un trabajo práctico de alumnos de \emph{Medición de la coyuntura y estructuras económicas} que se convirtió en un indicador.
     \item \textbf{Un dato propio, todos los meses}, sobre un tema de alto interés público: la actualización de las jubilaciones.
-    \item \textbf{Material para prensa, docencia e investigación aplicada}.
-    \item \textbf{Próximos pasos}: publicación mensual, informe metodológico completo y precios específicos de los jubilados (PAMI, tarifa social).
+    \item \textbf{Opinión de expertos}: revisar el índice con profesionales idóneos en el área para mejorarlo.
+    \item \textbf{Encuesta}: la ENGHo releva en qué gastan los hogares y con qué ingreso. Esta encuesta se puede complementar con una propia que recopile:
+    \begin{itemize}
+        \vspace{.2 cm}
+        \item Dependencias y cuidados: si puede bañarse, vestirse o salir solo; horas de cuidado familiar no pago; cuidadores pagos, etc.
+        \vspace{.2 cm}
+        \item Residentes de geriátricos: la ENGHo encuesta hogares.
+        \vspace{.2 cm}
+        \item Deudas: créditos de ANSES y otras instituciones.
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
-% ------------------------------------------------------------------------------- 15
+% ------------------------------------------------------------------------------- 17
 \begin{frame}
   \begin{center}
-    {\Huge\bfseries\color{azul} ¡Gracias!}\\[2em]
     {\large IIJP -- Índice de Inflación de Jubilados y Pensionados}\\[0.5em]
     INECO -- UADE\\[2em]
-    {\small Metodología, código y datos: \url{https://github.com/santiagoriverti/IPC_jubilados}}
+    {\small Metodología, código y datos: \url{https://github.com/UADEINECO/IPC_jubilados_ar}}
   \end{center}
 \end{frame}
 
