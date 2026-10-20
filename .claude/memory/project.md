@@ -129,3 +129,4 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
 - Bono previsional cargado desde sep-2022 (antes solo bonos de pago único, no cargados).
 - Criterio del usuario: los gráficos no arrancan en nov-23 ni en otra fecha de cambio de gobierno (el texto sí
   puede citar esos períodos).
+- El usuario mantiene todo en santiagoriverti/IPC_jubilados; el paso al repo de UADEINECO lo hace a mano. Los .tex apuntan a santiagoriverti.
