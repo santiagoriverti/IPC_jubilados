@@ -56,15 +56,36 @@ TRIMESTRES_ENGHO = {1: ('2017-11', '2018-01'), 2: ('2018-02', '2018-04'), 3: ('2
                     4: ('2018-08', '2018-11')}
 
 
-def _bajar(url: str, destino: Path, refrescar: bool = False) -> Path:
-    """Descarga url a destino salvo que ya exista (y no se pida refrescar)."""
-    if destino.exists() and not refrescar:
+# Vigencia de la cache para las fuentes que se actualizan cada mes (IPC, haber, PIB, IMIG): pasado este
+# plazo se vuelven a bajar aunque no se pida refrescar. Colab reutiliza sesiones y data/cache sobrevive al
+# git reset (esta ignorado): el 2026-11-12 una sesion vieja siguio usando un haber hasta sep-2026 cuando
+# datos.gob.ar ya tenia oct-2026. La ENGHo no cambia: no vence.
+VIGENCIA_HORAS = 12
+
+
+def _vigente(ruta: Path, vigencia_horas: float | None) -> bool:
+    """True si la cache existe y (sin vigencia o) se bajo hace menos de vigencia_horas."""
+    if not ruta.exists():
+        return False
+    return vigencia_horas is None or (time.time() - ruta.stat().st_mtime) < vigencia_horas * 3600
+
+
+def _bajar(url: str, destino: Path, refrescar: bool = False, vigencia_horas: float | None = None) -> Path:
+    """Descarga url a destino salvo que ya exista, este vigente y no se pida refrescar. Si la descarga
+    falla y hay una copia vieja, avisa y usa esa copia."""
+    if not refrescar and _vigente(destino, vigencia_horas):
         return destino
     destino.parent.mkdir(parents=True, exist_ok=True)
-    r = requests.get(url, headers=UA, timeout=180)
-    r.raise_for_status()
-    if 'text/html' in r.headers.get('Content-Type', ''):
-        raise RuntimeError(f'La URL devolvio HTML en vez de datos: {url}')
+    try:
+        r = requests.get(url, headers=UA, timeout=180)
+        r.raise_for_status()
+        if 'text/html' in r.headers.get('Content-Type', ''):
+            raise RuntimeError(f'La URL devolvio HTML en vez de datos: {url}')
+    except (requests.RequestException, RuntimeError) as e:
+        if destino.exists():
+            print(f'ATENCION: no se pudo actualizar {destino.name} ({e}); se usa la copia guardada')
+            return destino
+        raise
     destino.write_bytes(r.content)
     return destino
 
@@ -79,7 +100,7 @@ def _a_numero(s: pd.Series) -> pd.Series:
 def leer_ipc_divisiones(refrescar: bool = False) -> pd.DataFrame:
     """IPC por division, formato largo: periodo (Period M), region, codigo ('0' = nivel general,
     '01'..'12' = divisiones), descripcion, indice (dic-2016=100), var_mensual (en %)."""
-    ruta = _bajar(URL_IPC_DIVISIONES, CACHE / 'serie_ipc_divisiones.csv', refrescar)
+    ruta = _bajar(URL_IPC_DIVISIONES, CACHE / 'serie_ipc_divisiones.csv', refrescar, VIGENCIA_HORAS)
     d = pd.read_csv(ruta, sep=';', encoding='latin-1', dtype={'Codigo': str})
     d = d[d['Clasificador'] == 'Nivel general y divisiones COICOP'].copy()
     d['periodo'] = pd.PeriodIndex(d['Periodo'].astype(str).str[:4] + '-' + d['Periodo'].astype(str).str[4:],
@@ -112,7 +133,7 @@ def leer_ipc_aperturas(refrescar: bool = False) -> pd.DataFrame:
     """IPC por aperturas (nivel general, divisiones, grupos y algunas clases) de las 6 regiones; no hay
     aperturas nacionales. Formato largo: periodo, region, codigo ('0', '01', '04.1', '04.1.1'...),
     descripcion, indice (dic-2016=100)."""
-    ruta = _bajar(URL_IPC_APERTURAS, CACHE / 'serie_ipc_aperturas.csv', refrescar)
+    ruta = _bajar(URL_IPC_APERTURAS, CACHE / 'serie_ipc_aperturas.csv', refrescar, VIGENCIA_HORAS)
     d = pd.read_csv(ruta, sep=';', encoding='latin-1', dtype={'Codigo': str})
     cod = d['Codigo'].str.strip()
     cod = cod.where(cod.str.contains('.', regex=False), cod.str.zfill(2)).replace({'00': '0'})
@@ -204,12 +225,19 @@ def leer_haber_minimo(refrescar: bool = False) -> pd.Series:
     """Haber minimo jubilatorio mensual (pesos corrientes, sin bono), desde dic-2016."""
     ruta = CACHE / 'haber_minimo.csv'
     s = None
-    if ruta.exists() and not refrescar:
+    if ruta.exists():
         d = pd.read_csv(ruta)
         s = pd.Series(d['haber_minimo'].values, index=pd.PeriodIndex(d['periodo'], freq='M'),
                       name='haber_minimo').rename_axis(None)  # mismo indice que la descarga
-    if s is None or s.empty or s.index.min() > pd.Period('2016-12', 'M'):  # cache vacio o incompleto
-        s = serie_datos_gob(ID_HABER_MINIMO).rename('haber_minimo')
+    completo = s is not None and not s.empty and s.index.min() <= pd.Period('2016-12', 'M')
+    if refrescar or not completo or not _vigente(ruta, VIGENCIA_HORAS):
+        try:
+            s = serie_datos_gob(ID_HABER_MINIMO).rename('haber_minimo')
+        except (requests.RequestException, RuntimeError) as e:
+            if not completo:
+                raise
+            print(f'ATENCION: no se pudo actualizar el haber minimo ({e}); se usa la copia guardada')
+            return s
         ruta.parent.mkdir(parents=True, exist_ok=True)
         s.to_frame().to_csv(ruta, index_label='periodo')
     return s
@@ -225,10 +253,15 @@ def leer_pib_anual(refrescar: bool = False) -> pd.Series:
     """PIB nominal anual en millones de pesos (promedio de los trimestres anualizados)."""
     ruta = CACHE / 'pib_nominal_trim.csv'
     vacio = ruta.exists() and len(pd.read_csv(ruta)) == 0
-    if refrescar or not ruta.exists() or vacio:
-        s = serie_datos_gob(ID_PIB_NOMINAL, desde='2016-01-01')
-        ruta.parent.mkdir(parents=True, exist_ok=True)
-        s.rename('pib').to_frame().to_csv(ruta, index_label='periodo')
+    if refrescar or vacio or not _vigente(ruta, VIGENCIA_HORAS):
+        try:
+            s = serie_datos_gob(ID_PIB_NOMINAL, desde='2016-01-01')
+            ruta.parent.mkdir(parents=True, exist_ok=True)
+            s.rename('pib').to_frame().to_csv(ruta, index_label='periodo')
+        except (requests.RequestException, RuntimeError) as e:
+            if not ruta.exists() or vacio:
+                raise
+            print(f'ATENCION: no se pudo actualizar el PIB ({e}); se usa la copia guardada')
     d = pd.read_csv(ruta)
     d['anio'] = d['periodo'].str[:4].astype(int)
     g = d.groupby('anio')['pib'].agg(['sum', 'count'])
@@ -248,7 +281,7 @@ def leer_cuentas_publicas(archivo: str, refrescar: bool = False) -> pd.DataFrame
     for c in candidatos:
         if c.exists() and not refrescar:
             return pd.read_csv(c, encoding='utf-8-sig')
-    ruta = _bajar(URL_CUENTAS.format(archivo=archivo), CACHE / archivo, refrescar)
+    ruta = _bajar(URL_CUENTAS.format(archivo=archivo), CACHE / archivo, refrescar, VIGENCIA_HORAS)
     return pd.read_csv(ruta, encoding='utf-8-sig')
 
 

@@ -138,4 +138,9 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   distribución (API hasta sep-26, CSV con oct-26). Fix: `serie_datos_gob` baja ambos y combina (`combine_first`,
   prioridad API). También: el haber leído de la caché tenía índice con nombre `periodo` y el descargado no
   (cambiaba el encabezado de haberes.csv): ahora `rename_axis(None)` en los dos caminos.
+- Segunda corrida en Colab con `88481c9`: seguía sin oct-26. Causa real: sesión reutilizada con
+  `data/cache/haber_minimo.csv` viejo (ignorado, sobrevive al git reset) y cache sin vencimiento. Fix:
+  `fuentes.VIGENCIA_HORAS = 12` en IPC, haber, PIB, IMIG y originales del ZIP; sin red usa la copia con aviso.
+  `tests/test_fuentes.py` (monkeypatch de requests.get). Lección: al diagnosticar un ZIP de Colab, mirar la
+  hora de los archivos de fuentes_originales/ (delata sesiones reutilizadas).
 - Sin cambios de cifras. Próximo: rutina mensual con el IPC de oct-2026 (INDEC lo publica a mediados de nov).

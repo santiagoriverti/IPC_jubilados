@@ -313,7 +313,8 @@ def copiar_fuentes_originales(destino: Path) -> pd.DataFrame:
             if local is None or not Path(local).exists():
                 if url is None:
                     raise FileNotFoundError(local)
-                local = fuentes._bajar(url, fuentes.CACHE / 'originales' / Path(rel).name)
+                local = fuentes._bajar(url, fuentes.CACHE / 'originales' / Path(rel).name,
+                                       vigencia_horas=fuentes.VIGENCIA_HORAS)
             shutil.copy2(local, ruta)
             estado = 'ok'
         except Exception as e:  # noqa: BLE001 (sin red o URL caida: se informa y se sigue)

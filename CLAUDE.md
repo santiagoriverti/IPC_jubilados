@@ -64,6 +64,11 @@
 - Antes de commitear resultados nuevos: `python scripts/control_calidad.py` (0 ALERTAS) y
   `python -m pytest tests -q`.
 - `data/cache/` guarda las descargas (ignorado). `--refrescar` en construir.py baja todo de nuevo.
+  Las fuentes mensuales (IPC, haber, PIB, IMIG de GitHub) vencen a las `fuentes.VIGENCIA_HORAS` (12 h): en
+  Colab la cache sobrevive al `git reset` de una sesión reutilizada y los notebooks no refrescan (pasó el
+  2026-11-12: haber hasta sep-26 con oct-26 ya publicado). Una fuente mensual nueva debe usar esa vigencia.
+- datos.gob.ar: `serie_datos_gob` combina la API de series y el CSV del catálogo (la API puede venir
+  atrasada respecto del CSV, no solo vacía).
 - El costo fiscal lee la IMIG de `cuentas_publicas` (repo hermano en disco o GitHub raw): actualizar
   ese repo primero.
 - La regla de movilidad usa el IPC(t−2) **desde niveles con 2 decimales** (`haberes.var_movilidad`),

@@ -83,8 +83,14 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
   respondía con datos pero atrasada (hasta sep-26) y el CSV del catálogo ya tenía oct-26; el CSV solo se
   usaba si la API venía vacía. Corregido en `fuentes.serie_datos_gob`: baja API y CSV y los combina (valor
   de la API donde existe, meses que solo están en el CSV). Valores comunes API = CSV (dif 0). Con
-  `construir.py --refrescar`: último haber oct-2026, `data/processed` idéntico, 0 ALERTAS, 19 tests. Falta
-  volver a correr en Colab después del push.
+  `construir.py --refrescar`: último haber oct-2026, `data/processed` idéntico, 0 ALERTAS, 19 tests.
+- Colab con `88481c9`: seguía sin oct-2026. Causa: sesión reutilizada, con `data/cache/haber_minimo.csv`
+  de la corrida anterior (ignorado por git, sobrevive al `git reset`); los notebooks no refrescan y la cache
+  no vencía (el ZIP traía el CSV original con oct-26, pero el cálculo usaba la cache). Corregido:
+  `fuentes.VIGENCIA_HORAS = 12` para IPC, haber, PIB, IMIG de GitHub y los originales bajados del ZIP (la
+  ENGHo no vence); sin red se usa la copia guardada con un aviso ATENCION. `tests/test_fuentes.py` (4 tests sin
+  red). Simulación de cache vieja hasta sep-26: vuelve a bajar y llega a oct-26. 23 tests, 0 ALERTAS,
+  `data/processed` idéntico. Falta volver a correr en Colab después del push.
 
 - Colab con `55391e0` (2026-10-19): los 3 ZIP = local tras `construir.py --refrescar` (0 diferencias no
   esperadas; Colab ya tenía el haber de oct-2026: bono de oct cargado, decreto 1108/2026). Excel completo: 55 hojas,
