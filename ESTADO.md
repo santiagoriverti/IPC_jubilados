@@ -8,10 +8,10 @@ este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → 
 
 El IIJP se valoriza **por región y al nivel de aperturas del IPC**, con los restos no publicados
 deducidos de las ponderaciones oficiales del INDEC y una concordancia ENGHo → IPC (expensas). Incluye un
-subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a sep-2026.
+subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a oct-2026.
 **Tres segmentos** (sesión 6): mínima, promedio y alto (20% de mayor ingreso per cápita), cada uno con su
 canasta, su índice y el poder adquisitivo de su haber (simulado desde la ENGHo con la movilidad efectiva).
-Colab verificado con `a7f5652` (antes de los segmentos): ZIP = local. README
+Colab verificado con `10b8e27` (segmentos, IPC de oct-2026): ZIP = local. README
 y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
 errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`, generadas por
 `graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
@@ -21,7 +21,7 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 
 | Fuente | Último dato | Cómo se actualiza |
 |---|---|---|
-| IPC por división y por aperturas regionales (INDEC) | sep-2026 | automático (`--refrescar`) |
+| IPC por división y por aperturas regionales (INDEC) | oct-2026 | automático (vence a las 12 h o `--refrescar`) |
 | Ponderaciones oficiales por región (`data/reference/ponderadores_ipc_regiones.csv`) | dic-2016 | fijas (cambian solo con un IPC nuevo) |
 | Haber mínimo (datos.gob.ar `58.1_MP_0_M_24`) | oct-2026 | automático |
 | Bono previsional (`data/reference/bono_previsional.csv`) | oct-2026 ($70.000) | **manual**, una fila por mes |
@@ -31,52 +31,54 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 
 ## 2. Cifras vigentes (`python scripts/construir.py`, bootstrap 500)
 
-- **Sep-2026**: IPC 1,93% m/m y 33,4% i.a. · IIJP 1,94% y 34,6% · IIJP haber mínimo 2,13% y 36,6% ·
-  IPC ENGHo 17/18 1,86% y 34,3%.
-- **Brecha IIJP vs IPC oficial**: dic-16 → sep-26 **+1,21%** (IC 0,78-1,65); Macri +3,22%; Fernández
-  −4,86%; Milei (nov-23 → sep-26) **+3,06%** (IC 2,45-3,59); shock tarifario +2,53%; desde dic-24 +0,53%;
-  ventana del TP +2,74%.
-- **IIJP haber mínimo**: vs IPC oficial completo +4,00% (IC 3,35-4,68), Milei +4,75% (IC 3,95-5,63); vs
-  IIJP completo +2,75% (IC 2,14-3,38), Milei +1,63% (IC 0,83-2,45). Con topes de 1 a 2 haberes mínimos,
+- **Oct-2026**: IPC 2,17% m/m y 33,1% i.a. · IIJP 2,35% y 34,7% · IIJP haber mínimo 2,37% y 36,8% ·
+  IIJP alto 2,35% y 33,2% · IPC ENGHo 17/18 2,30% y 34,2%. (Sep-2026: IPC 1,93% / IIJP 1,94% / mínima 2,13%.)
+- **Brecha IIJP vs IPC oficial**: dic-16 → oct-26 **+1,39%** (IC 0,97-1,82); Macri +3,22%; Fernández
+  −4,86%; Milei (nov-23 → oct-26) **+3,25%** (IC 2,62-3,77); shock tarifario +2,53%; desde dic-24 +0,70%
+  (IC 0,40-1,00); ventana del TP +2,74%. Anual 2026 (dic-25 → oct-26): IPC 26,3%, IIJP 27,3% (brecha +0,80%),
+  mínima 29,2% (+2,28%). Brecha de 12 meses a oct-26: IIJP +1,2%, mínima +2,7%, alto 0,0%.
+- **IIJP haber mínimo**: vs IPC oficial completo +4,20% (IC 3,54-4,87), Milei +4,95% (IC 4,13-5,85); vs
+  IIJP completo +2,77% (IC 2,18-3,40), Milei +1,65% (IC 0,84-2,47). Con topes de 1 a 2 haberes mínimos,
   vs IIJP: completo +2,0 a +3,0%, Milei +1,1 a +1,7%.
-- **Efecto edad** (IIJP vs IPC 17/18): completo **+1,69%** (IC 1,30-2,10); Macri +2,91%; Fernández −0,57%;
-  Milei −0,62% (IC −1,11 a −0,13); desde dic-24 −0,85%. Contra los hogares no jubilados: completo +2,02%,
-  Milei −0,74%. **Efecto canasta vieja** (IPC 17/18 vs oficial): completo −0,47%; Milei +3,71%.
-- **Firmeza (20 variantes)**: mantienen el signo en todas la brecha vs IPC oficial en Macri, Fernández y
-  Milei (2,4 a 6,7%), el efecto edad del período completo (0,2 a 4,5%) y de Macri, y el aumento del haber
-  si se indexara por IIJP (0,1 a 6,1%). **No son firmes**: la brecha del período completo (−0,2 a 4,0%) y
-  desde 2025, y el signo del efecto edad en Fernández, Milei (−1,3 a +1,0) y desde 2025.
+- **Efecto edad** (IIJP vs IPC 17/18): completo **+1,74%** (IC 1,36-2,14); Macri +2,91%; Fernández −0,57%;
+  Milei −0,57% (IC −1,06 a −0,07); desde dic-24 −0,80%. Contra los hogares no jubilados: completo +2,08%,
+  Milei −0,68%. **Efecto canasta vieja** (IPC 17/18 vs oficial): completo −0,34%; Milei +3,84%.
+- **Firmeza (20 variantes)**: mantienen el signo en todas la brecha vs IPC oficial en Macri, Fernández,
+  Milei (2,6 a 7,1%) y **desde 2025 (0,1 a 2,4%; firme desde oct-26)**, el efecto edad del período completo
+  (0,3 a 4,6%) y de Macri, y el aumento del haber si se indexara por IIJP (0,15 a 6,1%). **No son firmes**:
+  la brecha del período completo (−0,04 a 4,2%: jubilados de ingreso alto casi 0) y el signo del efecto
+  edad en Fernández, Milei (−1,2 a +1,1) y desde 2025.
 - Lo que explica la brecha en Milei (por apertura): prendas (los jubilados compran menos ropa, que subió
   menos) y electricidad y gas, a favor; alquiler, restaurantes y recreación, en contra. Medicamentos
   resta en el efecto edad (subieron menos que prepagas).
-- **Regiones** (IIJP vs IPC de la región, Milei, IC 95%): GBA +2,7% (1,8-3,7), Pampeana +2,0% (1,1-2,9),
-  NOA +5,8% (4,4-7,2), NEA +9,3% (7,5-11,4), Cuyo +3,2% (1,9-4,8), Patagonia +5,5% (3,8-7,3).
+- **Regiones** (IIJP vs IPC de la región, Milei, IC 95%): GBA +2,9% (1,9-3,9), Pampeana +2,3% (1,4-3,2),
+  NOA +5,8% (4,4-7,2), NEA +9,1% (7,2-11,1), Cuyo +3,4% (2,1-5,0), Patagonia +5,8% (4,0-7,7).
 - **Canasta** (hogares jubilados, 5.350 en la muestra, 2,96 M expandidos): alimentos 26,4%, vivienda
   14,5% (dentro de vivienda: alquiler 16%, expensas y gastos comunes 12%, electricidad y gas 51%), salud
   11,4% (medicamentos 54%, prepagas 29%), transporte 11,3% (transporte público 27%). Haber mínimo (2.081
   hogares, 40% de los jubilados): alimentos 32,9%, vivienda 16,5%, medicamentos 72% de salud, transporte
   público 43%. Precios: 83% de la canasta con aperturas publicadas, 16,5% con restos derivados, 0,5% con
   el índice del agregado.
-- **Haber mínimo real** (base nov-23, sep-26): sin bono +10,3% (IPC) / +7,0% (IIJP) / +5,3% (IIJP haber
-  mínimo); con bono −9,8% / −12,5% / −13,9%. Bono actualizado por IPC desde mar-24: $198.367.
+- **Haber mínimo real** (base nov-23, oct-26): sin bono +9,7% (IPC) / +6,3% (IIJP) / +4,6% (IIJP haber
+  mínimo); con bono −10,5% / −13,3% / −14,7%. Bono actualizado por IPC desde mar-24: $201.660.
 - **Contrafactual desde abr-24** (oct-26, último haber): con IIJP el haber sería +1,03% ($4.473/mes en la
   mínima); con IIJP haber mínimo, +2,75% ($11.989). En sep-26: +1,10% ($4.698) y +2,61% ($11.188).
 - **Costo fiscal** (indexar por IIJP): 2024 (abr-dic) $127.947 M = 0,42% del gasto previsional (0,022% PIB);
   2025 $125.308 M = 0,22% (0,015% PIB); 2026 ene-sep $369.658 M = 0,69%. Mayo 2026: $42.559 M.
-- Movilidad: ANSES usa el IPC(t−2) desde niveles con 2 decimales (error 0 en 29/29 meses).
+- Movilidad: ANSES usa el IPC(t−2) desde niveles con 2 decimales (error 0 en 30/30 meses).
 - **Segmentos** (mínima / promedio / alto = 20% de mayor ingreso per cápita; 2.081 / 5.350 / 1.056 hogares;
-  perceptor medio 0,88 / 1,67 / 3,37 mínimos en 2017/18; haber medio sep-26 $374.927 / $685.693 / $1.347.248
+  perceptor medio 0,88 / 1,67 / 3,37 mínimos en 2017/18; haber medio oct-26 $381.150 / $697.076 / $1.369.612
   sin bono). Canasta: alimentos 32,9 / 26,4 / 19,0%; salud 9,5 / 11,4 / 14,0%; dentro de salud prepagas
   12 / 29 / 48%; dentro de vivienda luz y gas 60 / 51 / 36%; transporte público 43 / 27 / 20% del transporte.
-  Brecha del IIJP alto vs IPC oficial: completo −2,03% (IC −2,72 a −1,34), Milei +2,22% (IC 1,11 a 3,21),
-  desde 2025 −0,53%; vs IIJP: completo −3,21% (IC −3,76 a −2,66), Milei −0,82% (IC −1,59 a −0,11).
-  Sensibilidad al corte (percentil 50 a 90): vs IPC completo −0,2 a −3,5%, Milei +1,2 a +2,4%.
+  Brecha del IIJP alto vs IPC oficial: completo −1,86% (IC −2,55 a −1,18), Milei +2,41% (IC 1,32 a 3,39),
+  desde 2025 −0,35%; vs IIJP: completo −3,21% (IC −3,74 a −2,67), Milei −0,81% (IC −1,58 a −0,12).
+  Sensibilidad al corte (percentil 50 a 90): vs IPC completo 0,0 a −3,3%, Milei +1,4 a +2,6%.
 - **Poder adquisitivo por segmento** (haber simulado / índice de su canasta): desde nov-23 con bono mínima
-  −15,9%, promedio −2,0%, alto +6,7%; sin bono +5,3 / +7,0 / +7,9%. Desde dic-16 con bono −31,7 / −39,8 /
-  −42,0%; sin bono −41,9 / −42,7 / −42,4%. Fernández con bono −3,1 / −27,7 / −37,1% (la mínima recibió la
-  suma fija de mar-2020 y los refuerzos desde sep-22). Desde 2025 con bono −9,6 / −2,6 / +1,6%. La mínima
+  −16,7%, promedio −2,8%, alto +6,0%; sin bono +4,6 / +6,3 / +7,2%. Desde dic-16 con bono −32,3 / −40,3 /
+  −42,4%; sin bono −42,3 / −43,1 / −42,7%. Fernández con bono −3,1 / −27,7 / −37,1% (la mínima recibió la
+  suma fija de mar-2020 y los refuerzos desde sep-22). Desde 2025 con bono −10,5 / −3,3 / +0,9%. La mínima
   del segmento (0,88 mínimos de media: PNC y pensiones) pierde más con bono que el haber mínimo exacto
-  (−15,9% vs −13,9%) porque el bono pesa más en haberes menores.
+  (−16,7% vs −14,7%) porque el bono pesa más en haberes menores.
 
 ## 3. Dónde se citan las cifras (actualizar todo junto si cambian)
 
@@ -84,10 +86,10 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 |---|---|
 | `ESTADO.md` §2 | al día: todas |
 | `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-9 (8-9: segmentos), nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%, cobertura 83/16,5/0,5%) |
-| `docs/revision_TP.md` | al día: tabla resumen (ventana del TP, haberes may-26/sep-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
+| `docs/revision_TP.md` | al día (oct-26): tabla resumen (ventana del TP, haberes may-26/oct-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
 | `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
-| `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-10-16, sep-26): resumen ejecutivo, cuadros de sep-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual sep-26, costo fiscal, firmeza |
-| `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-10-16, sep-26): mismas cifras que el documento de prensa |
+| `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-11-12, oct-26): resumen ejecutivo, cuadros de oct-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual oct-26, costo fiscal, firmeza. Todavía sin los segmentos |
+| `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-11-12, oct-26): mismas cifras que el documento de prensa |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
 ## 4. Verificación (2026-11-12)
@@ -115,6 +117,12 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
   escala constante salvo mar-2020, 1 mínimo reproduce el haber mínimo, orden de haberes). 28 tests (5
   nuevos en `tests/test_haberes_segmentos.py`). Notebooks ejecutados en local (`_local_run/`, bootstrap 30).
   Falta correrlos en Colab después del push.
+- Colab con `10b8e27` (2026-11-12): trajo el IPC de oct-2026 (publicado ese día; la cache con vencimiento lo
+  bajó sola). Tras `construir.py --refrescar` en la PC: los 3 ZIP = local (0 diferencias no esperadas),
+  Excel completo de 59 hojas con las 4 de segmentos. Rutina mensual de oct-2026: 0 ALERTAS, 28 tests; cifras
+  de §2, README, revision_TP y `docs/divulgacion/` actualizadas. Prensa (13 págs.) y presentación (17)
+  compilan con pdfLaTeX + BibTeX: 0 errores, 0 advertencias, 0 cajas desbordadas. Haber e IMIG sin datos
+  nuevos (contrafactual y costo fiscal iguales). Novedad: la brecha desde 2025 pasa a ser firme (0,1 a 2,4%).
 
 - Colab con `55391e0` (2026-10-19): los 3 ZIP = local tras `construir.py --refrescar` (0 diferencias no
   esperadas; Colab ya tenía el haber de oct-2026: bono de oct cargado, decreto 1108/2026). Excel completo: 55 hojas,

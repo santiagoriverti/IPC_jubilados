@@ -154,3 +154,9 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   nov-23 −15,9% / −2,0% / +6,7% (mínima / promedio / alto); sin bono los tres +5 a +8%.
 - Todas las cifras previas idénticas (CSV comparados con HEAD por clave). Pendiente: Colab, divulgación,
   beneficios por tipo, financiamiento (aportes y contribuciones ya están en la IMIG de cuentas_publicas).
+- Colab con `10b8e27` ya trajo el IPC de oct-2026 (el vencimiento de cache funcionó). Rutina mensual oct-26
+  hecha: Milei +3,25%, completo +1,39%, desde 2025 +0,70% ahora FIRME en las 20 variantes; mínima +4,95% Milei.
+  Método para la rutina: script de scratchpad que compara CSV de HEAD vs nuevos (cifras viejas -> nuevas) y
+  scripts de reemplazo que exigen 1 aparición exacta de cada texto viejo en los .tex. Compilar en
+  `_local_run/prensa_ineco` (tiene el logo) y `_local_run/divulgacion` copiando figuras de output/figuras.
+  "warning" en el log de pdflatex = nombre del paquete infwarerr (no es advertencia).

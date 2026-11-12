@@ -10,15 +10,15 @@ El punto de partida fue el trabajo práctico de un grupo de la materia *Medició
 estructuras económicas* (INECO · UADE); el índice actual es una reconstrucción completa de la
 metodología. La revisión del TP original está en [`docs/revision_TP.md`](docs/revision_TP.md).
 
-## Resultados (datos hasta septiembre 2026)
+## Resultados (datos hasta octubre 2026)
 
 | Período | IPC oficial | IIJP | Brecha IIJP vs IPC | Efecto edad | Brecha IIJP haber mínimo vs IPC |
 |---|---|---|---|---|---|
-| Dic-2016 → sep-2026 | 12.414% | 12.566% | **+1,2%** | **+1,7%** | +4,0% |
+| Dic-2016 → oct-2026 | 12.686% | 12.864% | **+1,4%** | **+1,7%** | +4,2% |
 | Macri (dic-16 → dic-19) | 183,4% | 192,6% | +3,2% | +2,9% | +4,5% |
 | Fernández (dic-19 → nov-23) | 893,5% | 845,3% | −4,9% | −0,6% | −5,0% |
-| Milei (nov-23 → sep-26) | 344,4% | 358,0% | **+3,1%** | −0,6% | +4,7% |
-| Desde 2025 (dic-24 → sep-26) | 62,6% | 63,5% | +0,5% | −0,8% | +1,8% |
+| Milei (nov-23 → oct-26) | 354,0% | 368,8% | **+3,2%** | −0,6% | +4,9% |
+| Desde 2025 (dic-24 → oct-26) | 66,2% | 67,4% | +0,7% | −0,8% | +2,0% |
 
 Brecha: (1 + inflación del IIJP) / (1 + inflación del IPC) − 1. Efecto edad: IIJP frente al mismo cálculo
 con la canasta de *todos* los hogares de la ENGHo 2017/18.
@@ -27,23 +27,24 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
    (26,4% vs 22,7% del total de hogares) y salud (11,4% vs 6,4%); dentro de salud, más medicamentos
    (54% vs 42%) y menos prepagas; dentro de vivienda, mucho menos alquiler (16% vs 35%) y más
    electricidad y gas (51% vs 41%); dentro de transporte, más transporte público (27% vs 22%).
-2. **Desde noviembre de 2023 el IPC oficial subestima la inflación de los jubilados en 3,1%** (IC 95%
-   muestral: 2,4 a 3,6; entre 2,4% y 6,7% en las 20 variantes metodológicas, siempre positiva), **pero
+2. **Desde noviembre de 2023 el IPC oficial subestima la inflación de los jubilados en 3,2%** (IC 95%
+   muestral: 2,6 a 3,8; entre 2,6% y 7,1% en las 20 variantes metodológicas, siempre positiva), **pero
    se explica por la canasta vieja del IPC**: el mismo cálculo con la canasta de todos los hogares da
-   +3,7%. El efecto propio de la edad es negativo (−0,6%), aunque su signo depende de la especificación.
-3. **En todo el período 2016-2026 la brecha es menor (+1,2%; IC 0,8 a 1,6) y no es firme**: en tres de
+   +3,8%. El efecto propio de la edad es negativo (−0,6%), aunque su signo depende de la especificación.
+   Desde diciembre de 2024 la brecha es chica pero firme: +0,7% (IC 0,4 a 1,0; positiva en las 20 variantes).
+3. **En todo el período 2016-2026 la brecha es menor (+1,4%; IC 1,0 a 1,8) y no es firme**: en tres de
    las 20 variantes queda en torno a cero (jubilados de ingresos altos, hogares solo de mayores de 65,
-   todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,7%; IC 1,3 a 2,1), pero
+   todos los adultos jubilados). El efecto edad sí es positivo en todas (+1,7%; IC 1,4 a 2,1), pero
    viene de 2016-2019 (+2,9%, normalización tarifaria y medicamentos); desde 2019 es negativo.
-4. **Los jubilados de haber mínimo enfrentan más inflación**: +4,0% sobre el IPC desde 2016 y +4,7%
-   desde noviembre de 2023; sobre el IIJP, +2,8% (IC 2,1 a 3,4) y +1,6% (IC 0,8 a 2,4). El resultado no
+4. **Los jubilados de haber mínimo enfrentan más inflación**: +4,2% sobre el IPC desde 2016 y +4,9%
+   desde noviembre de 2023; sobre el IIJP, +2,8% (IC 2,2 a 3,4) y +1,6% (IC 0,8 a 2,5). El resultado no
    depende del tope que define al grupo (de 1 a 2 haberes mínimos). Su canasta pesa más alimentos
    (33%), electricidad y gas, transporte público y medicamentos.
-5. **Regiones**: desde noviembre de 2023 la brecha con el IPC de cada región va de +2,0% (Pampeana) y
-   +2,7% (GBA) a +5,7% (Noroeste) y +9,3% (Noreste; IC 7,5 a 11,4).
-6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 10,3% arriba en términos
-   reales con el IPC y 5,3% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
-   2024) está 9,8% y 13,9% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
+5. **Regiones**: desde noviembre de 2023 la brecha con el IPC de cada región va de +2,3% (Pampeana) y
+   +2,9% (GBA) a +5,8% (Noroeste y Patagonia) y +9,1% (Noreste; IC 7,2 a 11,1).
+6. **Haberes**: frente a noviembre de 2023, el haber mínimo *sin bono* está 9,7% arriba en términos
+   reales con el IPC y 4,6% con el IIJP haber mínimo; *con el bono* (congelado en $70.000 desde marzo
+   2024) está 10,5% y 14,7% abajo. Indexar por IIJP desde abril de 2024 (misma regla del DNU 274/2024)
    daría un haber 1,0% mayor en octubre de 2026 ($4.473 por mes en la mínima); por IIJP haber mínimo,
    2,7% ($11.989).
 7. **Costo fiscal** de indexar por IIJP desde abril de 2024: 0,2%-0,6% del gasto en jubilaciones y
@@ -51,11 +52,11 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
 8. **Tres segmentos de jubilados**, cada uno con su canasta: **mínima** (40% de los hogares jubilados),
    **promedio** (todos) y **alto** (20% de mayor ingreso per cápita). Cuanto más pobre el segmento, más
    pesan alimentos (33% / 26% / 19%), luz y gas y medicamentos, y menos las prepagas y los vehículos. Su
-   inflación ordena igual: contra el IPC, la mínima +4,0% desde 2016 y +4,7% desde noviembre de 2023; el
-   segmento alto −2,0% (IC −2,7 a −1,3) y +2,2% (IC 1,1 a 3,2).
+   inflación ordena igual: contra el IPC, la mínima +4,2% desde 2016 y +4,9% desde noviembre de 2023; el
+   segmento alto −1,9% (IC −2,6 a −1,2) y +2,4% (IC 1,3 a 3,4).
 9. **Poder adquisitivo por segmento**, con el haber de cada uno (simulado desde la ENGHo con la movilidad
-   efectiva) deflactado por su propia canasta: desde noviembre de 2023, con bono, la mínima perdió 15,9%,
-   el promedio 2,0% y el alto ganó 6,7%; sin bono, los tres ganaron entre 5,3% y 7,9%. El bono congelado
+   efectiva) deflactado por su propia canasta: desde noviembre de 2023, con bono, la mínima perdió 16,7%,
+   el promedio 2,8% y el alto ganó 6,0%; sin bono, los tres ganaron entre 4,6% y 7,2%. El bono congelado
    explica casi toda la diferencia. Desde diciembre de 2016, todos perdieron alrededor de 40% (con bono:
    −32% la mínima, −40% el promedio, −42% el alto).
 
