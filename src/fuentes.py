@@ -154,12 +154,8 @@ def _serie(fechas, valores) -> pd.Series:
     return pd.Series(pd.to_numeric(pd.Series(valores), errors='coerce').values, index=periodos).dropna().astype(float)
 
 
-def serie_datos_gob(serie_id: str, desde: str = '2016-12-01', intentos: int = 4) -> pd.Series:
-    """Serie de la API de datos.gob.ar desde `desde`.
-
-    La API a veces responde sin datos (oct-2026: la misma consulta devolvia la serie completa o una tabla
-    vacia segun el momento). Se reintenta y, si sigue vacia, se baja el CSV de la distribucion del
-    catalogo (DISTRIBUCIONES). Si tampoco hay datos, error: nunca devuelve una serie vacia."""
+def _serie_api(serie_id: str, desde: str, intentos: int) -> pd.Series:
+    """Serie de la API de series de datos.gob.ar (vacia si no responde con datos tras los reintentos)."""
     for k in range(intentos):
         try:
             r = requests.get(URL_SERIES, params={'ids': serie_id, 'format': 'csv', 'limit': 1000,
@@ -171,15 +167,36 @@ def serie_datos_gob(serie_id: str, desde: str = '2016-12-01', intentos: int = 4)
         except (requests.RequestException, pd.errors.ParserError, pd.errors.EmptyDataError):
             pass
         time.sleep(2 * (k + 1))
-    if serie_id in DISTRIBUCIONES:
-        url, columna = DISTRIBUCIONES[serie_id]
+    return pd.Series(dtype=float)
+
+
+def _serie_csv(serie_id: str, desde: str) -> pd.Series:
+    """Serie del CSV de la distribucion en el catalogo (vacia si no hay CSV o no se pudo bajar)."""
+    if serie_id not in DISTRIBUCIONES:
+        return pd.Series(dtype=float)
+    url, columna = DISTRIBUCIONES[serie_id]
+    try:
         r = requests.get(url, headers=UA, timeout=180)
         r.raise_for_status()
         d = pd.read_csv(io.BytesIO(r.content))
-        s = _serie(d['indice_tiempo'], d[columna])
-        s = s.loc[pd.Period(desde, 'M'):]
-        if len(s):
-            return s
+        return _serie(d['indice_tiempo'], d[columna]).loc[pd.Period(desde, 'M'):]
+    except (requests.RequestException, pd.errors.ParserError, pd.errors.EmptyDataError, KeyError):
+        return pd.Series(dtype=float)
+
+
+def serie_datos_gob(serie_id: str, desde: str = '2016-12-01', intentos: int = 4) -> pd.Series:
+    """Serie de datos.gob.ar desde `desde`: API de series + CSV de la distribucion del catalogo.
+
+    La API a veces responde sin datos (oct-2026: la misma consulta devolvia la serie completa o una tabla
+    vacia segun el momento) y a veces atrasada respecto del CSV (nov-2026: la API llegaba a sep-2026 y el
+    CSV ya tenia el haber de oct-2026; Colab corrio sin el ultimo haber). Se bajan las dos y se combinan:
+    el valor de la API donde existe y los meses que solo estan en el CSV. Si ninguna trae datos, error:
+    nunca devuelve una serie vacia."""
+    api = _serie_api(serie_id, desde, intentos)
+    csv = _serie_csv(serie_id, desde)
+    s = api.combine_first(csv).sort_index().rename_axis(None)
+    if len(s):
+        return s
     raise RuntimeError(f'datos.gob.ar no devolvio datos para la serie {serie_id} (API y CSV de respaldo)')
 
 
@@ -189,7 +206,8 @@ def leer_haber_minimo(refrescar: bool = False) -> pd.Series:
     s = None
     if ruta.exists() and not refrescar:
         d = pd.read_csv(ruta)
-        s = pd.Series(d['haber_minimo'].values, index=pd.PeriodIndex(d['periodo'], freq='M'), name='haber_minimo')
+        s = pd.Series(d['haber_minimo'].values, index=pd.PeriodIndex(d['periodo'], freq='M'),
+                      name='haber_minimo').rename_axis(None)  # mismo indice que la descarga
     if s is None or s.empty or s.index.min() > pd.Period('2016-12', 'M'):  # cache vacio o incompleto
         s = serie_datos_gob(ID_HABER_MINIMO).rename('haber_minimo')
         ruta.parent.mkdir(parents=True, exist_ok=True)

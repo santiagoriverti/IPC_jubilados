@@ -1,6 +1,6 @@
 # ESTADO — IPC_jubilados (IIJP)
 
-**Última actualización:** 2026-10-19 (sesión 5: brecha anual, figuras de inflación anual y mensual, figuras 3 y 6 sin base política). Punto de entrada para retomar:
+**Última actualización:** 2026-11-12 (sesión 6: verificación en Colab con `a999d4b` y descarga del haber que combina API y CSV de datos.gob.ar). Punto de entrada para retomar:
 este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md`
 (historial).
 
@@ -75,7 +75,16 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 | `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-10-16, sep-26): mismas cifras que el documento de prensa |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
-## 4. Verificación (2026-10-19)
+## 4. Verificación (2026-11-12)
+
+- Colab con `a999d4b` (2026-11-12): los 3 ZIP y el Excel completo (55 hojas) = local, salvo el haber de
+  oct-2026, que faltaba en Colab (Haberes 118 vs 119 filas, Regla_movilidad 29 vs 30, `haber_vs_ipc` de
+  Variantes: contrafactual a sep-26 +1,10% en vez de oct-26 +1,03%). Causa: la API de series de datos.gob.ar
+  respondía con datos pero atrasada (hasta sep-26) y el CSV del catálogo ya tenía oct-26; el CSV solo se
+  usaba si la API venía vacía. Corregido en `fuentes.serie_datos_gob`: baja API y CSV y los combina (valor
+  de la API donde existe, meses que solo están en el CSV). Valores comunes API = CSV (dif 0). Con
+  `construir.py --refrescar`: último haber oct-2026, `data/processed` idéntico, 0 ALERTAS, 19 tests. Falta
+  volver a correr en Colab después del push.
 
 - Colab con `55391e0` (2026-10-19): los 3 ZIP = local tras `construir.py --refrescar` (0 diferencias no
   esperadas; Colab ya tenía el haber de oct-2026: bono de oct cargado, decreto 1108/2026). Excel completo: 55 hojas,

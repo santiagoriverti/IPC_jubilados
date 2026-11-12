@@ -130,3 +130,12 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
 - Criterio del usuario: los gráficos no arrancan en nov-23 ni en otra fecha de cambio de gobierno (el texto sí
   puede citar esos períodos).
 - El usuario mantiene todo en santiagoriverti/IPC_jubilados; el paso al repo de UADEINECO lo hace a mano. Los .tex apuntan a santiagoriverti.
+
+## Sesión 6 (2026-11-12): verificación en Colab y descarga del haber
+- El usuario corrió los 3 notebooks en Colab con `a999d4b` (datos a sep-2026) y pidió explicación de resultados.
+  `comparar_zip.py`: todo = local salvo el haber de oct-2026 (faltaba en Colab).
+- Trampa: la API de series de datos.gob.ar puede responder CON datos pero atrasada respecto del CSV de la
+  distribución (API hasta sep-26, CSV con oct-26). Fix: `serie_datos_gob` baja ambos y combina (`combine_first`,
+  prioridad API). También: el haber leído de la caché tenía índice con nombre `periodo` y el descargado no
+  (cambiaba el encabezado de haberes.csv): ahora `rename_axis(None)` en los dos caminos.
+- Sin cambios de cifras. Próximo: rutina mensual con el IPC de oct-2026 (INDEC lo publica a mediados de nov).
