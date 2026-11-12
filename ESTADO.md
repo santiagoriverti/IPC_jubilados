@@ -90,7 +90,10 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
   `fuentes.VIGENCIA_HORAS = 12` para IPC, haber, PIB, IMIG de GitHub y los originales bajados del ZIP (la
   ENGHo no vence); sin red se usa la copia guardada con un aviso ATENCION. `tests/test_fuentes.py` (4 tests sin
   red). Simulación de cache vieja hasta sep-26: vuelve a bajar y llega a oct-26. 23 tests, 0 ALERTAS,
-  `data/processed` idéntico. Falta volver a correr en Colab después del push.
+  `data/processed` idéntico.
+- Colab con `a7f5652` (2026-11-12, entorno borrado antes de correr): los 3 ZIP = local (0 diferencias no
+  esperadas, solo Bootstrap_pond por 300 vs 500 réplicas); último haber oct-2026. Excel completo: 55 hojas,
+  Haberes y Dato_Haber_minimo hasta oct-2026.
 
 - Colab con `55391e0` (2026-10-19): los 3 ZIP = local tras `construir.py --refrescar` (0 diferencias no
   esperadas; Colab ya tenía el haber de oct-2026: bono de oct cargado, decreto 1108/2026). Excel completo: 55 hojas,
