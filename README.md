@@ -48,6 +48,16 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
    2,7% ($11.989).
 7. **Costo fiscal** de indexar por IIJP desde abril de 2024: 0,2%-0,6% del gasto en jubilaciones y
    pensiones, ~0,02% del PIB por año.
+8. **Tres segmentos de jubilados**, cada uno con su canasta: **mínima** (40% de los hogares jubilados),
+   **promedio** (todos) y **alto** (20% de mayor ingreso per cápita). Cuanto más pobre el segmento, más
+   pesan alimentos (33% / 26% / 19%), luz y gas y medicamentos, y menos las prepagas y los vehículos. Su
+   inflación ordena igual: contra el IPC, la mínima +4,0% desde 2016 y +4,7% desde noviembre de 2023; el
+   segmento alto −2,0% (IC −2,7 a −1,3) y +2,2% (IC 1,1 a 3,2).
+9. **Poder adquisitivo por segmento**, con el haber de cada uno (simulado desde la ENGHo con la movilidad
+   efectiva) deflactado por su propia canasta: desde noviembre de 2023, con bono, la mínima perdió 15,9%,
+   el promedio 2,0% y el alto ganó 6,7%; sin bono, los tres ganaron entre 5,3% y 7,9%. El bono congelado
+   explica casi toda la diferencia. Desde diciembre de 2016, todos perdieron alrededor de 40% (con bono:
+   −32% la mínima, −40% el promedio, −42% el alto).
 
 ![Brecha desde nov-2023](output/graficos/g02_brecha_nov23.png)
 
@@ -59,6 +69,7 @@ con la canasta de *todos* los hogares de la ENGHo 2017/18.
 |---|---|
 | ![Ponderaciones](output/graficos/g01_ponderaciones.png) | ![Haber real](output/graficos/g05_haber_real.png) |
 | ![Regiones](output/graficos/g07_regiones.png) | ![Descomposición](output/graficos/g04_descomposicion.png) |
+| ![Canasta por segmento](output/graficos/g09_segmentos_canasta.png) | ![Poder adquisitivo por segmento](output/graficos/g11_segmentos_poder_adquisitivo.png) |
 
 ## Cómo usarlo
 

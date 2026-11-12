@@ -217,6 +217,69 @@ def g08_variantes(R):
 # directos. Se exportan a figuras/ (output/figuras/ y la carpeta figuras/ de cada ZIP), con los mismos
 # nombres que usan los .tex: esa carpeta se sube tal cual a la carpeta "figuras" de Overleaf.
 # ---------------------------------------------------------------------------------------------
+SEGMENTOS_GRAF = [('minima', 'jub_minimo', 'IIJP haber mínimo', 'Mínima', NARANJA),
+                  ('promedio', 'jubilados', 'IIJP', 'Promedio', AZUL),
+                  ('alto', 'jub_alto', 'IIJP alto', 'Alto (20% de mayor ingreso)', AQUA)]
+
+
+def g09_segmentos_canasta(R):
+    W = R['ponderaciones']
+    orden = W.sort_values('jubilados').index
+    fig, ax = plt.subplots(figsize=(9, 6.2))
+    y = range(len(orden))
+    alto = 0.26
+    for k, (_, col, _, lab, c) in enumerate(SEGMENTOS_GRAF):
+        ax.barh([i + (k - 1) * alto for i in y], W.loc[orden, col] * 100, height=alto - 0.03, color=c,
+                label=f'Segmento {lab[0].lower() + lab[1:]}')
+    ax.set_yticks(list(y))
+    ax.set_yticklabels([pond.DIVISIONES_CORTO[c] for c in orden])
+    ax.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    ax.grid(axis='y', visible=False)
+    ax.set_title('Canasta de cada segmento de jubilados (estructura del gasto por división)')
+    ax.legend(loc='lower right')
+    _pie(fig)
+    return fig
+
+
+def g10_segmentos_precios(R):
+    niv = R['niveles']
+    base = niv.index.min()
+    ipc = niv['IPC oficial'] / niv['IPC oficial'].loc[base]
+    fig, ax = plt.subplots(figsize=(9.5, 5.2))
+    x = _fecha(niv.index)
+    for _, _, k, lab, c in SEGMENTOS_GRAF:
+        y = ((niv[k] / niv[k].loc[base]) / ipc - 1) * 100
+        ax.plot(x, y, color=c, label=lab)
+        ax.annotate(f'{y.iloc[-1]:+.1f}%', (x[-1], y.iloc[-1]), xytext=(4, 0), textcoords='offset points',
+                    va='center', fontsize=8.5, color=TINTA2)
+    ax.axhline(0, color=GRIS, lw=1)
+    ax.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    ax.set_title('Precios de la canasta de cada segmento contra el IPC oficial (brecha desde dic-2016)')
+    ax.legend(loc='lower left', fontsize=9)
+    _pie(fig)
+    return fig
+
+
+def g11_segmentos_poder_adquisitivo(R):
+    hs = R['haberes_segmentos']
+    fig, ax = plt.subplots(figsize=(9.5, 5.2))
+    x = _fecha(hs.index)
+    for s, _, _, lab, c in SEGMENTOS_GRAF:
+        y = hs[f'real_con_bono_{s}'] / hs[f'real_con_bono_{s}'].iloc[0] * 100
+        ax.plot(x, y, color=c, label=f'{lab}, con bono')
+        ax.annotate(_coma(y.iloc[-1], 0), (x[-1], y.iloc[-1]), xytext=(4, 0), textcoords='offset points',
+                    va='center', fontsize=8.5, color=TINTA2)
+        if s != 'alto':
+            ax.plot(x, hs[f'real_{s}'] / hs[f'real_{s}'].iloc[0] * 100, color=c, ls='--', lw=1.3,
+                    label=f'{lab}, sin bono')
+    ax.axhline(100, color=GRIS, lw=1)
+    ax.set_title('Poder adquisitivo del haber de cada segmento, medido con su canasta (dic-2016 = 100)')
+    ax.legend(loc='lower left', fontsize=9)
+    _pie(fig, FUENTE + ', datos.gob.ar (haber mínimo) y decretos (bono). Haber de cada segmento simulado '
+         'desde la ENGHo.')
+    return fig
+
+
 RC_DIVULGACION = {'font.size': 12.5, 'axes.titlesize': 13, 'legend.fontsize': 12, 'savefig.dpi': 200}
 FUENTE_CORTA = 'Fuente: INECO-UADE con datos del INDEC (IPC y ENGHo 2017/18)'
 MILEI = 'Milei (nov-23 al último dato)'
@@ -489,4 +552,7 @@ GRAFICOS = {
     'g06_costo_fiscal': g06_costo_fiscal,
     'g07_regiones': g07_regiones,
     'g08_variantes': g08_variantes,
+    'g09_segmentos_canasta': g09_segmentos_canasta,
+    'g10_segmentos_precios': g10_segmentos_precios,
+    'g11_segmentos_poder_adquisitivo': g11_segmentos_poder_adquisitivo,
 }

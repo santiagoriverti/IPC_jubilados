@@ -1,6 +1,6 @@
 # ESTADO — IPC_jubilados (IIJP)
 
-**Última actualización:** 2026-11-12 (sesión 6: verificación en Colab con `a999d4b` y descarga del haber que combina API y CSV de datos.gob.ar). Punto de entrada para retomar:
+**Última actualización:** 2026-11-12 (sesión 6: descarga del haber que combina API y CSV de datos.gob.ar, cache con vencimiento y tres segmentos de jubilados). Punto de entrada para retomar:
 este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md`
 (historial).
 
@@ -9,7 +9,9 @@ este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → 
 El IIJP se valoriza **por región y al nivel de aperturas del IPC**, con los restos no publicados
 deducidos de las ponderaciones oficiales del INDEC y una concordancia ENGHo → IPC (expensas). Incluye un
 subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variantes**. Datos a sep-2026.
-Colab verificado con `f9f5e82` (notebook 03 con Excel completo y `fuentes_originales/`): ZIP = local. README
+**Tres segmentos** (sesión 6): mínima, promedio y alto (20% de mayor ingreso per cápita), cada uno con su
+canasta, su índice y el poder adquisitivo de su haber (simulado desde la ENGHo con la movilidad efectiva).
+Colab verificado con `a7f5652` (antes de los segmentos): ZIP = local. README
 y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
 errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`, generadas por
 `graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
@@ -62,13 +64,26 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 - **Costo fiscal** (indexar por IIJP): 2024 (abr-dic) $127.947 M = 0,42% del gasto previsional (0,022% PIB);
   2025 $125.308 M = 0,22% (0,015% PIB); 2026 ene-sep $369.658 M = 0,69%. Mayo 2026: $42.559 M.
 - Movilidad: ANSES usa el IPC(t−2) desde niveles con 2 decimales (error 0 en 29/29 meses).
+- **Segmentos** (mínima / promedio / alto = 20% de mayor ingreso per cápita; 2.081 / 5.350 / 1.056 hogares;
+  perceptor medio 0,88 / 1,67 / 3,37 mínimos en 2017/18; haber medio sep-26 $374.927 / $685.693 / $1.347.248
+  sin bono). Canasta: alimentos 32,9 / 26,4 / 19,0%; salud 9,5 / 11,4 / 14,0%; dentro de salud prepagas
+  12 / 29 / 48%; dentro de vivienda luz y gas 60 / 51 / 36%; transporte público 43 / 27 / 20% del transporte.
+  Brecha del IIJP alto vs IPC oficial: completo −2,03% (IC −2,72 a −1,34), Milei +2,22% (IC 1,11 a 3,21),
+  desde 2025 −0,53%; vs IIJP: completo −3,21% (IC −3,76 a −2,66), Milei −0,82% (IC −1,59 a −0,11).
+  Sensibilidad al corte (percentil 50 a 90): vs IPC completo −0,2 a −3,5%, Milei +1,2 a +2,4%.
+- **Poder adquisitivo por segmento** (haber simulado / índice de su canasta): desde nov-23 con bono mínima
+  −15,9%, promedio −2,0%, alto +6,7%; sin bono +5,3 / +7,0 / +7,9%. Desde dic-16 con bono −31,7 / −39,8 /
+  −42,0%; sin bono −41,9 / −42,7 / −42,4%. Fernández con bono −3,1 / −27,7 / −37,1% (la mínima recibió la
+  suma fija de mar-2020 y los refuerzos desde sep-22). Desde 2025 con bono −9,6 / −2,6 / +1,6%. La mínima
+  del segmento (0,88 mínimos de media: PNC y pensiones) pierde más con bono que el haber mínimo exacto
+  (−15,9% vs −13,9%) porque el bono pesa más en haberes menores.
 
 ## 3. Dónde se citan las cifras (actualizar todo junto si cambian)
 
 | Documento | Estado |
 |---|---|
 | `ESTADO.md` §2 | al día: todas |
-| `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-7, nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%, cobertura 83/16,5/0,5%) |
+| `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-9 (8-9: segmentos), nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%, cobertura 83/16,5/0,5%) |
 | `docs/revision_TP.md` | al día: tabla resumen (ventana del TP, haberes may-26/sep-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
 | `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
 | `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-10-16, sep-26): resumen ejecutivo, cuadros de sep-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual sep-26, costo fiscal, firmeza |
@@ -94,6 +109,12 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 - Colab con `a7f5652` (2026-11-12, entorno borrado antes de correr): los 3 ZIP = local (0 diferencias no
   esperadas, solo Bootstrap_pond por 300 vs 500 réplicas); último haber oct-2026. Excel completo: 55 hojas,
   Haberes y Dato_Haber_minimo hasta oct-2026.
+- Tres segmentos (2026-11-12, sin commitear al escribir esto): las cifras existentes no cambian (CSV
+  comparados con HEAD en columnas y filas comunes: diferencia 0; solo se agregan columnas `IIJP alto` /
+  `jub_alto` y filas `IIJP alto vs IIJP`). Control de calidad 0 ALERTAS con 4 controles nuevos (alto ~20%,
+  escala constante salvo mar-2020, 1 mínimo reproduce el haber mínimo, orden de haberes). 28 tests (5
+  nuevos en `tests/test_haberes_segmentos.py`). Notebooks ejecutados en local (`_local_run/`, bootstrap 30).
+  Falta correrlos en Colab después del push.
 
 - Colab con `55391e0` (2026-10-19): los 3 ZIP = local tras `construir.py --refrescar` (0 diferencias no
   esperadas; Colab ya tenía el haber de oct-2026: bono de oct cargado, decreto 1108/2026). Excel completo: 55 hojas,
@@ -154,6 +175,15 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 4. Decidir si el umbral del haber mínimo (1,1 mínimos) y la inclusión de PNC quedan como están.
 5. Si el INDEC publica el IPC con canasta ENGHo 2017/18 (postergado sin fecha en feb-2026) o una ENGHo
    nueva: cambiar la referencia de ponderaciones.
+6. Pedidos del usuario (2026-11-12), además de los tres segmentos (hechos):
+   - Llevar los segmentos al documento de prensa y la presentación (foco en la mínima) y decidir si el
+     corte del segmento alto (percentil 80) queda.
+   - Cuántos beneficios hay por tipo (jubilaciones, pensiones, PUAM, PNC, regímenes especiales), cuántos
+     cobran la mínima y haber medio por tipo: fuente nueva (datos.gob.ar tiene beneficios de ANSES,
+     dataset 189, y gasto devengado del SIPA, dataset 186; falta el haber medio por tipo y por tramo).
+   - Financiamiento del gasto previsional: gasto vs "Aportes y contribuciones a la seguridad social" (ya está
+     en la IMIG de `cuentas_publicas`) y costo de recuperar el poder adquisitivo de la mínima (p. ej. bono
+     actualizado por inflación).
 
 ## 6. Rutina mensual (cuando el INDEC publica el IPC)
 

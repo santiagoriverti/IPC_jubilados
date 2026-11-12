@@ -1,0 +1,4 @@
+segmento,poblacion,indice,descripcion,hogares_muestra,hogares_expandidos,pct_hogares_jubilados,perceptores_por_hogar,haber_medio_en_minimos_2017_18,ingreso_pc_medio_2017_18,gasto_medio_hogar_2017_18,ultimo_mes,haber_medio_ultimo_mes,haber_medio_con_bono_ultimo_mes
+minima,jub_minimo,IIJP haber mínimo,"Hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos",2081,1171173.000000,39.584669,1.425063,0.875679,6443.684175,10963.423305,2026-09,374926.505557,440945.773334
+promedio,jubilados,IIJP,Hogares jubilados: jubilaciones y pensiones (contributivas y no contributivas) >= 50% del ingreso,5350,2958653.000000,100.000000,1.457835,1.669497,12257.270017,17164.654100,2026-09,685693.444455,720287.743404
+alto,jub_alto,IIJP alto,Hogares jubilados de mayores ingresos: el 20% de mayor ingreso per cápita,1056,588458.000000,19.889389,1.413217,3.367785,27667.288016,30044.222068,2026-09,1347248.153656,1354712.749438

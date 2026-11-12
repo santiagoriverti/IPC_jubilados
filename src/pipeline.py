@@ -21,8 +21,32 @@ NOMBRES = {
     'IPC ENGHo 17/18': 'Mismo calculo que el IIJP con la canasta de todos los hogares de la ENGHo 2017/18',
     'IIJP': 'IIJP: canasta de los hogares jubilados (ENGHo 2017/18), aperturas regionales, canasta fija',
     'IIJP haber mínimo': 'IIJP de los hogares jubilados en los que nadie cobra mas de 1,1 haberes minimos',
+    'IIJP alto': 'IIJP del 20% de hogares jubilados de mayor ingreso per capita',
 }
-POBLACIONES_INDICE = {'IIJP': 'jubilados', 'IPC ENGHo 17/18': 'total', 'IIJP haber mínimo': 'jub_minimo'}
+POBLACIONES_INDICE = {'IIJP': 'jubilados', 'IPC ENGHo 17/18': 'total', 'IIJP haber mínimo': 'jub_minimo',
+                      'IIJP alto': 'jub_alto'}
+# Indice de precios de cada segmento de jubilados (ponderaciones.SEGMENTOS)
+INDICE_SEGMENTO = {'minima': 'IIJP haber mínimo', 'promedio': 'IIJP', 'alto': 'IIJP alto'}
+PERIODOS_SENSIBILIDAD = ('Completo', 'Milei (nov-23 al último dato)', 'Desde 2025 (dic-24 al último dato)')
+
+
+def _sensibilidad_corte(h, E, P, marcas: dict, ref: pd.Series, iijp: pd.Series, ultimo, etiqueta: str) -> pd.DataFrame:
+    """Brecha de un subindice contra el IPC y el IIJP con distintas definiciones de su poblacion.
+    marcas: {valor del corte: marca por hogar}."""
+    filas = []
+    for corte, m in marcas.items():
+        h['_corte'] = m
+        nv = indices.lowe(P, pond.canasta_nodos(E, h, '_corte'))
+        fila = {etiqueta: corte, 'hogares_muestra': int(m.sum()),
+                'pct_hogares_jubilados': float(h.loc[m, 'pondera'].sum() / h.loc[h['jubilados'], 'pondera'].sum() * 100)}
+        for nombre, d, hh in indices.periodos_vigentes(ultimo):
+            if nombre in PERIODOS_SENSIBILIDAD:
+                corto = nombre.split(' ')[0].lower()
+                fila[f'vs_ipc_{corto}'] = indices.brecha(nv, ref, d, hh)
+                fila[f'vs_iijp_{corto}'] = indices.brecha(nv, iijp, d, hh)
+        filas.append(fila)
+    h.drop(columns='_corte', inplace=True)
+    return pd.DataFrame(filas)
 
 var_movilidad = haberes.var_movilidad
 
@@ -98,7 +122,7 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
     # ---------------------------------------------------------------- indices
     niv = {'IPC oficial': I['0']}
     niv.update({k: indices.lowe(P, G[p]) for k, p in POBLACIONES_INDICE.items()})
-    niveles = pd.DataFrame(niv)[['IPC oficial', 'IPC ENGHo 17/18', 'IIJP', 'IIJP haber mínimo']]
+    niveles = pd.DataFrame(niv)[['IPC oficial', 'IPC ENGHo 17/18', 'IIJP', 'IIJP haber mínimo', 'IIJP alto']]
     niveles.index.name = 'periodo'
     R['niveles'] = niveles
     R['var_mensual'] = niveles.pct_change() * 100
@@ -118,26 +142,20 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
     R['niveles_regionales'] = pd.DataFrame(reg)
     R['periodos_regionales'] = pd.DataFrame(filas)
 
-    # Sensibilidad del subindice haber minimo al tope (haberes minimos que puede cobrar cada perceptor)
-    filas = []
-    for tope in (1.0, 1.05, pond.TOPE_HABER_MINIMO, 1.25, 1.5, 2.0):
-        h['_tope'] = pond.marcar_haber_minimo(h, tope)
-        nv = indices.lowe(P, pond.canasta_nodos(E, h, '_tope'))
-        fila = {'tope_haberes_minimos': tope, 'hogares_muestra': int(h['_tope'].sum()),
-                'pct_hogares_jubilados': float(h.loc[h['_tope'], 'pondera'].sum() / h.loc[h['jubilados'], 'pondera'].sum() * 100)}
-        for nombre, d, hh in indices.periodos_vigentes(ultimo):
-            if nombre in ('Completo', 'Milei (nov-23 al último dato)', 'Desde 2025 (dic-24 al último dato)'):
-                corto = nombre.split(' ')[0].lower()
-                fila[f'vs_ipc_{corto}'] = indices.brecha(nv, I['0'], d, hh)
-                fila[f'vs_iijp_{corto}'] = indices.brecha(nv, niv['IIJP'], d, hh)
-        filas.append(fila)
-    h.drop(columns='_tope', inplace=True)
-    R['sensibilidad_haber_minimo'] = pd.DataFrame(filas)
+    # Sensibilidad del subindice haber minimo al tope (haberes minimos que puede cobrar cada perceptor) y del
+    # segmento alto al corte de ingreso per capita
+    R['sensibilidad_haber_minimo'] = _sensibilidad_corte(
+        h, E, P, {t: pond.marcar_haber_minimo(h, t) for t in (1.0, 1.05, pond.TOPE_HABER_MINIMO, 1.25, 1.5, 2.0)},
+        I['0'], niv['IIJP'], ultimo, 'tope_haberes_minimos')
+    R['sensibilidad_alto'] = _sensibilidad_corte(
+        h, E, P, {q: pond.marcar_alto(h, q) for q in (0.5, 0.6, 0.7, pond.PERCENTIL_ALTO, 0.9)},
+        I['0'], niv['IIJP'], ultimo, 'percentil_ingreso_pc')
     jr = G['jubilados'].groupby(level='region').sum()
     R['peso_regiones'] = pd.DataFrame({'ipc_oficial': est.pond_oficial().groupby(level='region').sum(),
                                        'jubilados': jr, 'total': G['total'].groupby(level='region').sum(),
                                        'hogares_jubilados_muestra': h[h['jubilados']].groupby('region_ipc').size(),
-                                       'hogares_haber_minimo_muestra': h[h['jub_minimo']].groupby('region_ipc').size()
+                                       'hogares_haber_minimo_muestra': h[h['jub_minimo']].groupby('region_ipc').size(),
+                                       'hogares_alto_muestra': h[h['jub_alto']].groupby('region_ipc').size()
                                        }).loc[fuentes.REGIONES]
 
     # Validacion: con las ponderaciones oficiales, la misma estructura de nodos reproduce el IPC
@@ -160,7 +178,8 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
         for a, b, etiqueta in [('IIJP', 'IPC oficial', 'IIJP vs IPC oficial'),
                                ('IIJP', 'IPC ENGHo 17/18', 'IIJP vs IPC 17/18 (efecto edad)'),
                                ('IPC ENGHo 17/18', 'IPC oficial', 'IPC 17/18 vs oficial (efecto canasta nueva)'),
-                               ('IIJP haber mínimo', 'IIJP', 'IIJP haber mínimo vs IIJP')]:
+                               ('IIJP haber mínimo', 'IIJP', 'IIJP haber mínimo vs IIJP'),
+                               ('IIJP alto', 'IIJP', 'IIJP alto vs IIJP')]:
             r_ = indices.brecha_mensual(niv[a], niv[b], pd.Period(d, 'M') + 1, hh)
             filas.append({'periodo': nombre, 'comparacion': etiqueta, **r_})
     R['brecha_estadistica'] = pd.DataFrame(filas)
@@ -224,6 +243,8 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
             edad = (acu['jubilados'] / acu['total'] - 1) * 100
             vs_ofi_min = (acu['jub_minimo'] / ofi - 1) * 100
             min_vs_iijp = (acu['jub_minimo'] / acu['jubilados'] - 1) * 100  # pareado: misma replica
+            vs_ofi_alto = (acu['jub_alto'] / ofi - 1) * 100
+            alto_vs_iijp = (acu['jub_alto'] / acu['jubilados'] - 1) * 100
             filas.append({'periodo': nombre, 'desde': d, 'hasta': hh,
                           'brecha_vs_oficial_p2.5': np.percentile(vs_ofi, 2.5),
                           'brecha_vs_oficial_p97.5': np.percentile(vs_ofi, 97.5),
@@ -231,7 +252,11 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
                           'haber_minimo_vs_oficial_p2.5': np.percentile(vs_ofi_min, 2.5),
                           'haber_minimo_vs_oficial_p97.5': np.percentile(vs_ofi_min, 97.5),
                           'haber_minimo_vs_iijp_p2.5': np.percentile(min_vs_iijp, 2.5),
-                          'haber_minimo_vs_iijp_p97.5': np.percentile(min_vs_iijp, 97.5)})
+                          'haber_minimo_vs_iijp_p97.5': np.percentile(min_vs_iijp, 97.5),
+                          'alto_vs_oficial_p2.5': np.percentile(vs_ofi_alto, 2.5),
+                          'alto_vs_oficial_p97.5': np.percentile(vs_ofi_alto, 97.5),
+                          'alto_vs_iijp_p2.5': np.percentile(alto_vs_iijp, 2.5),
+                          'alto_vs_iijp_p97.5': np.percentile(alto_vs_iijp, 97.5)})
         R['bootstrap_brechas'] = pd.DataFrame(filas)
 
         # Intervalos de las brechas regionales (cada region con su IPC)
@@ -276,6 +301,47 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
         hab[f'real_haber_{k}'] = haberes.real(hab['haber_minimo'], s, base)
         hab[f'real_con_bono_{k}'] = haberes.real(hab['haber_con_bono'], s, base)
     R['haberes'] = hab
+
+    # ---------------------------------------------------------------- segmentos: canasta, precios y haber
+    pp = pond.perceptores(per, h, haber_serie)
+    marcas = {s: h[p] for s, p in pond.SEGMENTOS.items()}
+    hs = haberes.haber_segmentos(haber_serie, fuentes.leer_bono(), pp, marcas).loc[:ultimo]
+    for s, k in INDICE_SEGMENTO.items():
+        for b in ('', 'con_bono_'):
+            hs[f'real_{b}{s}'] = haberes.real(hs[f'haber_{b}{s}'], niv[k], indices.BASE)
+            hs[f'real_{b}{s}_ipc'] = haberes.real(hs[f'haber_{b}{s}'], I['0'], indices.BASE)
+    hs.index.name = 'periodo'
+    R['haberes_segmentos'] = hs
+    filas = []
+    for nombre, d, hh in indices.periodos_vigentes(ultimo):
+        dd, hp_ = pd.Period(d, 'M'), pd.Period(hh, 'M')
+        for s, k in INDICE_SEGMENTO.items():
+            def var(c):
+                return (hs.loc[hp_, c] / hs.loc[dd, c] - 1) * 100
+            filas.append({'periodo': nombre, 'desde': d, 'hasta': hh, 'segmento': s,
+                          'haber_nominal_%': var(f'haber_{s}'),
+                          'precios_su_canasta_%': indices.acumulada(niv[k], d, hh) * 100,
+                          'precios_ipc_%': indices.acumulada(I['0'], d, hh) * 100,
+                          'real_sin_bono_%': var(f'real_{s}'), 'real_con_bono_%': var(f'real_con_bono_{s}'),
+                          'real_sin_bono_ipc_%': var(f'real_{s}_ipc'),
+                          'real_con_bono_ipc_%': var(f'real_con_bono_{s}_ipc')})
+    R['poder_adquisitivo'] = pd.DataFrame(filas)
+    filas = []
+    for s, p in pond.SEGMENTOS.items():
+        m = h[p]
+        x = pp[pp['id'].map(m).fillna(False).values.astype(bool)]
+        filas.append({'segmento': s, 'poblacion': p, 'indice': INDICE_SEGMENTO[s],
+                      'descripcion': pond.POBLACIONES[p][0], 'hogares_muestra': int(m.sum()),
+                      'hogares_expandidos': float(h.loc[m, 'pondera'].sum()),
+                      'pct_hogares_jubilados': float(h.loc[m, 'pondera'].sum() / h.loc[h['jubilados'], 'pondera'].sum() * 100),
+                      'perceptores_por_hogar': float(np.average(x.groupby('id').size().reindex(h.index[m]).fillna(0),
+                                                                weights=h.loc[m, 'pondera'])),
+                      'haber_medio_en_minimos_2017_18': float(np.average(x['k'], weights=x['pondera'])),
+                      'ingreso_pc_medio_2017_18': float(np.average(h.loc[m, 'ingpch'], weights=h.loc[m, 'pondera'])),
+                      'gasto_medio_hogar_2017_18': float(np.average(h.loc[m, 'gastot'], weights=h.loc[m, 'pondera'])),
+                      'ultimo_mes': str(ultimo), 'haber_medio_ultimo_mes': float(hs.loc[ultimo, f'haber_{s}']),
+                      'haber_medio_con_bono_ultimo_mes': float(hs.loc[ultimo, f'haber_con_bono_{s}'])})
+    R['segmentos'] = pd.DataFrame(filas)
 
     # ---------------------------------------------------------------- fiscal
     imig = fuentes.imig_mensual()

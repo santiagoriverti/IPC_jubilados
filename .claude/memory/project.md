@@ -144,3 +144,13 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   `tests/test_fuentes.py` (monkeypatch de requests.get). Lección: al diagnosticar un ZIP de Colab, mirar la
   hora de los archivos de fuentes_originales/ (delata sesiones reutilizadas).
 - Sin cambios de cifras. Próximo: rutina mensual con el IPC de oct-2026 (INDEC lo publica a mediados de nov).
+- Pedido nuevo del usuario (lista de puntos): segmentar jubilados (mínima = más pobres, promedio, clase alta)
+  con canasta y poder adquisitivo propios, foco en la mínima; beneficios por tipo; financiamiento del gasto.
+  Hecho: los tres segmentos. Segmento alto = percentil 80 del ingreso per cápita de los hogares jubilados
+  (decisión de Claude, a confirmar con el usuario; sensibilidad 50-90 en `sensibilidad_alto`).
+- Haber por segmento: no hay serie del haber medio en datos.gob.ar. La serie del mínimo muestra que la
+  movilidad fue uniforme desde dic-16 salvo mar-2020 (2,3% + $1.500, decreto 163/2020) → simulación por
+  perceptor desde k de la ENGHo (`haberes.haber_segmentos`). El bono pesa mucho en la mínima: con bono desde
+  nov-23 −15,9% / −2,0% / +6,7% (mínima / promedio / alto); sin bono los tres +5 a +8%.
+- Todas las cifras previas idénticas (CSV comparados con HEAD por clave). Pendiente: Colab, divulgación,
+  beneficios por tipo, financiamiento (aportes y contribuciones ya están en la IMIG de cuentas_publicas).

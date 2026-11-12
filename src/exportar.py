@@ -58,6 +58,10 @@ def tablas_csv(R: dict) -> dict[str, tuple[pd.DataFrame, bool]]:
         'validacion.csv': (R['validacion'], True),
         'cobertura_precios.csv': (R['cobertura_precios'], True),
         'sensibilidad_haber_minimo.csv': (R['sensibilidad_haber_minimo'], False),
+        'sensibilidad_alto.csv': (R['sensibilidad_alto'], False),
+        'segmentos.csv': (R['segmentos'], False),
+        'haberes_segmentos.csv': (R['haberes_segmentos'], True),
+        'poder_adquisitivo.csv': (R['poder_adquisitivo'], False),
         'revision_tp_periodos.csv': (R['revision_tp']['periodos'], False),
     }
     for k, d in R['descomposicion'].items():
@@ -96,6 +100,10 @@ def hojas_excel(R: dict) -> dict[str, pd.DataFrame]:
         'Variantes_resumen': R['variantes_resumen'],
         'Variantes_niveles': R['variantes_niveles'],
         'Sensibilidad_haber_minimo': R['sensibilidad_haber_minimo'],
+        'Segmentos': R['segmentos'],
+        'Sensibilidad_alto': R['sensibilidad_alto'],
+        'Haberes_segmentos': R['haberes_segmentos'],
+        'Poder_adquisitivo': R['poder_adquisitivo'],
         'Cobertura_precios': R['cobertura_precios'],
         'Haberes': R['haberes'],
         'Regla_movilidad': R['regla_movilidad'],
@@ -139,6 +147,10 @@ def notas(R: dict) -> list[str]:
         'Niveles base dic-2016 = 100. Variaciones en %. Brechas: (1 + infl. A) / (1 + infl. B) - 1, en %.',
         'Efecto edad: IIJP contra el mismo calculo con todos los hogares (IPC ENGHo 17/18). Hoja Variantes: '
         'cada fila cambia una sola decision metodologica.',
+        'Segmentos (hojas Segmentos, Haberes_segmentos y Poder_adquisitivo): minima (nadie cobra mas de 1,1 haberes '
+        'minimos), promedio (todos los hogares jubilados) y alto (20% de mayor ingreso per capita), cada uno con su '
+        'canasta e indice. Haber de cada segmento simulado desde la ENGHo con la movilidad efectiva (igual para todos '
+        'los haberes salvo mar-2020: 2,3% + $1.500) y el bono como complemento hasta minimo + bono.',
         'Montos fiscales en millones de pesos corrientes. Metodologia: README y docs/ del repo '
         'github.com/santiagoriverti/IPC_jubilados.',
     ]

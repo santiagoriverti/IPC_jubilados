@@ -11,10 +11,11 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
+import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from src import estructura as estr  # noqa: E402
-from src import fuentes, pipeline  # noqa: E402
+from src import fuentes, haberes, pipeline  # noqa: E402
 
 
 def main() -> int:
@@ -92,6 +93,25 @@ def main() -> int:
     d = ((h['haber_cf_ipc'] / h['haber_minimo'] - 1).abs().max()) * 100
     chequear(d < 0.01, f'El contrafactual por IPC reproduce el haber efectivo: desvio maximo {d:.4f}% (< 0,01%)')
     chequear(bool(h['bono'].notna().all()), f'Bono cargado para todos los meses del haber (ultimo {h.index.max()})')
+
+    # Segmentos: el alto es ~20% de los jubilados y no tiene hogares de haber minimo; la simulacion del haber
+    # sigue al haber minimo para quien cobra un minimo y la escala solo se comprime en mar-2020
+    seg = R['segmentos'].set_index('segmento')
+    chequear(abs(seg.loc['alto', 'pct_hogares_jubilados'] - 20) < 1,
+             f'Segmento alto: {seg.loc["alto", "pct_hogares_jubilados"]:.1f}% de los hogares jubilados (~20%)')
+    hs = R['haberes_segmentos']
+    k = hs[[f'haber_minimos_{s}' for s in ('minima', 'promedio', 'alto')]]
+    cambios = k.diff().abs().gt(1e-9).any(axis=1)
+    chequear(cambios.sum() == 1 and str(cambios.idxmax()) == '2020-03',
+             'Haber por segmento en haberes minimos: constante salvo en mar-2020 (suma fija de $1.500)')
+    hm = fuentes.leer_haber_minimo().loc[:hs.index.max()]
+    sim = haberes.haber_perceptores(hm, [1.0])[:, 0]
+    d = float(np.abs(sim / hm.values - 1).max() * 100)
+    chequear(d < 1e-9, f'Simulacion del haber: un perceptor de 1 minimo reproduce el haber minimo (desvio {d:.1e}%)')
+    orden = seg['haber_medio_ultimo_mes']
+    chequear(orden['minima'] < orden['promedio'] < orden['alto'],
+             f'Haber medio actual: minima ${orden["minima"]:,.0f} < promedio ${orden["promedio"]:,.0f} < '
+             f'alto ${orden["alto"]:,.0f}')
 
     m = R['fiscal_mensual']
     fin = min(R['haberes']['factor_iijp'].dropna().index.max(), pd.Period(R['meta']['ultimo_imig'], 'M'))

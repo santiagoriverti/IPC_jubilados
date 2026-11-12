@@ -118,13 +118,15 @@ precios del INDEC con que se valoriza (ver notebook 02).
   contributivas, ≥ 50% del ingreso del hogar).
 - **Subíndice haber mínimo**: hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes
   mínimos (el vigente en el trimestre de la entrevista).
+- **Tres segmentos**: mínima (el subíndice anterior), promedio (todos los hogares jubilados) y alto (el
+  20% de hogares jubilados de mayor ingreso per cápita), cada uno con su canasta.
 - **Comparador**: todos los hogares de la misma encuesta, y el IPC oficial (ENGHo 2004/05).
 - Incertidumbre muestral de las ponderaciones (bootstrap de hogares).
 '''),
     code(SETUP),
     code(r'''N_BOOTSTRAP = 300   # replicas para los intervalos de confianza (0 = no calcular)
 R = pipeline.calcular(n_bootstrap=N_BOOTSTRAP)
-PRINC = ['ipc_oficial', 'total', 'jubilados', 'jub_minimo']'''),
+PRINC = ['ipc_oficial', 'total', 'jubilados', 'jub_minimo', 'jub_alto']'''),
     md(r'''
 ## Poblaciones
 
@@ -138,7 +140,7 @@ Hogares en la muestra y expandidos (factor `pondera`). Rol: `principal` (IIJP), 
 
 `ipc_oficial`: IPC nacional del INDEC (ENGHo 2004/05). `total`: todos los hogares con la ENGHo 2017/18
 (lo que sería un IPC con canasta actualizada). `jubilados`: canasta del IIJP. `jub_minimo`: subíndice
-haber mínimo. Las demás columnas son las definiciones alternativas de la población.
+haber mínimo. `jub_alto`: segmento alto. Las demás columnas son las definiciones alternativas de la población.
 '''),
     code(r'''W = R['ponderaciones'].set_index('division')
 display((W[PRINC] * 100).round(1))
@@ -175,6 +177,24 @@ Con otros topes cambia la cantidad de hogares; la tabla muestra cuánto cambia l
 el IIJP.
 '''),
     code(r'''display(R['sensibilidad_haber_minimo'])'''),
+    md(r'''
+## Tres segmentos: mínima, promedio y alto
+
+- **Mínima**: hogares jubilados en los que nadie cobra más de 1,1 haberes mínimos (los más pobres).
+- **Promedio**: todos los hogares jubilados (la canasta del IIJP).
+- **Alto**: el 20% de hogares jubilados de mayor ingreso per cápita.
+
+`haber_medio_en_minimos_2017_18`: haber medio por perceptor en múltiplos del haber mínimo del trimestre de la
+entrevista. El haber medio actual de cada segmento se simula con la movilidad efectiva (notebook 03).
+'''),
+    code(r'''display(R['segmentos'].drop(columns=['descripcion']))
+fig = graficos.g09_segmentos_canasta(R); plt.show()
+display((W[['ipc_oficial', 'jub_minimo', 'jubilados', 'jub_alto']] * 100).round(1))'''),
+    md(r'''
+Sensibilidad del segmento alto al corte de ingreso per cápita (percentil de los hogares jubilados): cuánto
+cambia la brecha de su índice con el IPC y con el IIJP.
+'''),
+    code(r'''display(R['sensibilidad_alto'])'''),
     md(r'''
 ## Incertidumbre muestral
 
@@ -272,6 +292,14 @@ display(R['periodos'])'''),
     code(r'''if 'bootstrap_brechas' in R:
     display(Markdown('**Intervalos de 95% por bootstrap (incertidumbre muestral de la ENGHo):**'))
     display(R['bootstrap_brechas'])'''),
+    md(r'''
+## Precios de cada segmento
+
+Índice de la canasta de cada segmento (mínima, promedio y alto) contra el IPC oficial. Las columnas
+`alto_vs_*` del bootstrap son los intervalos del segmento alto.
+'''),
+    code(r'''fig = graficos.g10_segmentos_precios(R); plt.show()
+display(R['periodos'][['periodo'] + [c for c in R['periodos'].columns if c.startswith('brecha IIJP')]].round(2))'''),
     md(r'''
 ## ¿La diferencia es persistente? (test de la media mensual)
 
@@ -373,6 +401,24 @@ t = pd.DataFrame({f'{bono}, {nom}': hab[f'{col}_{k}'] / hab.loc[b, f'{col}_{k}']
                   for nom, k in [('IPC', 'ipc'), ('IIJP', 'iijp'), ('IIJP haber mínimo', 'iijp_minimo')]})
 display((t.loc[['2023-12', '2024-02', '2024-12', '2025-12', str(u)]] * 100).round(1))
 print(f"Bono de $70.000 actualizado por IPC desde marzo 2024 en {u}: ${hab.loc[u, 'bono_indexado_ipc']:,.0f}")'''),
+    md(r'''
+## Poder adquisitivo de cada segmento
+
+No hay serie oficial del haber medio. Se simula el haber de cada perceptor de la ENGHo 2017/18 desde su
+posición en la escala (cuántos haberes mínimos cobraba): desde dic-2016 todos los haberes subieron el mismo
+porcentaje salvo en marzo de 2020 (2,3% más $1.500 fijos: la mínima subió 13% y un haber de 3 mínimos, 6%).
+El bono se suma como complemento hasta mínimo + bono, así que pesa mucho en la mínima y casi nada en el
+segmento alto. Cada haber se deflacta por el índice de **su propia canasta** (y, para comparar, por el IPC).
+Antes de sep-2022 hubo solo bonos de pago único, no cargados.
+'''),
+    code(r'''fig = graficos.g11_segmentos_poder_adquisitivo(R); plt.show()
+pa = R['poder_adquisitivo']
+for col, titulo in [('real_con_bono_%', 'Haber real con bono, deflactado por su canasta (%)'),
+                    ('real_sin_bono_%', 'Haber real sin bono, deflactado por su canasta (%)'),
+                    ('real_con_bono_ipc_%', 'Haber real con bono, deflactado por el IPC (%)')]:
+    display(Markdown(f'**{titulo}**'))
+    display(pa.pivot(index='periodo', columns='segmento', values=col)
+              .reindex(index=pa['periodo'].unique(), columns=['minima', 'promedio', 'alto']).round(1))'''),
     md(r'''
 ## Contrafactual: haber indexado por IIJP desde abril 2024
 

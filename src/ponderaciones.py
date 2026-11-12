@@ -46,6 +46,11 @@ POND_TP_ORIGINAL = pd.Series([0.25145, 0.01862, 0.05252, 0.13735, 0.066, 0.10895
 
 UMBRAL_JUBILADOS = 0.5      # jubilaciones y pensiones / ingreso del hogar
 TOPE_HABER_MINIMO = 1.1     # haber minimo: ningun perceptor cobra mas de 1,1 haberes minimos
+PERCENTIL_ALTO = 0.8        # segmento alto: hogares jubilados por encima del percentil 80 del ingreso per capita
+
+# Segmentos de jubilados (canasta, indice y poder adquisitivo propios): poblacion de cada uno
+SEGMENTOS = {'minima': 'jub_minimo', 'promedio': 'jubilados', 'alto': 'jub_alto'}
+SEGMENTOS_NOMBRE = {'minima': 'Mínima', 'promedio': 'Promedio', 'alto': 'Alto'}
 
 # poblacion: (descripcion, rol). Rol: principal (IIJP), comparador, subindice, variante (tabla de
 # sensibilidad) o tp (solo para la revision del TP original)
@@ -55,6 +60,7 @@ POBLACIONES = {
     'total': ('Todos los hogares (IPC con la canasta de la ENGHo 2017/18)', 'comparador'),
     'no_jubilados': ('Hogares no jubilados (el resto de los hogares)', 'comparador'),
     'jub_minimo': ('Hogares jubilados en los que ningún perceptor cobra más de 1,1 haberes mínimos', 'subindice'),
+    'jub_alto': ('Hogares jubilados de mayores ingresos: el 20% de mayor ingreso per cápita', 'subindice'),
     'jub_sin_pnc': ('Jubilaciones y pensiones contributivas >= 50% del ingreso (sin pensiones no contributivas)',
                     'variante'),
     'jub_umbral_75': ('Jubilaciones y pensiones >= 75% del ingreso', 'variante'),
@@ -123,19 +129,36 @@ def preparar_hogares(hogares: pd.DataFrame, personas: pd.DataFrame,
     corte = mediana_ponderada(h.loc[h['jubilados'], 'ingpch'], h.loc[h['jubilados'], 'pondera'])
     h['jub_bajos'] = h['jubilados'] & (h['ingpch'] <= corte)
     h['jub_altos'] = h['jubilados'] & (h['ingpch'] > corte)
+    h['jub_alto'] = marcar_alto(h)
     if haber_minimo is not None:
-        # Haber minimo de referencia: el maximo vigente en el trimestre operativo de la entrevista
-        tope = {t: float(haber_minimo.loc[a:b].max()) * TOPE_HABER_MINIMO
-                for t, (a, b) in fuentes.TRIMESTRES_ENGHO.items()}
-        if not all(np.isfinite(list(tope.values()))):
-            raise ValueError('La serie del haber minimo no cubre el relevamiento de la ENGHo (nov-2017 a nov-2018): '
-                             f'{haber_minimo.index.min()} a {haber_minimo.index.max()}')
         # Cociente entre el mayor ingreso previsional de un miembro y el haber minimo de referencia
-        pp = per[per['prev'] > 0]
-        rel = pp['prev'] / pp['id'].map(h['trimestre']).map(tope) * TOPE_HABER_MINIMO
-        h['max_haberes_minimos'] = rel.groupby(pp['id']).max().reindex(h.index)
+        pp = perceptores(per, h, haber_minimo)
+        h['max_haberes_minimos'] = pp.groupby('id')['k'].max().reindex(h.index)
         h['jub_minimo'] = marcar_haber_minimo(h)
     return h
+
+
+def perceptores(personas: pd.DataFrame, h: pd.DataFrame, haber_minimo: pd.Series) -> pd.DataFrame:
+    """Perceptores de jubilacion o pension: id del hogar, ingreso previsional (prev), k = prev / haber
+    minimo de referencia (el maximo vigente en el trimestre operativo de la entrevista) y pondera."""
+    tope = {t: float(haber_minimo.loc[a:b].max()) for t, (a, b) in fuentes.TRIMESTRES_ENGHO.items()}
+    if not all(np.isfinite(list(tope.values()))):
+        raise ValueError('La serie del haber minimo no cubre el relevamiento de la ENGHo (nov-2017 a nov-2018): '
+                         f'{haber_minimo.index.min()} a {haber_minimo.index.max()}')
+    per = personas.copy()
+    per['prev'] = per['ijubilacion'].fillna(0) + per['ipensionesnc'].fillna(0)
+    pp = per.loc[per['prev'] > 0, ['id', 'prev']].copy()
+    pp['k'] = pp['prev'] / pp['id'].map(h['trimestre']).map(tope)
+    pp['pondera'] = pp['id'].map(h['pondera'])
+    return pp.reset_index(drop=True)
+
+
+def marcar_alto(h: pd.DataFrame, percentil: float = PERCENTIL_ALTO) -> pd.Series:
+    """Hogares jubilados por encima del `percentil` (ponderado) del ingreso per capita de los hogares
+    jubilados (sensibilidad del segmento alto al corte)."""
+    j = h['jubilados']
+    corte = percentil_ponderado(h.loc[j, 'ingpch'], h.loc[j, 'pondera'], percentil)
+    return j & (h['ingpch'] > corte)
 
 
 def marcar_haber_minimo(h: pd.DataFrame, tope: float = TOPE_HABER_MINIMO) -> pd.Series:
@@ -144,10 +167,14 @@ def marcar_haber_minimo(h: pd.DataFrame, tope: float = TOPE_HABER_MINIMO) -> pd.
     return h['jubilados'] & (h['max_haberes_minimos'] <= tope).fillna(False)
 
 
-def mediana_ponderada(x: pd.Series, w: pd.Series) -> float:
+def percentil_ponderado(x: pd.Series, w: pd.Series, q: float) -> float:
     o = np.argsort(x.values)
     xs, ws = x.values[o], w.values[o]
-    return float(xs[np.searchsorted(np.cumsum(ws), ws.sum() / 2)])
+    return float(xs[np.searchsorted(np.cumsum(ws), ws.sum() * q)])
+
+
+def mediana_ponderada(x: pd.Series, w: pd.Series) -> float:
+    return percentil_ponderado(x, w, 0.5)
 
 
 # --------------------------------------------------------------------------------------------

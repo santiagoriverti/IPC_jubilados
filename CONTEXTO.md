@@ -33,6 +33,24 @@
   de los hogares jubilados expandidos. `h['max_haberes_minimos']` guarda el cociente de cada hogar y
   `ponderaciones.marcar_haber_minimo(h, tope)` permite otros topes (`R['sensibilidad_haber_minimo']`, de
   1 a 2 haberes mínimos).
+- **Segmento alto** (`jub_alto`, subíndice; índice `IIJP alto`): hogares jubilados por encima del
+  percentil 80 (ponderado) del ingreso per cápita de los hogares jubilados. 1.056 hogares, 20% de los
+  jubilados, ninguno de haber mínimo; perceptor medio 3,4 haberes mínimos en 2017/18.
+  `ponderaciones.marcar_alto(h, percentil)` y `R['sensibilidad_alto']` (percentiles 50 a 90).
+- **Tres segmentos** (`ponderaciones.SEGMENTOS`, sesión 6, 2026-11-12, pedido del usuario: "canasta para
+  cada segmento: mínima = más pobres, jubilado promedio, jubilado clase alta; focalizar en la mínima"):
+  mínima (`jub_minimo`, IIJP haber mínimo), promedio (`jubilados`, IIJP) y alto (`jub_alto`, IIJP alto).
+  Canasta, índice y poder adquisitivo propios (`R['segmentos']`, `R['haberes_segmentos']`,
+  `R['poder_adquisitivo']`; gráficos g09-g11).
+- **Haber de cada segmento** (`haberes.haber_segmentos`): no hay serie oficial del haber medio (se buscó en
+  la API de series de datos.gob.ar: solo haber mínimo, gasto y cantidad de beneficios). Desde dic-2016 la
+  movilidad fue un porcentaje uniforme salvo mar-2020 (decreto 163/2020: 2,3% + $1.500, piso en el nuevo
+  mínimo; la serie del mínimo lo confirma: +12,97%; `haberes.AJUSTES_SUMA_FIJA`). Se simula el haber de cada
+  perceptor de la ENGHo desde k = haber / mínimo del trimestre de la entrevista (`ponderaciones.perceptores`):
+  k ≤ 1 sigue al mínimo (PNC, PUAM); k > 1, la regla general. Bono: complemento hasta mínimo + bono (regla de
+  los decretos, aplicada también a los refuerzos de 2022-2023). Antes de sep-2022, sin bono (pagos únicos no
+  cargados). Supuesto: cada perceptor conserva su posición en la escala. Haber real = haber medio del
+  segmento / índice de su canasta (y / IPC para comparar), base dic-2016.
 - **IPC ENGHo 17/18**: el mismo cálculo con la canasta de todos los hogares. Separa:
   - *efecto edad* = IIJP vs IPC 17/18 (misma especificación);
   - *efecto canasta vieja* = IPC 17/18 vs IPC oficial (canasta ENGHo 2004/05).
@@ -97,7 +115,7 @@
 ## 4. Salidas
 
 - `pipeline.calcular()` devuelve un dict `R`. Índices: `niveles` (IPC oficial, IPC ENGHo 17/18, IIJP,
-  IIJP haber mínimo), `var_mensual`, `var_interanual`, `niveles_regionales` (IPC e IIJP de cada región).
+  IIJP haber mínimo, IIJP alto), `var_mensual`, `var_interanual`, `niveles_regionales` (IPC e IIJP de cada región).
   Brechas: `periodos`, `periodos_regionales`, `brecha_estadistica`, `bootstrap_brechas`,
   `banda_brecha_nov23`, `descomposicion` (por división) y `descomposicion_aperturas`
   (`nov23_ultimo`, `dic16_ultimo`). Canastas: `ponderaciones` (por división, todas las poblaciones),
@@ -105,14 +123,17 @@
   `ponderaciones_nodos` (región × nodo), `ponderaciones_democraticas`, `peso_regiones`, `poblaciones`.
   Estructura: `estructura` (nodos), `indices_residuales`, `sensibilidad_restos`, `imputaciones`,
   `validacion`, `cobertura_precios`. Sensibilidad: `variantes`, `variantes_resumen`, `variantes_niveles`,
-  `sensibilidad_haber_minimo`; `periodos_regionales` trae los intervalos bootstrap. Haberes y fiscal:
-  `haberes`, `regla_movilidad`, `fiscal_*`. TP: `revision_tp`. `meta`.
+  `sensibilidad_haber_minimo`, `sensibilidad_alto`; `periodos_regionales` trae los intervalos bootstrap.
+  Haberes y fiscal: `haberes`, `regla_movilidad`, `fiscal_*`. Segmentos: `segmentos` (resumen),
+  `haberes_segmentos` (haber medio sin y con bono, en mínimos y real por su canasta y por IPC) y
+  `poder_adquisitivo` (variación real por período y segmento). TP: `revision_tp`. `meta`.
 - `src/exportar.py`: `exportar(R, dir_salida, dir_datos)` (Excel con una hoja por tabla + 8 PNG + 29 CSV)
   y `zip_resultados(R, nombre)` (lo mismo + `LEEME.txt` en `_descargas/<nombre>.zip`; lo usan los
   notebooks). La hoja Notas y el LEEME traen el commit.
 - Gráficos (`src/graficos.py`): g01 ponderaciones, g02 brecha desde nov-23 (banda bootstrap, haber mínimo,
   todos los hogares y método anterior), g03 brecha histórica y componentes, g04 descomposición, g05 haber
-  real (IPC e IIJP haber mínimo), g06 costo fiscal, g07 regiones, g08 variantes.
+  real (IPC e IIJP haber mínimo), g06 costo fiscal, g07 regiones, g08 variantes, g09 canasta por segmento,
+  g10 precios por segmento vs IPC, g11 poder adquisitivo por segmento (base dic-2016).
 
 ## 5. Trampas conocidas
 
