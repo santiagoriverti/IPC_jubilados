@@ -13,7 +13,7 @@ subíndice **haber mínimo**, intervalos regionales y una **tabla de 20 variante
 canasta, su índice y el poder adquisitivo de su haber (simulado desde la ENGHo con la movilidad efectiva).
 Colab verificado con `10b8e27` (segmentos, IPC de oct-2026): ZIP = local. README
 y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
-errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`, generadas por
+errores ni advertencias con pdfLaTeX; figuras `iijp_01..10` de `output/figuras/`, generadas por
 `graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
 **Pendiente**: reescribir la sección LaTeX del informe INECO.
 
@@ -88,7 +88,7 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 | `README.md` | al día: tabla de períodos (brecha, efecto edad, haber mínimo), puntos 1-9 (8-9: segmentos), nota metodológica (5.350 / 2.081 hogares, 254 componentes, 0,08%, cobertura 83/16,5/0,5%) |
 | `docs/revision_TP.md` | al día (oct-26): tabla resumen (ventana del TP, haberes may-26/oct-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
 | `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
-| `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-11-12, oct-26): resumen ejecutivo, cuadros de oct-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual oct-26, costo fiscal, firmeza. Todavía sin los segmentos |
+| `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-11-12, oct-26): resumen ejecutivo, cuadros de oct-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual oct-26, costo fiscal, firmeza, sección "Tres tipos de jubilados" (cuadro 3, figuras `iijp_09` e `iijp_10`, viñeta en el resumen y párrafo en la metodología). Formato de Overleaf del usuario. 15 págs. |
 | `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-11-12, oct-26): mismas cifras que el documento de prensa |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
@@ -184,8 +184,8 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..08` de `output/figuras/`
 5. Si el INDEC publica el IPC con canasta ENGHo 2017/18 (postergado sin fecha en feb-2026) o una ENGHo
    nueva: cambiar la referencia de ponderaciones.
 6. Pedidos del usuario (2026-11-12), además de los tres segmentos (hechos):
-   - Llevar los segmentos al documento de prensa y la presentación (foco en la mínima) y decidir si el
-     corte del segmento alto (percentil 80) queda.
+   - (Hecho 2026-11-13) Segmentos en el documento de prensa y la presentación (foco en la mínima). Falta
+     decidir si el corte del segmento alto (percentil 80) queda.
    - Cuántos beneficios hay por tipo (jubilaciones, pensiones, PUAM, PNC, regímenes especiales), cuántos
      cobran la mínima y haber medio por tipo: fuente nueva (datos.gob.ar tiene beneficios de ANSES,
      dataset 189, y gasto devengado del SIPA, dataset 186; falta el haber medio por tipo y por tramo).

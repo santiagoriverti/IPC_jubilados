@@ -531,6 +531,66 @@ def iijp_08_inflacion_mensual(R):
     return fig
 
 
+SEGMENTOS_DIV = [('minima', 'jub_minimo', 'Jubilados de la mínima (40% de los hogares jubilados)', NARANJA),
+                 ('promedio', 'jubilados', 'Jubilado promedio (todos los hogares jubilados)', AZUL),
+                 ('alto', 'jub_alto', 'Jubilados de mayores ingresos (20% más alto)', AQUA)]
+
+
+def iijp_09_segmentos_canasta(R):
+    """Canasta de los tres segmentos de jubilados por division (% del gasto)."""
+    W = R['ponderaciones']
+    orden = W.sort_values('jub_minimo').index
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(9, 7.5))
+        y = range(len(orden))
+        alto = 0.28
+        for k, (_, col, lab, c) in enumerate(SEGMENTOS_DIV):
+            v = W.loc[orden, col] * 100
+            yy = [i + (1 - k) * alto for i in y]
+            ax.barh(yy, v, height=alto - 0.03, color=c, label=lab)
+            for yi, vi in zip(yy, v):
+                ax.annotate(_coma(vi), (vi, yi), xytext=(3, 0), textcoords='offset points', va='center',
+                            fontsize=8.5, color=TINTA2)
+        ax.set_yticks(list(y))
+        ax.set_yticklabels([pond.DIVISIONES_CORTO[c] for c in orden])
+        _eje_pct(ax, 'x')
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('% del gasto de consumo')
+        ax.legend(loc='lower right', fontsize=10.5)
+        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC (ENGHo 2017/18)')
+    return fig
+
+
+def iijp_10_segmentos_poder_adquisitivo(R):
+    """Poder de compra del haber medio de cada segmento, con bono, medido con la inflacion de su propia canasta
+    (diciembre 2016 = 100)."""
+    hs = R['haberes_segmentos']
+    x = _fecha(hs.index)
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(11, 5.2))
+        finales = []
+        for s, _, lab, c in SEGMENTOS_DIV:
+            y = hs[f'real_con_bono_{s}'] / hs[f'real_con_bono_{s}'].iloc[0] * 100
+            ax.plot(x, y, color=c, lw=2.2, label=lab)
+            finales.append([y.iloc[-1], y.iloc[-1], c])
+        # Etiquetas del ultimo valor separadas al menos 4 puntos (de arriba hacia abajo)
+        finales.sort(key=lambda f: -f[0])
+        for i in range(1, len(finales)):
+            finales[i][1] = min(finales[i][1], finales[i - 1][1] - 4)
+        for v, pos, c in finales:
+            ax.annotate(_coma(v, 0), (x[-1], pos), xytext=(5, 0), textcoords='offset points', va='center',
+                        fontsize=11, color=c, fontweight='bold')
+        ax.axhline(100, color=GRIS, lw=1)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _coma(v, 0)))
+        _eje_anios(ax)
+        ax.set_ylabel('poder de compra (diciembre 2016 = 100)')
+        ax.legend(loc='lower left', fontsize=10.5)
+        inicio = _mes_largo(R['haberes']['bono'].dropna().index.min())
+        _pie(fig, 'Fuente: INECO-UADE con datos del INDEC, datos.gob.ar (haber mínimo) y decretos del bono. Haber '
+                  f'de cada grupo estimado con la ENGHo 2017/18; bono incluido desde {inicio}.')
+    return fig
+
+
 GRAFICOS_DIVULGACION = {
     'iijp_01_canasta': iijp_01_canasta,
     'iijp_02_historia': iijp_02_historia,
@@ -540,6 +600,8 @@ GRAFICOS_DIVULGACION = {
     'iijp_06_jubilacion_minima': iijp_06_jubilacion_minima,
     'iijp_07_inflacion_anual': iijp_07_inflacion_anual,
     'iijp_08_inflacion_mensual': iijp_08_inflacion_mensual,
+    'iijp_09_segmentos_canasta': iijp_09_segmentos_canasta,
+    'iijp_10_segmentos_poder_adquisitivo': iijp_10_segmentos_poder_adquisitivo,
 }
 
 

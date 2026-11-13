@@ -214,7 +214,7 @@ de cada hogar (democráticas) da más peso a los hogares de menores ingresos.
 '''),
     code(r'''D = R['ponderaciones_democraticas'].set_index('division')
 display((D * 100).round(1))'''),
-    *figuras_divulgacion(['iijp_01_canasta']),
+    *figuras_divulgacion(['iijp_01_canasta', 'iijp_09_segmentos_canasta']),
     *descarga('IIJP_01_canasta_jubilados'),
 ]
 
@@ -454,7 +454,7 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
 '''),
     code(r'''print(f"Gasto previsional / PIB {R['meta']['anio_pib_ref']}: {R['meta']['gasto_prev_pct_pib']:.2f}%")
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
-    *figuras_divulgacion(['iijp_06_jubilacion_minima']),
+    *figuras_divulgacion(['iijp_06_jubilacion_minima', 'iijp_10_segmentos_poder_adquisitivo']),
     *descarga('IIJP_03_haberes_y_fiscal', fuentes_originales=True),
     md(r'''
 ## Excel completo: resultados y datos originales

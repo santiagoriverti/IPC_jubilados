@@ -160,3 +160,10 @@ originales en `Downloads` del usuario (`TPINECO_GRUPO 2 (1).pdf`, `TP INECO-INDI
   scripts de reemplazo que exigen 1 aparición exacta de cada texto viejo en los .tex. Compilar en
   `_local_run/prensa_ineco` (tiene el logo) y `_local_run/divulgacion` copiando figuras de output/figuras.
   "warning" en el log de pdflatex = nombre del paquete infwarerr (no es advertencia).
+- El usuario pegó su versión de Overleaf del documento de prensa (orden de figuras y epígrafes propios): es la
+  referencia de formato; `docs/divulgacion/iijp_prensa.tex` ahora es esa versión. Se le entrega el .tex
+  completo para copiar y pegar, más la lista de figuras (logo_ineco.jpg no está en el repo).
+- Sección "Tres tipos de jubilados" en prensa (cuadro 3, figuras iijp_09 canasta e iijp_10 poder adquisitivo
+  base dic-16, viñeta en el resumen, párrafo en metodología) y diapositiva en la presentación. Prensa 15
+  págs., presentación 18. Ojo: la pérdida con bono del grupo de la mínima (−16,7%) difiere de la del haber
+  mínimo exacto (−14,7%) porque el grupo incluye PNC y PUAM (haber medio 0,87 mínimos): el texto lo aclara.
