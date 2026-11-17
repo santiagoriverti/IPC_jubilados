@@ -111,6 +111,7 @@
 | IMIG (gasto previsional, resultados) | `cuentas_publicas/output/imig_consolidado.csv` (disco o GitHub raw) | `fuentes.imig_mensual` |
 | PIB nominal | datos.gob.ar `4.4_OGP_2004_T_17` (trimestral **anualizado**: anual = suma/4) | `fuentes.leer_pib_anual` |
 | Series del TP original | `data/reference/tp_original_series.csv` | `pipeline` (`R['revision_tp']`) |
+| Sistema previsional (BESS) | `argentina.gob.ar/sites/default/files/estadisticas_de_seguridad_social_{pasivos,pnc,indicadores}_MM-AAAA.xlsx`; la edición se lee de `argentina.gob.ar/trabajo/seguridadsocial/bess` | `previsional.leer_bess` → `R['previsional']` |
 
 ## 4. Salidas
 
@@ -122,7 +123,8 @@
   `ponderaciones_aperturas` (nacional por apertura, con participación dentro de la división),
   `ponderaciones_nodos` (región × nodo), `ponderaciones_democraticas`, `peso_regiones`, `poblaciones`.
   Estructura: `estructura` (nodos), `indices_residuales`, `sensibilidad_restos`, `imputaciones`,
-  `validacion`, `cobertura_precios`. Sensibilidad: `variantes`, `variantes_resumen`, `variantes_niveles`,
+  `validacion`, `cobertura_precios`. Sistema previsional: `previsional` (dict: tablas del BESS, `tramos_titulares`,
+  `tramos_regimen`, `resumen`, `haber_real`, `edicion`). Sensibilidad: `variantes`, `variantes_resumen`, `variantes_niveles`,
   `sensibilidad_haber_minimo`, `sensibilidad_alto`; `periodos_regionales` trae los intervalos bootstrap.
   Haberes y fiscal: `haberes`, `regla_movilidad`, `fiscal_*`. Segmentos: `segmentos` (resumen),
   `haberes_segmentos` (haber medio sin y con bono, en mínimos y real por su canasta y por IPC) y
@@ -173,6 +175,17 @@
   datos lanza un error; nunca guarda una serie vacía en caché. Con una serie vacía del haber, el grupo
   haber mínimo quedaba en 0 hogares (falló así en Colab el 2026-10-13): `preparar_hogares` y el pipeline
   ahora cortan con un mensaje claro.
+- **BESS** (`src/previsional.py`): cada cuadro se busca por su título (`CUADRO 2.3.8 ...`), no por el nombre de
+  la hoja; los rótulos de régimen se mapean con `REGIMENES` y un régimen desconocido, intervalos que no suman el
+  total o columnas de más dan error (no se adivina). El haber es **bruto** (antes de las cuotas de la moratoria:
+  por eso la EPH, que pregunta lo cobrado en mano, muestra más gente por debajo de la mínima) e incluye el bono
+  desde sep-2022. *Beneficio* = una jubilación o pensión (cuadros 2.3.x); *titular* = una persona con todos sus
+  beneficios sumados (2.2.6). Los tres intervalos puntuales del 2.2.6 y el 2.3.7 son, en orden, mínimo, mínimo
+  + bono y máximo (`previsional.puntos`): quien cobra entre el mínimo y el mínimo + bono termina en el mínimo +
+  bono (el bono es complemento), así que ahí se concentra la mitad de las personas. Los tramos en mínimos usan
+  el punto medio de cada intervalo. La serie 2.3.5 es promedio anual y el último mes publicado; desde 2019,
+  beneficios no suspendidos. El haber medio real mezcla precio y composición (más moratorias = haber medio más
+  bajo). No cubre cajas provinciales, municipales y profesionales ni fuerzas armadas y de seguridad.
 - El haber se conoce hasta 2 meses después del último IPC; la IMIG suele llegar 1 mes después del haber.
 - La IMIG de junio y diciembre incluye aguinaldo (el factor relativo aplica igual). Algunos conceptos
   aparecen con dos descripciones: se deduplica por (fecha, código).

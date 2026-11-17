@@ -591,6 +591,138 @@ def iijp_10_segmentos_poder_adquisitivo(R):
     return fig
 
 
+# --------------------------------------------------------------------------------------------
+# Sistema previsional (BESS)
+# --------------------------------------------------------------------------------------------
+FUENTE_BESS = 'Fuente: INECO-UADE con datos del Boletín Estadístico de la Seguridad Social (Secretaría de Trabajo, ANSES)'
+
+
+def _miles(x) -> str:
+    return f'{x:,.0f}'.replace(',', '.')
+
+
+def _mes_bess(R) -> str:
+    return _mes_largo(pd.Period(R['previsional']['regimenes']['mes'].iloc[0], 'M'))
+
+
+def prev_01_tramos_haber(R):
+    """Jubilados y pensionados del SIPA (personas) por tramo de su haber, en haberes minimos."""
+    t = R['previsional']['tramos_titulares']
+    res = R['previsional']['resumen'].set_index('indicador')['valor']
+    series = [('total', 'Todos los jubilados y pensionados', AZUL),
+              ('jubilacion_sin_moratoria', 'Jubilados sin moratoria', AQUA),
+              ('jubilacion_con_moratoria', 'Jubilados con moratoria', NARANJA)]
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(10, 5.6))
+        y = list(range(len(t)))
+        alto = 0.27
+        for k, (col, lab, c) in enumerate(series):
+            yy = [i + (k - 1) * alto for i in y]
+            v = t[f'{col}_pct'].values
+            ax.barh(yy, v, height=alto - 0.03, color=c, label=lab)
+            for yi, vi in zip(yy, v):
+                ax.annotate(_coma(vi) + '%', (vi, yi), xytext=(3, 0), textcoords='offset points', va='center',
+                            fontsize=9.5, color=TINTA2)
+        ax.set_yticks(y)
+        ax.set_yticklabels(t.index)
+        ax.invert_yaxis()
+        _eje_pct(ax, 'x')
+        ax.margins(x=0.08)
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('% de las personas de cada grupo')
+        ax.legend(loc='lower right')
+        _pie(fig, f'{FUENTE_BESS}, {_mes_bess(R)}. Haber bruto de cada persona (suma de sus beneficios del SIPA). '
+                  f'La mínima: ${_miles(float(res["haber_minimo"]))},\no ${_miles(float(res["haber_minimo_con_bono"]))} '
+                  'con el bono. Tramos aproximados con los intervalos de haber del boletín.')
+    return fig
+
+
+def prev_02_regimenes(R):
+    """Haber medio de cada regimen del SIPA y cantidad de beneficios, con el haber minimo con bono y el maximo."""
+    reg = R['previsional']['regimenes'].set_index('regimen').drop('Total').sort_values('haber_medio')
+    res = R['previsional']['resumen'].set_index('indicador')['valor']
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(10.5, 6))
+        y = list(range(len(reg)))
+        colores = [NARANJA if g == 'especial' else AZUL for g in reg['grupo']]
+        v = reg['haber_medio'] / 1e6
+        ax.barh(y, v, color=colores, height=0.66)
+        for yi, vi, n in zip(y, v, reg['beneficios']):
+            ax.annotate(f'${_coma(vi, 2)} M  ({_miles(n)} beneficios)', (vi, yi), xytext=(4, 0),
+                        textcoords='offset points', va='center', fontsize=9.5, color=TINTA2)
+        for val, lab in [(float(res['haber_minimo_con_bono']), 'mínima\ncon bono'),
+                         (float(res['haber_maximo']), 'haber\nmáximo')]:
+            ax.axvline(val / 1e6, color=GRIS, lw=1.2, ls='--')
+            ax.annotate(lab, (val / 1e6, len(reg) + 0.55), xytext=(3, 0), textcoords='offset points', fontsize=9,
+                        color=TINTA2, va='top')
+        ax.set_ylim(-0.6, len(reg) + 0.6)
+        ax.set_yticks(y)
+        ax.set_yticklabels(reg.index)
+        ax.set_xlim(0, v.max() * 1.55)
+        ax.xaxis.set_major_locator(mticker.MultipleLocator(2))
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: _coma(x, 0)))
+        ax.grid(axis='y', visible=False)
+        ax.set_xlabel('haber medio bruto (millones de pesos por mes)')
+        from matplotlib.patches import Patch
+        ax.legend(handles=[Patch(color=AZUL, label='Régimen general y otros'),
+                           Patch(color=NARANJA, label='Regímenes especiales')], loc='lower right')
+        _pie(fig, f'{FUENTE_BESS}, {_mes_bess(R)}. Incluye el bono. General: Ley 24.241; con moratoria: '
+                  'leyes 24.476, 26.970 y 27.705.')
+    return fig
+
+
+def prev_03_beneficios(R):
+    """Jubilaciones y pensiones del SIPA con y sin moratoria (millones de beneficios, promedio de cada anio)."""
+    s = R['previsional']['serie_sipa'].dropna(subset=['beneficios_con_moratoria'])
+    etiquetas = [p if t == 'promedio anual' else _mes(pd.Period(p, 'M')) for p, t in zip(s['periodo'], s['tipo'])]
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(11, 5.2))
+        x = list(range(len(s)))
+        sin = s['beneficios_sin_moratoria'] / 1e6
+        con = s['beneficios_con_moratoria'] / 1e6
+        ax.bar(x, sin, color=AZUL, width=0.72, label='Sin moratoria')
+        ax.bar(x, con, bottom=sin, color=NARANJA, width=0.72, label='Con moratoria')
+        for xi, a, b in zip(x, sin, con):
+            if xi % 5 == 0 or xi == len(x) - 1:
+                ax.annotate(_coma(a + b), (xi, a + b), xytext=(0, 3), textcoords='offset points', ha='center',
+                            fontsize=9.5, color=TINTA2)
+        ax.set_xticks(x)
+        ax.set_xticklabels(etiquetas, rotation=90, fontsize=10)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _coma(v, 0)))
+        ax.grid(axis='x', visible=False)
+        ax.set_ylabel('millones de beneficios')
+        ax.legend(loc='upper left')
+        _pie(fig, f'{FUENTE_BESS}. Promedio mensual de cada año y último mes publicado; desde 2019, beneficios '
+                  'no suspendidos.')
+    return fig
+
+
+def prev_04_haber_medio_real(R):
+    """Haber medio del SIPA (con bono) deflactado por el IPC y por el IIJP (2017 = 100)."""
+    h = R['previsional']['haber_real']
+    etiquetas = [p if t == 'promedio anual' else _mes(pd.Period(p, 'M')) for p, t in zip(h['periodo'], h['tipo'])]
+    with plt.rc_context(RC_DIVULGACION):
+        fig, ax = plt.subplots(figsize=(10, 5))
+        x = list(range(len(h)))
+        cols = [('real_IPC oficial', 'medido con el IPC oficial', AZUL),
+                ('real_IIJP', 'medido con la inflación de los jubilados (IIJP)', NARANJA)]
+        arriba = h[cols[0][0]].iloc[-1] >= h[cols[1][0]].iloc[-1]
+        for k, (col, lab, c) in enumerate(cols):
+            ax.plot(x, h[col], color=c, lw=2.4, marker='o', label=f'Haber medio {lab}')
+            dy = 7 if (k == 0) == arriba else -7  # etiquetas del ultimo valor separadas
+            ax.annotate(_coma(h[col].iloc[-1], 0), (x[-1], h[col].iloc[-1]), xytext=(8, dy), textcoords='offset points',
+                        va='center', fontsize=11, color=c, fontweight='bold')
+        ax.axhline(100, color=GRIS, lw=1)
+        ax.set_xticks(x)
+        ax.set_xticklabels(etiquetas)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: _coma(v, 0)))
+        ax.set_ylabel('poder de compra (2017 = 100)')
+        ax.legend(loc='lower left')
+        _pie(fig, f'{FUENTE_BESS} e INDEC. Haber medio bruto de todos los beneficios del SIPA, con el bono desde '
+                  'septiembre de 2022;\npromedio de cada año y último mes publicado.')
+    return fig
+
+
 GRAFICOS_DIVULGACION = {
     'iijp_01_canasta': iijp_01_canasta,
     'iijp_02_historia': iijp_02_historia,
@@ -602,6 +734,10 @@ GRAFICOS_DIVULGACION = {
     'iijp_08_inflacion_mensual': iijp_08_inflacion_mensual,
     'iijp_09_segmentos_canasta': iijp_09_segmentos_canasta,
     'iijp_10_segmentos_poder_adquisitivo': iijp_10_segmentos_poder_adquisitivo,
+    'prev_01_tramos_haber': prev_01_tramos_haber,
+    'prev_02_regimenes': prev_02_regimenes,
+    'prev_03_beneficios': prev_03_beneficios,
+    'prev_04_haber_medio_real': prev_04_haber_medio_real,
 }
 
 

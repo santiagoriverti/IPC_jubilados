@@ -373,6 +373,7 @@ NB03 = [
   hogares jubilados que cobran alrededor de la mínima).
 - Contrafactual: la misma regla con el IIJP. Costo fiscal con el gasto real en jubilaciones y pensiones
   (IMIG, repo `cuentas_publicas`).
+- El sistema previsional en números (BESS): beneficios, jubilados en la mínima, haber medio por régimen.
 '''),
     code(SETUP),
     code(r'''N_BOOTSTRAP = 300   # este notebook no usa los intervalos, pero van al Excel y a los graficos del ZIP (0 = mas rapido)
@@ -454,7 +455,32 @@ cambio de índice). En % del PIB se usa la relación gasto previsional / PIB del
 '''),
     code(r'''print(f"Gasto previsional / PIB {R['meta']['anio_pib_ref']}: {R['meta']['gasto_prev_pct_pib']:.2f}%")
 display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='anios', values='costo_pct_pib').round(2))'''),
-    *figuras_divulgacion(['iijp_06_jubilacion_minima', 'iijp_10_segmentos_poder_adquisitivo']),
+    md(r'''
+## El sistema previsional en números (BESS)
+
+Datos administrativos del **Boletín Estadístico de la Seguridad Social** (Secretaría de Trabajo, con datos
+de ANSES; trimestral): cuántos beneficios paga el SIPA, con y sin moratoria, cuántas personas cobran la
+mínima, el haber medio de cada régimen (general y especiales) y las pensiones no contributivas y la PUAM.
+El haber es **bruto** (antes de descontar las cuotas de la moratoria) e incluye el bono. Un *beneficio* es
+una jubilación o una pensión; un *titular* es una persona, con todos sus beneficios sumados. No incluye las
+cajas provinciales, municipales y profesionales ni las fuerzas armadas y de seguridad.
+'''),
+    code(r'''pv = R['previsional']
+print('BESS, datos a', pv['edicion'])
+display(pv['resumen'].set_index('indicador'))
+display(pv['regimenes'][['regimen', 'grupo', 'beneficios', 'haber_medio', 'jub_beneficios', 'jub_haber_medio',
+                         'pen_beneficios', 'pen_haber_medio']].round(0))'''),
+    code(r'''fig = graficos.prev_01_tramos_haber(R); plt.show()
+display(pv['tramos_titulares'].round(1))
+display(Markdown('**Beneficios por tramo de haber y régimen (% de cada régimen)**'))
+display(pv['tramos_regimen'][[c for c in pv['tramos_regimen'].columns if c.endswith('_pct')]].T.round(1))'''),
+    code(r'''fig = graficos.prev_02_regimenes(R); plt.show()
+fig = graficos.prev_03_beneficios(R); plt.show()
+fig = graficos.prev_04_haber_medio_real(R); plt.show()
+display(pv['haber_real'].round(1))'''),
+    *figuras_divulgacion(['iijp_06_jubilacion_minima', 'iijp_10_segmentos_poder_adquisitivo',
+                          'prev_01_tramos_haber', 'prev_02_regimenes', 'prev_03_beneficios',
+                          'prev_04_haber_medio_real']),
     *descarga('IIJP_03_haberes_y_fiscal', fuentes_originales=True),
     md(r'''
 ## Excel completo: resultados y datos originales
@@ -462,8 +488,8 @@ display(R['fiscal_desvio_permanente'].pivot(index='desvio_pp_anual', columns='an
 Un solo Excel con **todos los resultados** (las mismas hojas que el Excel del ZIP) y **los datos
 originales** que usa el análisis, en las hojas `Dato_*`: IPC por divisiones y por aperturas (INDEC),
 ponderaciones oficiales del IPC (canasta de la ENGHo 2004/05), microdatos de la ENGHo 2017/18 (hogares,
-personas y gastos, con las columnas que usa el cálculo), haber mínimo, bono, gasto previsional (IMIG) y
-PIB. La hoja `Indice` describe cada hoja y su fuente. Pesa unos 30 MB y tarda un par de minutos en
+personas y gastos, con las columnas que usa el cálculo), haber mínimo, bono, gasto previsional (IMIG),
+PIB y las tablas del BESS. La hoja `Indice` describe cada hoja y su fuente. Pesa unos 30 MB y tarda un par de minutos en
 escribirse. En Colab se descarga solo (si el navegador pregunta, permitir descargas múltiples).
 '''),
     code(r'''from src.exportar import excel_completo

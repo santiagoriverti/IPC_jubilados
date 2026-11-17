@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from . import estructura as estr
-from . import fiscal, fuentes, haberes, indices, variantes
+from . import fiscal, fuentes, haberes, indices, previsional, variantes
 from . import ponderaciones as pond
 
 NOMBRES = {
@@ -343,6 +343,9 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
                       'haber_medio_con_bono_ultimo_mes': float(hs.loc[ultimo, f'haber_con_bono_{s}'])})
     R['segmentos'] = pd.DataFrame(filas)
 
+    # ---------------------------------------------------------------- sistema previsional (BESS)
+    R['previsional'] = previsional.calcular(niveles, refrescar)
+
     # ---------------------------------------------------------------- fiscal
     imig = fuentes.imig_mensual()
     pib = fuentes.leer_pib_anual(refrescar)
@@ -376,7 +379,7 @@ def calcular(refrescar: bool = False, n_bootstrap: int = 500, verbose: bool = Tr
         'peso_tp_1_mayor': pond.peso_tp(h)}
 
     R['meta'] = {'ultimo_ipc': str(ultimo), 'ultimo_haber': str(hab.index.max()),
-                 'ultimo_imig': str(imig.index.max()), 'anio_pib_ref': ult_anio, 'gasto_prev_pct_pib': gpib,
+                 'ultimo_imig': str(imig.index.max()), 'edicion_bess': R['previsional']['edicion'], 'anio_pib_ref': ult_anio, 'gasto_prev_pct_pib': gpib,
                  'n_bootstrap': n_bootstrap, 'nodos': len(est.nodos), 'restos_derivados': n_der,
                  'cobertura_gasto': cobertura, 'umbral_resto': estr.UMBRAL_RESTO}
     return R

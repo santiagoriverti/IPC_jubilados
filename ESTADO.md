@@ -1,6 +1,6 @@
 # ESTADO — IPC_jubilados (IIJP)
 
-**Última actualización:** 2026-11-12 (sesión 6: descarga del haber que combina API y CSV de datos.gob.ar, cache con vencimiento y tres segmentos de jubilados). Punto de entrada para retomar:
+**Última actualización:** 2026-11-17 (sesión 7: sistema previsional con el BESS: beneficios, jubilados en la mínima, regímenes especiales; sesión 6: tres segmentos de jubilados). Punto de entrada para retomar:
 este archivo → `CLAUDE.md` (reglas) → `CONTEXTO.md` (método y trampas) → `.claude/memory/project.md`
 (historial).
 
@@ -15,6 +15,7 @@ Colab verificado con `10b8e27` (segmentos, IPC de oct-2026): ZIP = local. README
 y revision_TP al día. Documento de prensa y presentación Beamer en `docs/divulgacion/` (compilan sin
 errores ni advertencias con pdfLaTeX; figuras `iijp_01..10` de `output/figuras/`, generadas por
 `graficos.GRAFICOS_DIVULGACION`; también en la carpeta `figuras/` del ZIP de cada notebook).
+**Sistema previsional** (sesión 7, `src/previsional.py`): datos administrativos de ANSES del BESS (beneficios, personas por tramo de haber, haber medio por régimen, PNC, PUAM, cobertura), figuras `prev_01..04` y sección "El sistema previsional en números" en la prensa (bloque para Overleaf: `docs/divulgacion/seccion_sistema_previsional.tex`). Falta correr el notebook 03 en Colab.
 **Pendiente**: reescribir la sección LaTeX del informe INECO.
 
 ## 1. Cobertura de datos
@@ -28,6 +29,7 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..10` de `output/figuras/`
 | IMIG (vía repo `cuentas_publicas`) | sep-2026 | actualizar ese repo primero |
 | PIB nominal anual completo (datos.gob.ar) | 2025 | automático |
 | ENGHo | 2017/18 (canasta fija) | no cambia |
+| BESS (Secretaría de Trabajo, datos de ANSES): pasivos, PNC, indicadores | sep-2026 (cobertura por edad: jun-2025) | automático y trimestral: `previsional.ultima_edicion` lee la página (vence a los 7 días); sin red, las copias `data/processed/bess_*.csv` |
 
 ## 2. Cifras vigentes (`python scripts/construir.py`, bootstrap 500)
 
@@ -80,6 +82,21 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..10` de `output/figuras/`
   del segmento (0,88 mínimos de media: PNC y pensiones) pierde más con bono que el haber mínimo exacto
   (−16,7% vs −14,7%) porque el bono pesa más en haberes menores.
 
+- **Sistema previsional (BESS, sep-2026)**: SIPA 7.255.078 beneficios (5.652.286 jubilaciones, 1.602.792
+  pensiones) a 6.049.974 personas; PNC 1.452.540 (invalidez 1.131.784), PUAM 227.317. Con moratoria: 60,4% de
+  los beneficios y 67,9% de las jubilaciones. **En la mínima: 2.993.884 personas (49,5%)**: 2.863.569 con bono
+  ($498.633,20) y 130.315 sin bono ($428.633,20); hasta 2 mínimas 72,6%; más de 5 mínimas 7,6%; titular mediano
+  = mínima con bono (1,16 mínimos; EPH: 1,17). Con moratoria 66,6% en la mínima, sin moratoria 14,5%; 86,9% de
+  los beneficios con moratoria. Haber medio bruto con bono: SIPA $760.792 (jub. $791.111, pens. $653.873),
+  general sin moratoria $973.461, con moratoria $505.534. Especiales: 274.557 beneficios (3,8%), 14,0% de la
+  masa, haber medio $2.817.807; Poder Judicial $8.775.570 (9,0 veces el general sin moratoria; 98,5% sobre el
+  haber máximo de $2.884.295,54), Servicio Exterior $13.873.810 (14,3 veces; 98,5%), docentes no universitarios
+  208.278 beneficios, $2.547.066 (2,6 veces; 36,8%), investigadores 3,6 veces (65,9%), docentes universitarios
+  3,2 veces (55,6%). Haber medio real (2017 = 100): sep-26 70,6 (IPC) / 70,1 (IIJP); piso 2024 62,9. Cobertura
+  65-90 años (jun-2025): 95,4% (solo moratoria 56,3%, otros sistemas 9,6%, no contributiva 5,0%). Control: haber
+  simulado del jubilado promedio sep-26 $720.288, entre $695.594 (SIPA + PNC + PUAM por beneficio) y $804.039
+  (por persona).
+
 ## 3. Dónde se citan las cifras (actualizar todo junto si cambian)
 
 | Documento | Estado |
@@ -89,10 +106,19 @@ errores ni advertencias con pdfLaTeX; figuras `iijp_01..10` de `output/figuras/`
 | `docs/revision_TP.md` | al día (oct-26): tabla resumen (ventana del TP, haberes may-26/oct-26, ejercicio dic-23, costo may-26, 2050), M1, M1b, M2 (tabla edad/canasta), M3, M4, M5, D |
 | `docs/informe_indicadores/seccion_iijp.tex` | **desactualizada** (comentario en la cabecera): reescribir con la metodología nueva |
 | `docs/divulgacion/iijp_prensa.tex` (documento de prensa, plantilla de informe de prensa del INECO + `bibliografia.bib`) | al día (2026-11-12, oct-26): resumen ejecutivo, cuadros de oct-26 y anual 2017-2026, períodos, ejemplo de $100, rubros (ropa y vivienda desde nov-23), regiones, haber real, bono indexado, contrafactual oct-26, costo fiscal, firmeza, sección "Tres tipos de jubilados" (cuadro 3, figuras `iijp_09` e `iijp_10`, viñeta en el resumen y párrafo en la metodología). Formato de Overleaf del usuario. 15 págs. |
-| `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-11-12, oct-26): mismas cifras que el documento de prensa |
+| `docs/divulgacion/iijp_presentacion.tex` (Beamer Madrid, autoridades) | al día (2026-11-12, oct-26): mismas cifras que el documento de prensa; diapositivas del BESS (sep-26, 2026-11-17) |
+| `docs/divulgacion/seccion_sistema_previsional.tex` (bloque para Overleaf, BESS sep-26) | al día (2026-11-17); la misma sección está en `iijp_prensa.tex`, con una viñeta del resumen y un párrafo de metodología |
 | Markdown de `scripts/gen_notebooks.py` | sin cifras fijas (las imprime el código) |
 
-## 4. Verificación (2026-11-12)
+## 4. Verificación (2026-11-17)
+
+- Sesión 7 (BESS): `construir.py` con el haber hasta oct-2026 (el de nov-2026 ya está publicado pero falta su
+  bono: rutina mensual pendiente); todos los CSV y figuras existentes idénticos a HEAD, solo se agregan
+  `bess_*`, `previsional_*` y `prev_01..04`. Control de calidad 0 ALERTAS con 5 controles nuevos (haber mínimo y
+  bono del BESS = los del análisis, regímenes y tramos suman el total, haber simulado dentro del rango, edición
+  vigente). 40 tests (6 nuevos en `tests/test_previsional.py`). Prensa (18 págs.) y presentación (21) compilan
+  con pdfLaTeX + BibTeX: 0 errores, 0 advertencias. Falta correr el notebook 03 en Colab.
+
 
 - Colab con `a999d4b` (2026-11-12): los 3 ZIP y el Excel completo (55 hojas) = local, salvo el haber de
   oct-2026, que faltaba en Colab (Haberes 118 vs 119 filas, Regla_movilidad 29 vs 30, `haber_vs_ipc` de

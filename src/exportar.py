@@ -17,7 +17,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from . import fuentes, graficos
+from . import fuentes, graficos, previsional
 
 DESCARGAS = fuentes.RAIZ / '_descargas'
 
@@ -64,6 +64,13 @@ def tablas_csv(R: dict) -> dict[str, tuple[pd.DataFrame, bool]]:
         'poder_adquisitivo.csv': (R['poder_adquisitivo'], False),
         'revision_tp_periodos.csv': (R['revision_tp']['periodos'], False),
     }
+    pv = R['previsional']
+    for k in previsional.TABLAS:
+        t[f'bess_{k}.csv'] = (pv[k], False)
+    t['previsional_tramos_titulares.csv'] = (pv['tramos_titulares'], True)
+    t['previsional_tramos_regimen.csv'] = (pv['tramos_regimen'], True)
+    t['previsional_resumen.csv'] = (pv['resumen'], False)
+    t['previsional_haber_real.csv'] = (pv['haber_real'], False)
     for k, d in R['descomposicion'].items():
         t[f'descomposicion_{k}.csv'] = (d, True)
     for k, d in R['descomposicion_aperturas'].items():
@@ -118,6 +125,13 @@ def hojas_excel(R: dict) -> dict[str, pd.DataFrame]:
         'Revision_TP_pond': R['revision_tp']['ponderaciones'],
         'Revision_TP_periodos': R['revision_tp']['periodos'],
     }
+    pv = R['previsional']
+    h.update({'BESS_resumen': pv['resumen'], 'BESS_regimenes': pv['regimenes'],
+              'BESS_tramos_titulares': pv['tramos_titulares'], 'BESS_tramos_regimen': pv['tramos_regimen'],
+              'BESS_haber_real': pv['haber_real'], 'BESS_serie_SIPA': pv['serie_sipa'],
+              'BESS_no_contributivas': pv['no_contributivas'], 'BESS_cobertura': pv['cobertura'],
+              'BESS_intervalos_titulares': pv['intervalos_titulares'],
+              'BESS_intervalos_regimen': pv['intervalos_regimen']})
     if 'bootstrap_brechas' in R:
         h['Bootstrap_brechas'] = R['bootstrap_brechas']
         h['Bootstrap_pond'] = R['bootstrap_ponderaciones']
@@ -141,7 +155,7 @@ def notas(R: dict) -> list[str]:
         'ENGHo 2017/18, valorizada con el IPC del INDEC por aperturas en cada region.',
         f'Version del codigo (commit): {version_repo()}',
         f'Ultimo IPC: {m["ultimo_ipc"]} | ultimo haber: {m["ultimo_haber"]} | ultima IMIG: {m["ultimo_imig"]}'
-        f' | replicas bootstrap: {m["n_bootstrap"]}',
+        f' | replicas bootstrap: {m["n_bootstrap"]} | BESS: datos a {m["edicion_bess"]}',
         f'Estructura de precios: {m["nodos"]} nodos en 6 regiones ({m["restos_derivados"]} restos derivados de las '
         'ponderaciones oficiales del INDEC). Hoja Estructura_nodos.',
         'Niveles base dic-2016 = 100. Variaciones en %. Brechas: (1 + infl. A) / (1 + infl. B) - 1, en %.',
@@ -151,6 +165,9 @@ def notas(R: dict) -> list[str]:
         'minimos), promedio (todos los hogares jubilados) y alto (20% de mayor ingreso per capita), cada uno con su '
         'canasta e indice. Haber de cada segmento simulado desde la ENGHo con la movilidad efectiva (igual para todos '
         'los haberes salvo mar-2020: 2,3% + $1.500) y el bono como complemento hasta minimo + bono.',
+        'Sistema previsional (hojas BESS_*): Boletin Estadistico de la Seguridad Social (Secretaria de Trabajo, datos '
+        'de ANSES). Haberes brutos con bono; beneficio = una jubilacion o pension; titular = una persona con todos sus '
+        'beneficios del SIPA. No incluye cajas provinciales, municipales y profesionales ni fuerzas armadas y de seguridad.',
         'Montos fiscales en millones de pesos corrientes. Metodologia: README y docs/ del repo '
         'github.com/santiagoriverti/IPC_jubilados.',
     ]
@@ -238,6 +255,11 @@ def datos_originales() -> dict[str, tuple[pd.DataFrame, str]]:
                                f'(serie {fuentes.ID_PIB_NOMINAL})')
     d['PIB_anual'] = (fuentes.leer_pib_anual().rename_axis('anio').reset_index(),
                       'PIB anual a precios corrientes, millones de pesos (promedio de los 4 trimestres anualizados)')
+    for k in previsional.TABLAS:
+        df = pd.read_csv(fuentes.PROCESADOS / f'bess_{k}.csv') if (fuentes.PROCESADOS / f'bess_{k}.csv').exists() else None
+        if df is not None:
+            d[f'BESS_{k}'] = (df, 'BESS (Secretaria de Trabajo, datos de ANSES), tabla leida de los Excel del boletin '
+                                  f'(src/previsional.py; los Excel originales, en fuentes_originales/BESS). {previsional.URL_PAGINA}')
     d['TP_original_series'] = (pd.read_csv(fuentes.REFERENCIA / 'tp_original_series.csv', comment='#'),
                                'Series del TP original (planilla de los alumnos, hoja Canasta): solo para la revision')
     return d
@@ -318,7 +340,7 @@ def copiar_fuentes_originales(destino: Path) -> pd.DataFrame:
     LEEME.txt de la carpeta. Devuelve la tabla archivo / origen / estado."""
     destino = Path(destino)
     filas = []
-    for rel, url, local, desc in FUENTES_ORIGINALES:
+    for rel, url, local, desc in FUENTES_ORIGINALES + previsional.fuentes_originales():
         ruta = destino / rel
         ruta.parent.mkdir(parents=True, exist_ok=True)
         try:

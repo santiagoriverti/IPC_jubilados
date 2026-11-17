@@ -1,0 +1,49 @@
+% =============================================================================================
+% Seccion "El sistema previsional en numeros" (BESS, datos a septiembre de 2026), para pegar en el
+% documento de prensa de Overleaf. NO es un documento: no se compila solo (lo usa iijp_prensa.tex y
+% sirve de bloque para copiar). Va despues de "La jubilacion minima" y antes de "Tres tipos de jubilados".
+%
+% Necesita en la carpeta figuras/ de Overleaf: prev_01_tramos_haber.png, prev_02_regimenes.png,
+% prev_03_beneficios.png y prev_04_haber_medio_real.png (output/figuras/ del repo o figuras/ del ZIP del
+% notebook 03), y la entrada STESS2026_BESS de bibliografia.bib.
+% Cifras: data/processed/previsional_resumen.csv (python scripts/construir.py).
+% =============================================================================================
+\section*{El sistema previsional en números}
+
+Para saber a cuántas personas alcanzan la jubilación mínima y el bono, esta sección usa los registros de ANSES que publica el Boletín Estadístico de la Seguridad Social \citep{STESS2026_BESS}, con datos a septiembre de 2026.
+
+\textbf{Cuántos son.} El Sistema Integrado Previsional Argentino (SIPA), que administra ANSES, paga \textbf{7,26 millones de beneficios} (5,65 millones de jubilaciones y 1,60 millones de pensiones) a \textbf{6,05 millones de personas}. A eso se suman 1,45 millones de pensiones no contributivas (1,13 millones por invalidez) y 227 mil Pensiones Universales para el Adulto Mayor (PUAM). \textbf{El 60\% de los beneficios del SIPA, y el 68\% de las jubilaciones, se obtuvo con una moratoria}: desde 2006 los beneficios sin moratoria se mantienen en alrededor de 3 millones y casi todo el crecimiento del sistema vino de las moratorias (figura \ref{fig:beneficios}). Gracias a ellas, el 95\% de las personas de 65 a 90 años cobra algún beneficio; el 56\% solo tiene una jubilación por moratoria.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{prev_03_beneficios.png}
+\caption{Jubilaciones y pensiones del SIPA, con y sin moratoria (millones de beneficios).}
+\label{fig:beneficios}
+\end{figure}
+
+\textbf{Cuántos cobran la mínima.} \textbf{La mitad de los jubilados y pensionados del SIPA, 3,0 millones de personas, cobra exactamente la mínima}: 2,86 millones la mínima con el bono (\$498.633 en septiembre de 2026) y 130 mil la mínima sin el bono (\$428.633). El 73\% cobra menos de dos haberes mínimos y solo el 8\% más de cinco (figura \ref{fig:tramos}). Entre los que se jubilaron con una moratoria, dos de cada tres cobran la mínima; entre los que no, uno de cada siete. Es decir, \textbf{el bono congelado y la canasta de la jubilación mínima que analiza este informe son los de la mitad de los jubilados del país}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{prev_01_tramos_haber.png}
+\caption{Jubilados y pensionados del SIPA por tramo de haber, septiembre de 2026 (\% de las personas de cada grupo).}
+\label{fig:tramos}
+\end{figure}
+
+\textbf{Cuánto cobran.} El haber medio bruto del SIPA, con el bono, es de \$760.792: \$973.461 en el régimen general sin moratoria y \$505.534 con moratoria. En septiembre de 2026 el haber medio compraba un 29\% menos que en 2017 según el IPC, y un 30\% menos según el IIJP. Tocó su piso en 2024 y desde entonces se recuperó en parte (figura \ref{fig:haber_medio}). Una parte de la caída se explica porque creció el peso de las jubilaciones por moratoria, que son más bajas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{prev_04_haber_medio_real.png}
+\caption{Poder de compra del haber medio del SIPA, con el bono (2017 = 100).}
+\label{fig:haber_medio}
+\end{figure}
+
+\textbf{Regímenes especiales.} Dentro del SIPA hay siete regímenes especiales con reglas propias. El haber es un porcentaje fijo del sueldo en actividad (por ejemplo, 82\% en el Poder Judicial y 85\% en el Servicio Exterior), sigue a los sueldos de los activos y no tiene el tope del régimen general. \textbf{Pagan 275 mil beneficios, el 3,8\% del total, pero se llevan el 14\% de lo que el SIPA paga en haberes}. El haber medio es de \$8,78 millones en el Poder Judicial, 9 veces el del régimen general sin moratoria, y de \$13,87 millones en el Servicio Exterior, 14 veces (figura \ref{fig:regimenes}). En ambos, el 98\% de los beneficios supera el haber máximo del régimen general (\$2.884.296). El más numeroso es el de los docentes no universitarios: 208 mil beneficios, con un haber medio de \$2,55 millones (2,6 veces el general).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{prev_02_regimenes.png}
+\caption{Haber medio de cada régimen del SIPA, septiembre de 2026 (millones de pesos por mes).}
+\label{fig:regimenes}
+\end{figure}

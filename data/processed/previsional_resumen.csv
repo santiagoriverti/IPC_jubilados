@@ -1,0 +1,59 @@
+indicador,valor,unidad
+mes,2026-09,mes de los datos
+haber_minimo,428633.2,$
+haber_minimo_con_bono,498633.2,$
+haber_maximo,2884295.54,$
+haber_maximo_en_minimos,6.729053045820995,mínimos
+beneficios_sipa,7255078.0,beneficios
+jubilaciones_sipa,5652286.0,beneficios
+pensiones_sipa,1602792.0,beneficios
+titulares_sipa,6049974.0,personas
+haber_medio_sipa,760792.2313312138,"$ (bruto, con bono)"
+haber_medio_jubilaciones,791110.9315820183,$
+haber_medio_pensiones,653872.5780226006,$
+haber_medio_general_sin_moratoria,973460.6779012831,$
+haber_medio_general_con_moratoria,505533.55648149754,$
+pct_beneficios_con_moratoria,60.449853192481186,%
+pct_jubilaciones_con_moratoria,67.85949967853715,%
+titulares_en_la_minima,2993884.0,personas
+pct_titulares_en_la_minima,49.48589861708497,%
+pct_titulares_hasta_minima_con_bono,50.17562058944386,%
+pct_titulares_menos_que_minima,0.39957196510265997,%
+pct_titulares_hasta_2_minimas,72.64272540675381,%
+pct_titulares_mas_de_5_minimas,7.628793115474545,%
+titular_mediano_desde,498633.2,$ (intervalo de la mediana)
+titular_mediano_en_minimos,1.1633097949482214,mínimos
+pct_moratoria_en_la_minima,86.88494200676566,% de los beneficios con moratoria
+beneficios_regimenes_especiales,274557.0,beneficios
+pct_beneficios_regimenes_especiales,3.7843424977650133,%
+pct_masa_regimenes_especiales,14.016373349895709,%
+haber_medio_regimenes_especiales,2817807.3106058124,$
+beneficios_sobre_haber_maximo_especiales,103779.0,beneficios
+pnc,1452540.0,beneficios (2026-09)
+pnc_invalidez,1131784.0,beneficios (2026-09)
+pnc_vejez,265.0,beneficios (2026-09)
+pnc_haber_medio,413026.0,$ (2026-09)
+puam,227317.0,beneficios (2026-09)
+puam_haber_medio,420295.07450129115,$ (2026-09)
+haber_medio_anses_por_beneficio,695593.6424375118,$ (SIPA + PNC + PUAM)
+haber_medio_anses_por_persona,804038.7922572189,$ (titulares del SIPA + PNC + PUAM; cota superior: algunos cobran PNC y SIPA)
+cobertura_65_90,95.43477716664401,% (2025-06)
+cobertura_65_90_solo_moratoria,56.33083118164978,%
+cobertura_65_90_otros_sistemas,9.635191291224707,%
+cobertura_65_90_no_contributiva,4.992776065172767,%
+cobertura_60_90,84.57101318012931,%
+serie_ultimo_periodo,2026-09,
+veces_general_poder_judicial,9.014817267083158,veces el haber medio general sin moratoria
+pct_sobre_maximo_poder_judicial,98.4779299847793,% de sus beneficios
+veces_general_servicio_exterior,14.25204937351873,veces el haber medio general sin moratoria
+pct_sobre_maximo_servicio_exterior,98.48484848484848,% de sus beneficios
+veces_general_docentes_no_universitarios,2.6165062558941576,veces el haber medio general sin moratoria
+pct_sobre_maximo_docentes_no_universitarios,36.848346920942205,% de sus beneficios
+veces_general_investigadores_cientificos,3.570641100860953,veces el haber medio general sin moratoria
+pct_sobre_maximo_investigadores_cientificos,65.90786395537161,% de sus beneficios
+veces_general_docentes_universitarios,3.239324031545206,veces el haber medio general sin moratoria
+pct_sobre_maximo_docentes_universitarios,55.58070448436837,% de sus beneficios
+veces_general_luz_y_fuerza,2.4223700266251758,veces el haber medio general sin moratoria
+pct_sobre_maximo_luz_y_fuerza,7.933591231463572,% de sus beneficios
+veces_general_rio_turbio,2.4510538369909276,veces el haber medio general sin moratoria
+pct_sobre_maximo_rio_turbio,35.4054054054054,% de sus beneficios

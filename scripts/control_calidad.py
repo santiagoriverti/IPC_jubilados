@@ -113,6 +113,34 @@ def main() -> int:
              f'Haber medio actual: minima ${orden["minima"]:,.0f} < promedio ${orden["promedio"]:,.0f} < '
              f'alto ${orden["alto"]:,.0f}')
 
+    # Sistema previsional (BESS): el haber minimo y el bono del boletin coinciden con los del analisis
+    pv = R['previsional']
+    res_b = pv['resumen'].set_index('indicador')['valor']
+    mes_b = pd.Period(res_b['mes'], 'M')
+    hab_b = R['haberes']
+    if mes_b in hab_b.index:
+        d_min = abs(float(res_b['haber_minimo']) / hab_b.loc[mes_b, 'haber_minimo'] - 1) * 100
+        d_bono = abs(float(res_b['haber_minimo_con_bono']) - float(res_b['haber_minimo'])
+                     - hab_b.loc[mes_b, 'bono'])
+        chequear(d_min < 0.01 and d_bono < 1, f'BESS {mes_b}: haber minimo ${float(res_b["haber_minimo"]):,.2f} y bono '
+                                              f'iguales a los del analisis (desvio {d_min:.4f}%, ${d_bono:.2f})')
+    else:
+        chequear(False, f'BESS {mes_b}: el mes no esta en la serie del haber minimo')
+    reg_b = pv['regimenes'].set_index('regimen')
+    chequear(abs(reg_b.loc['Total', 'beneficios'] - reg_b.drop('Total')['beneficios'].sum()) < 1,
+             f'BESS: los regimenes suman el total de beneficios ({reg_b.loc["Total", "beneficios"]:,.0f})')
+    tt = pv['tramos_titulares']['total']
+    chequear(abs(tt.sum() - float(res_b['titulares_sipa'])) < 1,
+             f'BESS: los tramos de haber suman los {float(res_b["titulares_sipa"]):,.0f} titulares')
+    if mes_b in R['haberes_segmentos'].index:
+        sim_b = float(R['haberes_segmentos'].loc[mes_b, 'haber_con_bono_promedio'])
+        lo, hi = float(res_b['haber_medio_anses_por_beneficio']), float(res_b['haber_medio_anses_por_persona'])
+        chequear(0.95 * lo <= sim_b <= 1.05 * hi,
+                 f'Haber simulado del jubilado promedio en {mes_b} (${sim_b:,.0f}) dentro del rango del BESS '
+                 f'(SIPA + PNC + PUAM: ${lo:,.0f} por beneficio a ${hi:,.0f} por persona, +-5%)')
+    vencido = (pd.Period(R['meta']['ultimo_ipc'], 'M') - mes_b).n
+    chequear(vencido <= 9, f'BESS con datos a {mes_b}: {vencido} meses antes del ultimo IPC (<= 9; si no, revisar la pagina)')
+
     m = R['fiscal_mensual']
     fin = min(R['haberes']['factor_iijp'].dropna().index.max(), pd.Period(R['meta']['ultimo_imig'], 'M'))
     esperado = pd.period_range('2024-04', fin, freq='M')
